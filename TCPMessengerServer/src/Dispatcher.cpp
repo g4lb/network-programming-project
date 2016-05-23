@@ -6,7 +6,7 @@
  */
 
 #include "Dispatcher.h"
-#define TIMEOUT 0
+#define TIMEOUT 2
 using namespace std;
 using namespace npl;
 

@@ -32,6 +32,7 @@ using namespace npl;
 		for(;iter!= sockets.end();iter++){
 			TCPSocket* sock = *iter;
 			int fd = sock->getSocketFd();
+			//cout<<sock->fromAddr()<<endl;
 			FD_SET(fd,&set);
 			if (fd >= nfd){
 				nfd = fd+1;
@@ -58,21 +59,10 @@ using namespace npl;
 			TCPSocket* sock = *iter;
             cout << "checking if socket "<<sock->fromAddr()<<" sent the msg"<<endl;
 			int fd = sock->getSocketFd();
-
-            //*******
-            fd_set setInner;
-            FD_ZERO(&setInner);
-            FD_SET(fd,&setInner);
-            struct timeval timet;
-            timet.tv_sec = 0;
-            timet.tv_usec = 5;
-            if (select(fd, &setInner,NULL,NULL,&timet)>0)
-            {
-                FD_ZERO(&set);
-                FD_ZERO(&setInner);
-                return sock;
-            }
-            //*******
+			if(FD_ISSET(fd,&set)){
+				FD_ZERO(&set);
+				return sock;
+			}
 		}
 		FD_ZERO(&set);
 		return NULL;
