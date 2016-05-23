@@ -9,7 +9,8 @@
 
 using namespace npl;
 	void MultipleTCPSocketListener::add(TCPSocket* socket){
-		sockets.push_back(socket);
+		if (std::find(sockets.begin(),sockets.end(),socket) == sockets.end()) // add to vector if not exist already
+			sockets.push_back(socket);
 
 	}
 

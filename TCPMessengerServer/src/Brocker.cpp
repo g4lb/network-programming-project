@@ -52,13 +52,11 @@ void Brocker::run(){
                 TCPMessengerProtocol::sendToServer(command,reciver->fromAddr(),sender);
                 TCPMessengerProtocol::sendToServer(command,sender->fromAddr(),reciver);
                 active = false;
-                close();
                 break;
             case EXIT:
                 TCPMessengerProtocol::sendToServer(command,reciver->fromAddr(),sender);
                 TCPMessengerProtocol::sendToServer(command,sender->fromAddr(),reciver);
                 active = false;
-                close();
                 TCPMessengerProtocol::sendToServer(EXIT," ",sender);
                 break;
             default:

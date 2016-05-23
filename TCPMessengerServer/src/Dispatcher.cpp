@@ -16,7 +16,8 @@ Dispatcher::Dispatcher() {
 
 }
 void Dispatcher::add(TCPSocket* peer){
-	peers.push_back(peer);
+    if (std::find(peers.begin(),peers.end(),peer) == peers.end()) // add to vector if not exist already
+	    peers.push_back(peer);
 	listener->add(peer);
 		if(!running){
 			running = true;
@@ -64,12 +65,16 @@ void Dispatcher::run(){
                             //tell peerB to change sessionIsActive=true
                             TCPMessengerProtocol::sendToServer(SESSION_ESTABLISHED,peerB->fromAddr(),peer);
                             TCPMessengerProtocol::sendToServer(SESSION_ESTABLISHED,peer->fromAddr(),peerB);
+                            //remove peers from the dispatcher responsibility
                             this->removePeer(peer);
                             this->removePeer(peerB);
+                            //give responsibility of the peers to a new brocker
                             Brocker* broker = new Brocker(this, peer, peerB);
+                            //keep reference of brocker in brockers vector
                             brockers.push_back(broker);
                         }
                         else
+                            //if peer does not exist in peers list - refuse the session
                             TCPMessengerProtocol::sendToServer(SESSION_REFUSED,data,peer);
                         break;
                     }
