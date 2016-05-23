@@ -24,6 +24,7 @@ private:
 	TCPSocket* peerA;
 	TCPSocket* peerB;
 	Handler* handler;
+	bool active;
 public:
 	Brocker(Handler* Handler, TCPSocket* peerA, TCPSocket* peerB);
 	virtual ~Brocker();

@@ -2,7 +2,7 @@
  * TCPMessengerProtocol.h
  *
  *  Created on: Feb 13, 2013
- *      Author: efi
+ *      Author:
  */
 
 #ifndef TCPMESSENGERPROTOCOL_H_
@@ -26,7 +26,8 @@
 #define TEST_PEER_NAME "test"
 #define SESSION_REFUSED_TEXT "Connection refused to peer: "
 #define SESSION_ESTABLISHED_TEXT "Session established with peer: "
-#define CLOSE_SESSION_WITH_PEER_TEXT "Connection refused to peer: "
+#define CLOSE_SESSION_WITH_PEER_TEXT "Sesion end with peer: "
+#define EXIT_TEXT "disconnected: "
 
 namespace npl{
 class TCPMessengerProtocol{

@@ -67,17 +67,19 @@ void Dispatcher::run(){
                             this->removePeer(peer);
                             this->removePeer(peerB);
                             Brocker* broker = new Brocker(this, peer, peerB);
+                            brockers.push_back(broker);
                         }
-                        else{
+                        else
                             TCPMessengerProtocol::sendToServer(SESSION_REFUSED,data,peer);
-                        }
-
                         break;
                     }
                     case EXIT: {
                         this->removePeer(peer);
-
+                        TCPMessengerProtocol::sendToServer(EXIT," ",peer);
                         cout << "Client " << peer->fromAddr() << " has disconnected" << endl;
+                        if(peers.size() == 0){
+                            running = false;
+                        }
                         break;
                     }
                     default: {
@@ -94,20 +96,13 @@ void Dispatcher::close(){
 
 }
 void Dispatcher::onClose(Brocker * brocker, TCPSocket* peerA,TCPSocket* peerB){
-	//return peerA and B to the vector
-    peers.push_back(peerA);
-    peers.push_back(peerB);
-    listener->add(peerA);
-    listener->add(peerB);
 	//remove the brocker from the brockers vector
     brockers.erase(std::remove(brockers.begin(),brockers.end(), brocker),brockers.end());
+	//return peerA and B to the vector
+    this->add(peerA);
+    this->add(peerB);
 	//delete the brocker
-    delete brocker;
-
-    if (!running){
-        running = true;
-        start();
-    }
+    brocker->waitForThread();
 
 }
 

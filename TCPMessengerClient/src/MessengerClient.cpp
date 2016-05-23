@@ -60,14 +60,14 @@ void MessengerClient::openSession(const string& ipAndPort){
 }
 void MessengerClient::closeSession(){
 	if(sessionIsActive){
-		sendToServer(CLOSE_SESSION_WITH_PEER,"",sock);
+		sendToServer(CLOSE_SESSION_WITH_PEER," ",sock);
 	}
 	else
 		cout<<"sesion is already close"<<endl;
 }
 void MessengerClient::disconnect(){
 	if(sessionIsActive){
-		sendToServer(CLOSE_SESSION_WITH_PEER,"",sock);
+		sendToServer(CLOSE_SESSION_WITH_PEER," ",sock);
 	}
 	if (clientConnected){
 		cout<<"disconnected"<<endl;
@@ -80,7 +80,7 @@ void MessengerClient::disconnect(){
 }
 void MessengerClient::exit(){
 	if(sessionIsActive){
-		sendToServer(CLOSE_SESSION_WITH_PEER,"",sock);
+		sendToServer(CLOSE_SESSION_WITH_PEER," ",sock);
 		}
 	if(clientConnected){
 		sendToServer(EXIT,"exit",sock);

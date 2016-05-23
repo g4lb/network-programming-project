@@ -9,7 +9,7 @@
 #include "../../SocketUtils/src/MultipleTCPSocketListener.h"
 #include "../../SocketUtils/src/TCPMessengerProtocol.h"
 
-#define TIMEOUT 0
+#define TIMEOUT 120
 
 namespace npl {
 
@@ -17,6 +17,7 @@ Brocker::Brocker(Handler* Handler, TCPSocket* peerA, TCPSocket* peerB) {
 	this->handler = Handler;
 	this->peerA=peerA;
 	this->peerB = peerB;
+    active = true;
 	start();
 }
 
@@ -25,7 +26,7 @@ Brocker::~Brocker() {
 }
 void Brocker::run(){
 	MultipleTCPSocketListener listener;
-    TCPSocket* sender, *receiver;
+    TCPSocket* sender, *reciver;
 
     listener.add(peerA);
     listener.add(peerB);
@@ -33,28 +34,35 @@ void Brocker::run(){
     int command = 0;
     string data = "";
 
-	while(true){
+	while(active){
 		sender = listener.listen(TIMEOUT);
         //IF SENDER IS NULL THEN TIMEOUT HANDLING
         if (sender == peerA)
-            receiver = peerB;
+            reciver = peerB;
         else
-            receiver = peerA;
+            reciver = peerA;
 
         TCPMessengerProtocol::readFromServer(command,data,sender);
         switch (command)
         {
-            case SEND_MSG_TO_PEER: {
-
-                TCPMessengerProtocol::sendToServer(command,data,receiver);
+            case SEND_MSG_TO_PEER:
+                TCPMessengerProtocol::sendToServer(command,data,reciver);
                 break;
-            }
-            case CLOSE_SESSION_WITH_PEER:{
-                TCPMessengerProtocol::sendToServer(command,data,receiver);
-                TCPMessengerProtocol::sendToServer(command,data,sender);
+            case CLOSE_SESSION_WITH_PEER:
+                TCPMessengerProtocol::sendToServer(command,reciver->fromAddr(),sender);
+                TCPMessengerProtocol::sendToServer(command,sender->fromAddr(),reciver);
+                active = false;
                 close();
                 break;
-            }
+            case EXIT:
+                TCPMessengerProtocol::sendToServer(command,reciver->fromAddr(),sender);
+                TCPMessengerProtocol::sendToServer(command,sender->fromAddr(),reciver);
+                active = false;
+                close();
+                TCPMessengerProtocol::sendToServer(EXIT," ",sender);
+                break;
+            default:
+                cout<<command<<endl;
         }
 	}
 	close();

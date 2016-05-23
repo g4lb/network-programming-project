@@ -53,11 +53,9 @@ using namespace npl;
 			return NULL;
 		}
 
-        cout << "someone sent a msg"<<endl;
 		iter = sockets.begin();
 		for(;iter!= sockets.end();iter++){
 			TCPSocket* sock = *iter;
-            cout << "checking if socket "<<sock->fromAddr()<<" sent the msg"<<endl;
 			int fd = sock->getSocketFd();
 			if(FD_ISSET(fd,&set)){
 				FD_ZERO(&set);
