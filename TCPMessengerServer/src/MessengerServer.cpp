@@ -7,8 +7,8 @@
 
 #include "MessengerServer.h"
 
-using namespace npl;
 using namespace std;
+using namespace npl;
 
 MessengerServer::MessengerServer() {
 

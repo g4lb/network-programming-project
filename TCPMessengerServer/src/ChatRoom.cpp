@@ -6,11 +6,13 @@
 #include "../../SocketUtils/src/MultipleTCPSocketListener.h"
 #include "../../SocketUtils/src/TCPMessengerProtocol.h"
 
-namespace npl {
-ChatRoom::ChatRoom(Handler* handler, TCPSocket* peerA){
+using namespace std;
+using namespace npl;
+
+ChatRoom::ChatRoom(ChatRoomHandler* handler, string peerName,TCPSocket* peerA){
     this->handler = handler;
     admin = peerA;
-    peers.push_back(admin);
+    peers[peerName]=admin;
     active = true;
     start();
 }
@@ -43,7 +45,11 @@ void ChatRoom::run(){
                     close();
                 }
                 sendByLoop(CLIENT_DISCONNECTED_FROM_ROOM,data,sender);
-                peers.erase(std::remove(peers.begin(),peers.end(), sender),peers.end());
+                for (map<string,TCPSocket*>::iterator itr = peers.begin(); itr != peers.end() ; ++itr) {
+                    if(itr->second==sender){
+                        peers.erase(itr->first);
+                    }
+                }
                 break;
             default:
                 cout<<command<<endl;
@@ -52,23 +58,32 @@ void ChatRoom::run(){
     close();
 }
 void ChatRoom::close(){
-    handler->onClose(this,admin);
+   //handler->onClose(this,admin);
 }
-void ChatRoom::addUser(TCPSocket* peer){
-    peers.push_back(peer);
-    if(peers.size()<1){
-        sendByLoop(CLIENT_ENTERED_ROOM," ",peer);
+void ChatRoom::addUser(string userName,TCPSocket* peer){
+    if(peers.size()>1){
+        sendByLoop(CLIENT_ENTERED_ROOM,userName+" "+peer->fromAddr(),peer);
     }
+    peers[userName]=peer;
 }
 void ChatRoom::sendByLoop( int command, const string& data,TCPSocket* sender){
-    peers.erase(std::remove(peers.begin(),peers.end(), sender),peers.end());
-    for (int i = 0; i <peers.size() ; ++i) {
-        TCPMessengerProtocol::sendToServer(command,data,peers[i]);
+    for (map<string,TCPSocket*>::iterator itr = peers.begin(); itr != peers.end() ; ++itr) {
+        if(itr->second!=sender){
+            TCPMessengerProtocol::sendToServer(command,data,itr->second);
+        }
     }
-    peers.push_back(sender);
 }
-virtual ChatRoom::~Brocker(){
+string ChatRoom::getRoomName(){
+    return this->roomName;
+}
+string ChatRoom::getUsers(){
+    string users;
+    for (map<string,TCPSocket*>::iterator itr = peers.begin(); itr != peers.end() ; ++itr) {
+        users+=itr->first;
+    }
+    return users;
+}
+ChatRoom::~ChatRoom(){
 
 }
 
-}/* namespace npl */

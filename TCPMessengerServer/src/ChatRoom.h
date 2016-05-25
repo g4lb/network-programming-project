@@ -6,6 +6,7 @@
 #define CPPPROJECT_COPY_CHATROOM_H
 
 #include <vector>
+#include <map>
 #include "../../SocketUtils/src/MThread.h"
 #include "../../SocketUtils/src/TCPSocket.h"
 
@@ -13,23 +14,25 @@ namespace npl {
 
 class ChatRoom:public MThread {
 public:
-    class Handler{
+    class ChatRoomHandler{
     public:
-        virtual void onClose(ChatRoom* chatRoom, TCPSocket* peerA)=0;
+        //virtual void onClose(ChatRoom* chatRoom, TCPSocket* peerA)=0;
     };
 private:
-    vector<TCPSocket*> peers;
+    map<string,TCPSocket*> peers;
     TCPSocket * admin;
-    Handler* handler;
+    ChatRoomHandler* handler;
     string roomName;
     bool active;
 public:
-    ChatRoom(Handler* handler, TCPSocket* peerA);
+    ChatRoom(ChatRoomHandler* handler, string peerName,TCPSocket* peerA);
     void run();
     void close();
-    void addUser(TCPSocket* peer);
+    void addUser(string userName,TCPSocket* peer);
     void sendByLoop(int command,const string& data,TCPSocket* sender);
-    virtual ~Brocker();
+    string getRoomName();
+    string getUsers();
+    virtual ~ChatRoom();
 };
 } /* namespace npl */
 

@@ -17,17 +17,17 @@ namespace npl {
 
 class Brocker:public MThread {
 public:
-	class Handler{
+	class BrockerHandler{
 	public:
 		virtual void onClose(Brocker* brocker, TCPSocket* peerA, TCPSocket* peerB)=0;
 	};
 private:
 	TCPSocket* peerA;
 	TCPSocket* peerB;
-	Handler* handler;
+	BrockerHandler* handler;
 	bool active;
 public:
-	Brocker(Handler* handler, TCPSocket* peerA, TCPSocket* peerB);
+	Brocker(BrockerHandler* handler, TCPSocket* peerA, TCPSocket* peerB);
 	virtual ~Brocker();
 	void run();
 	void close();

@@ -18,14 +18,12 @@
 
 namespace npl {
 
-class Dispatcher : public MThread, Brocker::Handler,ChatRoom::Handler {
+class Dispatcher : public MThread, ChatRoom::ChatRoomHandler,Brocker::BrockerHandler {
 	vector<TCPSocket*> peers;
 	vector<Brocker*> brockers;
 	vector<ChatRoom*> chatRooms;
-
 	map<string,string> registeredUsers;
 	map<string,TCPSocket*> loggedInUsers;
-
 	MultipleTCPSocketListener* listener;
 	bool running;
 public:
@@ -37,9 +35,8 @@ public:
 	void run();
 	void close();
 	virtual ~Dispatcher();
-
-	virtual void onClose(Brocker * brocker, TCPSocket* peerA,TCPSocket* peerB);
-	virtual void onClose(ChatRoom* chatRoom, vector<TCPSocket*> vec);
+	void onClose(Brocker * brocker, TCPSocket* peerA,TCPSocket* peerB);
+	void onClose(ChatRoom* chatRoom, map<string,TCPSocket*> peersMap);
 
 };
 

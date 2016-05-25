@@ -5,6 +5,7 @@
  *      Author: parallels
  */
 
+#include <sstream>
 #include "Dispatcher.h"
 
 #define TIMEOUT 2
@@ -60,6 +61,52 @@ void Dispatcher::run(){
 				TCPMessengerProtocol::readFromServer(command, data, peer);
 				cout<<"read command from peer: "<< command << " " << data << endl;
 				switch(command){
+                    case LOGIN:{
+                        std::istringstream splitter(data);
+                        string peerUser;
+                        string peerPassword;
+                        splitter >> peerUser;
+                        splitter >> peerPassword;
+                        for (map<string,string>::iterator itr = registeredUsers.begin(); itr != registeredUsers.end() ; ++itr) {
+                            if((itr->second==peerPassword)&&(itr->first==peerUser)){
+                                TCPMessengerProtocol::sendToServer(LOGIN,itr->first, peer);
+                                loggedInUsers[itr->first]=peer;
+                                break;
+                            }
+                        }
+                    }
+                        TCPMessengerProtocol::sendToServer(LOGIN_REFUSE," ", peer);
+                        break;
+                    case REGISTER:{
+                        std::istringstream splitter1(data);
+                        string peerUser1;
+                        string peerPassword1;
+                        splitter1 >> peerUser1;
+                        splitter1 >> peerPassword1;
+                        for (map<string,string>::iterator itr = registeredUsers.begin(); itr != registeredUsers.end() ; ++itr) {
+                            if(itr->second==peerUser1){
+                                TCPMessengerProtocol::sendToServer(REGISTER_REFUSE,data, peer);
+                                break;
+                            }
+                            registeredUsers[peerUser1] = peerPassword1;
+                            TCPMessengerProtocol::sendToServer(REGISTER,data, peer);
+                        }
+                    }
+                        break;
+                    case OPEN_OR_CONNECT_TO_ROOM: {
+                        for (map<string, TCPSocket *>::iterator itr = loggedInUsers.begin();
+                             itr != loggedInUsers.end(); ++itr) {
+                            if (itr->second == peer) {
+                                ChatRoom *room = new ChatRoom(this, itr->first, peer);
+                                TCPMessengerProtocol::sendToServer(SUCCESS_ENTER_ROOM, itr->first, peer);
+                                this->removePeer(peer);
+                                chatRooms.push_back(room);
+                                break;
+                            }
+                        }
+                    }
+                        TCPMessengerProtocol::sendToServer(LOGIN_REFUSE," ",peer);
+                        break;
                     case OPEN_SESSION_WITH_PEER: {
                         TCPSocket* peerB = this->getPeerByAddress(data); // find second peer according to the data
                         if (peerB != NULL) {
@@ -77,6 +124,41 @@ void Dispatcher::run(){
                         else
                             //if peer does not exist in peers list - refuse the session
                             TCPMessengerProtocol::sendToServer(SESSION_REFUSED,data,peer);
+                        break;
+                    }
+                    case LIST_USERS:{
+                        string users;
+                        for (map<string, string>::iterator itr = registeredUsers.begin();
+                             itr != registeredUsers.end(); ++itr) {
+                            users += itr->first+"/n";
+                        }
+                            TCPMessengerProtocol::sendToServer(LIST_USERS_RESPONSE,users,peer);
+                        break;
+                    }
+                    case LIST_CONNECTED_USERS:{
+                        string connectedUsers;
+                        for (map<string, TCPSocket *>::iterator itr = loggedInUsers.begin();
+                             itr != loggedInUsers.end(); ++itr) {
+                            connectedUsers += itr->first+"/n";
+                        }
+                        TCPMessengerProtocol::sendToServer(LIST_CONNECTED_USERS_RESPONSE,connectedUsers,peer);
+                        break;
+                    }
+                    case LIST_ROOMS:{
+                        string rooms;
+                        for (int i = 0; i <chatRooms.size(); ++i) {
+                            rooms+=chatRooms[i]->getRoomName();
+                        }
+                        TCPMessengerProtocol::sendToServer(LIST_ROOMS_RESPONSE,rooms,peer);
+                        break;
+                    }
+                    case LIST_ROOM_USERS:{
+                        for (int i = 0; i <chatRooms.size() ; ++i) {
+                            if(chatRooms[i]->getRoomName()==data){
+                                TCPMessengerProtocol::sendToServer(LIST_ROOM_USERS_RESPONSE,chatRooms[i]->getUsers(),peer);
+                                break;
+                            }
+                        }
                         break;
                     }
                     case EXIT: {
@@ -102,23 +184,23 @@ void Dispatcher::close(){
 
 }
 void Dispatcher::onClose(Brocker * brocker, TCPSocket* peerA,TCPSocket* peerB){
-	//remove the brocker from the brockers vector
-    brockers.erase(std::remove(brockers.begin(),brockers.end(), brocker),brockers.end());
-	//return peerA and B to the vector
+//remove the brocker from the brockers vector
+    this->brockers.erase(std::remove(brockers.begin(),brockers.end(), brocker),brockers.end());
+    //return peerA and B to the vector
     this->add(peerA);
     this->add(peerB);
-	//delete the brocker
+    //delete the brocker
     brocker->waitForThread();
 
 }
-void Dispatcher::onClose(ChatRoom* chatRoom, vector<TCPSocket*> vec){
+void Dispatcher::onClose(ChatRoom* chatRoom, map<string,TCPSocket*> peersMap){
     //remove the brocker from the brockers vector
     chatRooms.erase(std::remove(chatRooms.begin(),chatRooms.end(), chatRoom),chatRooms.end());
     //return the peers to the vector
-    for (int i = 0; i <vec.size() ; ++i) {
-        peers.push_back(vec[i]);
+    for (map<string,TCPSocket*>::iterator itr = peersMap.begin(); itr != peersMap.end() ; ++itr) {
+        peers.push_back(itr->second);
     }
-    delete vec;
+
     //delete the brocker
     chatRoom->waitForThread();
 }
