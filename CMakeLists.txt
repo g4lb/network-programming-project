@@ -23,7 +23,7 @@ set(SERVER_SIDE
     TCPMessengerServer/src/Dispatcher.h
     TCPMessengerServer/src/main.cpp
     TCPMessengerServer/src/MessengerServer.cpp
-    TCPMessengerServer/src/MessengerServer.h)
+    TCPMessengerServer/src/MessengerServer.h TCPMessengerServer/src/ChatRoom.cpp TCPMessengerServer/src/ChatRoom.h)
 
 set(CLIENT_SIDE
         SocketUtils/src/FileInterface.cpp

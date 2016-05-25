@@ -9,7 +9,7 @@
 #include "../../SocketUtils/src/MultipleTCPSocketListener.h"
 #include "../../SocketUtils/src/TCPMessengerProtocol.h"
 
-#define TIMEOUT 120
+#define TIMEOUT 2
 
 namespace npl {
 

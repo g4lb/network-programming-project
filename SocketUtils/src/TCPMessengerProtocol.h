@@ -16,12 +16,14 @@
  */
 #define MSNGR_PORT 3346
 
-#define CLOSE_SESSION_WITH_PEER 	1
-#define OPEN_SESSION_WITH_PEER 		2
-#define EXIT						3
-#define SEND_MSG_TO_PEER			4
-#define SESSION_REFUSED				5
-#define SESSION_ESTABLISHED			6
+#define CLOSE_SESSION_WITH_PEER 	    1
+#define OPEN_SESSION_WITH_PEER 		    2
+#define EXIT						    3
+#define SEND_MSG_TO_PEER			    4
+#define SESSION_REFUSED				    5
+#define SESSION_ESTABLISHED			    6
+#define CLIENT_DISCONNECTED_FROM_ROOM   7
+#define CLIENT_ENTERED_ROOM             8
 
 #define TEST_PEER_NAME "test"
 #define SESSION_REFUSED_TEXT "Connection refused to peer: "
