@@ -12,20 +12,30 @@
 #include "../../SocketUtils/src/TCPMessengerProtocol.h"
 #include "../../SocketUtils/src/MThread.h"
 #include "../../SocketUtils/src/TCPSocket.h"
+#include "ClientState.h"
 
 using namespace std;
 namespace npl{
 
-class MessengerClient : public MThread{
-	bool clientConnected;
-	bool sessionIsActive;
+class MessengerClient : public MThread {
+	State clientState;
+    string currentRoomName;
 	TCPSocket * sock;
 protected:
 public:
 	
 	MessengerClient();
 	void connect(const string& ip);
-	void openSession(const string& ipAndPort);
+    void login(const string& user,const string& password);
+    void reg(const string& user,const string& password);
+    void listUsers();
+    void listConnectedUsers();
+    void listRooms();
+    void listRoomUsers(const string& roomName);
+    void openOrConnectToRoom(const string& roomName);
+    void printClientState();
+    void closeCurrentRoom();
+    void openSession(const string& ipAndPort);
 	void sendToServer(int command, const string& data, TCPSocket* sock);
 	void readFromServer(int & command,string& data,TCPSocket* sock);
 	void send(const string & msg);

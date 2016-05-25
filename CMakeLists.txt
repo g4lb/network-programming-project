@@ -23,7 +23,10 @@ set(SERVER_SIDE
     TCPMessengerServer/src/Dispatcher.h
     TCPMessengerServer/src/main.cpp
     TCPMessengerServer/src/MessengerServer.cpp
-    TCPMessengerServer/src/MessengerServer.h TCPMessengerServer/src/ChatRoom.cpp TCPMessengerServer/src/ChatRoom.h)
+    TCPMessengerServer/src/MessengerServer.h
+    TCPMessengerServer/src/ServerState.h
+    TCPMessengerServer/src/ChatRoom.cpp
+    TCPMessengerServer/src/ChatRoom.h)
 
 set(CLIENT_SIDE
         SocketUtils/src/FileInterface.cpp
@@ -41,7 +44,8 @@ set(CLIENT_SIDE
         SocketUtils/src/UDPSocket.h
         TCPMessengerClient/src/main.cpp
         TCPMessengerClient/src/MessengerClient.cpp
-        TCPMessengerClient/src/MessengerClient.h)
+        TCPMessengerClient/src/MessengerClient.h
+        TCPMessengerClient/src/ClientState.h)
 
 
 add_executable(server ${SERVER_SIDE})

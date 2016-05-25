@@ -24,13 +24,19 @@
 #define SESSION_ESTABLISHED			    6
 #define CLIENT_DISCONNECTED_FROM_ROOM   7
 #define CLIENT_ENTERED_ROOM             8
-#define CHAT_CLOSED_BY_ADMIN            9
+#define LOGIN                           9
+#define REGISTER                        10
+#define LIST_USERS                      11
+#define LIST_CONNECTED_USERS            12
+#define LIST_ROOMS                      13
+#define LIST_ROOM_USERS                 14
+#define OPEN_OR_CONNECT_TO_ROOM         15
+#define CLOSE_ROOM                      16
+#define CHAT_CLOSED_BY_ADMIN            17
 
-#define TEST_PEER_NAME "test"
 #define SESSION_REFUSED_TEXT "Connection refused to peer: "
 #define SESSION_ESTABLISHED_TEXT "Session established with peer: "
 #define CLOSE_SESSION_WITH_PEER_TEXT "Sesion end with peer: "
-#define EXIT_TEXT "disconnected: "
 
 namespace npl{
 class TCPMessengerProtocol{
