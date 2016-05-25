@@ -16,6 +16,7 @@
 #include "../../SocketUtils/src/UDPSocket.h"
 #include <sstream>
 #include <algorithm>
+#include <map>
 
 using namespace std;
 namespace npl{

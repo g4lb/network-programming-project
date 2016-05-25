@@ -85,7 +85,7 @@ void MessengerClient::run() {
                 //Expecting input in format: <user>
 
                 map<string,string>::iterator iter = this->peersInRoom->find(str);
-                if(iter != this->peersInRoom->.end())
+                if(iter != this->peersInRoom->end())
                     this->peersInRoom->erase(iter);
                 else
                     cout << "Unsuccessful delete of user: ["<<str<<"] from room"<<endl;

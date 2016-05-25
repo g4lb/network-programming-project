@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include "MessengerClient.h"
+
 using namespace std;
 using namespace npl;
 void printInstructions(){
@@ -81,7 +82,7 @@ int main(){
 			if(msg.size()>0 && msg[0] == ' ')msg.erase(0,1);
 			client->send(msg);
 		}else if(command == "cs"){
-				client->closeSession();
+				client->closeSessionOrExitRoom();
 		}else if(command == "d"){
 			client->disconnect();
 		}else if(command == "x"){
