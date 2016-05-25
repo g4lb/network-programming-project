@@ -13,12 +13,14 @@
 #include "Brocker.h"
 #include "../../SocketUtils/src/MultipleTCPSocketListener.h"
 #include "../../SocketUtils/src/TCPMessengerProtocol.h"
+#include "ChatRoom.h"
 
 namespace npl {
 
-class Dispatcher : public MThread, Brocker::Handler {
+class Dispatcher : public MThread, Brocker::Handler,ChatRoom::Handler {
 	vector<TCPSocket*> peers;
 	vector<Brocker*> brockers;
+	vector<ChatRoom*> chatRooms;
 	MultipleTCPSocketListener* listener;
 	bool running;
 public:
@@ -32,6 +34,7 @@ public:
 	virtual ~Dispatcher();
 
 	virtual void onClose(Brocker * brocker, TCPSocket* peerA,TCPSocket* peerB);
+	virtual void onClose(ChatRoom* chatRoom, vector<TCPSocket*> vec);
 
 };
 

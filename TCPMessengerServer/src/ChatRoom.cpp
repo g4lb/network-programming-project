@@ -30,16 +30,20 @@ void ChatRoom::run(){
         {
             case CLIENT_DISCONNECTED_FROM_ROOM:
                 if(sender==admin){
-                    //TODO EXIT
+                    active = false;
+                    sendByLoop(CHAT_CLOSED_BY_ADMIN,data,sender);
+                    close();
                 }
                 sendByLoop(command,data,sender);
-                active = false;
                 break;
             case EXIT:
-                //TCPMessengerProtocol::sendToServer(command,reciver->fromAddr(),sender);
-                //TCPMessengerProtocol::sendToServer(command,sender->fromAddr(),reciver);
-                active = false;
-                TCPMessengerProtocol::sendToServer(EXIT," ",sender);
+                if(sender==admin){
+                    active = false;
+                    sendByLoop(CHAT_CLOSED_BY_ADMIN,data,sender);
+                    close();
+                }
+                sendByLoop(CLIENT_DISCONNECTED_FROM_ROOM,data,sender);
+                peers.erase(std::remove(peers.begin(),peers.end(), sender),peers.end());
                 break;
             default:
                 cout<<command<<endl;
@@ -48,7 +52,7 @@ void ChatRoom::run(){
     close();
 }
 void ChatRoom::close(){
-
+    handler->onClose(this,admin);
 }
 void ChatRoom::addUser(TCPSocket* peer){
     peers.push_back(peer);

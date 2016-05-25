@@ -6,6 +6,7 @@
  */
 
 #include "Dispatcher.h"
+
 #define TIMEOUT 2
 using namespace std;
 using namespace npl;
@@ -109,6 +110,17 @@ void Dispatcher::onClose(Brocker * brocker, TCPSocket* peerA,TCPSocket* peerB){
 	//delete the brocker
     brocker->waitForThread();
 
+}
+void Dispatcher::onClose(ChatRoom* chatRoom, vector<TCPSocket*> vec){
+    //remove the brocker from the brockers vector
+    chatRooms.erase(std::remove(chatRooms.begin(),chatRooms.end(), chatRoom),chatRooms.end());
+    //return the peers to the vector
+    for (int i = 0; i <vec.size() ; ++i) {
+        peers.push_back(vec[i]);
+    }
+    delete vec;
+    //delete the brocker
+    chatRoom->waitForThread();
 }
 
 Dispatcher::~Dispatcher() {

@@ -24,6 +24,7 @@
 #define SESSION_ESTABLISHED			    6
 #define CLIENT_DISCONNECTED_FROM_ROOM   7
 #define CLIENT_ENTERED_ROOM             8
+#define CHAT_CLOSED_BY_ADMIN            9
 
 #define TEST_PEER_NAME "test"
 #define SESSION_REFUSED_TEXT "Connection refused to peer: "
