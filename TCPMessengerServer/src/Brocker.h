@@ -9,6 +9,7 @@
 #define SRC_BROCKER_H_
 
 
+
 #include "../../SocketUtils/src/MThread.h"
 #include "../../SocketUtils/src/TCPSocket.h"
 
@@ -26,7 +27,7 @@ private:
 	Handler* handler;
 	bool active;
 public:
-	Brocker(Handler* Handler, TCPSocket* peerA, TCPSocket* peerB);
+	Brocker(Handler* handler, TCPSocket* peerA, TCPSocket* peerB);
 	virtual ~Brocker();
 	void run();
 	void close();
