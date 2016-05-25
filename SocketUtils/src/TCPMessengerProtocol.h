@@ -33,6 +33,7 @@
 #define OPEN_OR_CONNECT_TO_ROOM         15
 #define CLOSE_ROOM                      16
 #define CHAT_CLOSED_BY_ADMIN            17
+#define DISCONNECT_FROM_ROOM            18
 
 #define SESSION_REFUSED_TEXT "Connection refused to peer: "
 #define SESSION_ESTABLISHED_TEXT "Session established with peer: "

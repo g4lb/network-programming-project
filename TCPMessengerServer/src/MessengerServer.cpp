@@ -11,6 +11,8 @@ using namespace npl;
 using namespace std;
 
 MessengerServer::MessengerServer() {
+
+	//TODO: READ USERS FROM USERS FILE ( USING IVGI'S CLASS )
 	dispatcher = new Dispatcher();
 	socket = new TCPSocket(MSNGR_PORT);
 	start();

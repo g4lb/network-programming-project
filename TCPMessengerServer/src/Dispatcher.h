@@ -10,6 +10,7 @@
 
 #include <algorithm>
 #include <vector>
+#include <map>
 #include "Brocker.h"
 #include "../../SocketUtils/src/MultipleTCPSocketListener.h"
 #include "../../SocketUtils/src/TCPMessengerProtocol.h"
@@ -21,6 +22,10 @@ class Dispatcher : public MThread, Brocker::Handler,ChatRoom::Handler {
 	vector<TCPSocket*> peers;
 	vector<Brocker*> brockers;
 	vector<ChatRoom*> chatRooms;
+
+	map<string,string> registeredUsers;
+	map<string,TCPSocket*> loggedInUsers;
+
 	MultipleTCPSocketListener* listener;
 	bool running;
 public:
