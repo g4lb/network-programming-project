@@ -95,19 +95,20 @@ void Dispatcher::run(){
                         break;
                     case OPEN_OR_CONNECT_TO_ROOM: {
                         for (map<string, TCPSocket *>::iterator itr = loggedInUsers.begin();
-                             itr != loggedInUsers.end(); ++itr) {
-                            if (itr->second == peer) {
-                                ChatRoom *room = new ChatRoom(this, itr->first, peer);
+                             itr != loggedInUsers.end(); ++itr){
+                            if (itr->second==peer) {
+                                ChatRoom *room = new ChatRoom(this,itr->first, peer);
                                 TCPMessengerProtocol::sendToServer(SUCCESS_ENTER_ROOM, itr->first, peer);
                                 this->removePeer(peer);
                                 chatRooms.push_back(room);
                                 break;
                             }
                         }
-                    }
-                        TCPMessengerProtocol::sendToServer(LOGIN_REFUSE," ",peer);
+                        TCPMessengerProtocol::sendToServer(NOT_CONNECTED_TO_SERVER," ", peer);
                         break;
+                    }
                     case OPEN_SESSION_WITH_PEER: {
+                        if (isLogedIn(peer)){
                         TCPSocket* peerB = this->getPeerByAddress(data); // find second peer according to the data
                         if (peerB != NULL) {
                             //tell peerB to change sessionIsActive=true
@@ -124,6 +125,9 @@ void Dispatcher::run(){
                         else
                             //if peer does not exist in peers list - refuse the session
                             TCPMessengerProtocol::sendToServer(SESSION_REFUSED,data,peer);
+                        break;
+                    }
+                        TCPMessengerProtocol::sendToServer(NOT_CONNECTED_TO_SERVER," ", peer);
                         break;
                     }
                     case LIST_USERS:{
@@ -162,12 +166,16 @@ void Dispatcher::run(){
                         break;
                     }
                     case EXIT: {
-                        this->removePeer(peer);
-                        TCPMessengerProtocol::sendToServer(EXIT," ",peer);
-                        cout << "Client " << peer->fromAddr() << " has disconnected" << endl;
-                        if(peers.size() == 0){
-                            running = false;
+                        if (isLogedIn(peer)) {
+                            this->removePeer(peer);
+                            TCPMessengerProtocol::sendToServer(EXIT, " ", peer);
+                            cout << "Client " << peer->fromAddr() << " has disconnected" << endl;
+                            if (peers.size() == 0) {
+                                running = false;
+                            }
+                            break;
                         }
+                        TCPMessengerProtocol::sendToServer(NOT_CONNECTED_TO_SERVER," ", peer);
                         break;
                     }
                     default: {
@@ -204,7 +212,15 @@ void Dispatcher::onClose(ChatRoom* chatRoom, map<string,TCPSocket*> peersMap){
     //delete the brocker
     chatRoom->waitForThread();
 }
-
+bool Dispatcher::isLogedIn(TCPSocket* sock){
+    for (map<string, TCPSocket *>::iterator itr = loggedInUsers.begin();
+         itr != loggedInUsers.end(); ++itr) {
+        if(itr->second==sock){
+            return true;
+        }
+    }
+    return false;
+}
 Dispatcher::~Dispatcher() {
 	// TODO Auto-generated destructor stub
 }

@@ -42,7 +42,7 @@ void ChatRoom::run(){
                 if(sender==admin){
                     active = false;
                     sendByLoop(CHAT_CLOSED_BY_ADMIN,data,sender);
-                    close();
+                    this->close();
                 }
                 sendByLoop(CLIENT_DISCONNECTED_FROM_ROOM,data,sender);
                 for (map<string,TCPSocket*>::iterator itr = peers.begin(); itr != peers.end() ; ++itr) {
@@ -58,7 +58,7 @@ void ChatRoom::run(){
     close();
 }
 void ChatRoom::close(){
-   //handler->onClose(this,admin);
+   handler->onClose(this,admin);
 }
 void ChatRoom::addUser(string userName,TCPSocket* peer){
     if(peers.size()>1){

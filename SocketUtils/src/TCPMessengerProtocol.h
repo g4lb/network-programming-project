@@ -43,6 +43,7 @@
 #define LIST_CONNECTED_USERS_RESPONSE   25
 #define LIST_ROOMS_RESPONSE             26
 #define LIST_ROOM_USERS_RESPONSE        27
+#define NOT_CONNECTED_TO_SERVER         27
 
 
 #define SESSION_REFUSED_TEXT "Connection refused to peer: "
