@@ -15,6 +15,7 @@
 #include "ClientState.h"
 #include "../../SocketUtils/src/UDPSocket.h"
 #include <sstream>
+#include <algorithm>
 
 using namespace std;
 namespace npl{
@@ -52,7 +53,7 @@ public:
 	void sendToServer(int command, const string& data, TCPSocket* sock);
 	void readFromServer(int & command,string& data,TCPSocket* sock);
 	void send(const string & msg);
-	void closeSession();
+	void closeSessionOrExitRoom();
 	void disconnect();
 	void run();
 	void exit();
