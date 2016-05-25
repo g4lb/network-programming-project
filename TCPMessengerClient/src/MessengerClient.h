@@ -13,14 +13,27 @@
 #include "../../SocketUtils/src/MThread.h"
 #include "../../SocketUtils/src/TCPSocket.h"
 #include "ClientState.h"
+#include "../../SocketUtils/src/UDPSocket.h"
+#include <sstream>
 
 using namespace std;
 namespace npl{
 
 class MessengerClient : public MThread {
 	State clientState;
+
+    string currentUserName;
     string currentRoomName;
-	TCPSocket * sock;
+
+	TCPSocket* mainServer;
+    UDPSocket* udpPeer;
+
+    //maps user,IP:PORT
+    map<string,string>* peersInRoom;
+    //pair of user,IP:PORT
+    pair<string,string>* peerInSeesion;
+
+
 protected:
 public:
 	
