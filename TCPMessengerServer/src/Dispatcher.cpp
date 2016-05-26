@@ -7,12 +7,18 @@
 
 #include <sstream>
 #include "Dispatcher.h"
+#include "ServerLoader.h"
 
 #define TIMEOUT 2
+#define USERS_PATH "users.txt"
 using namespace std;
 using namespace npl;
 
 Dispatcher::Dispatcher() {
+    //read users map
+    ServerLoader sl(USERS_PATH);
+    this->registeredUsers = sl.loadAllUserFromFile();
+
 	running = false;
     listener = new MultipleTCPSocketListener();
 
@@ -61,38 +67,50 @@ void Dispatcher::run(){
 				TCPMessengerProtocol::readFromServer(command, data, peer);
 				cout<<"read command from peer: "<< command << " " << data << endl;
 				switch(command){
-                    case LOGIN:{
+                    case LOGIN: {
                         std::istringstream splitter(data);
                         string peerUser;
                         string peerPassword;
                         splitter >> peerUser;
                         splitter >> peerPassword;
-                        for (map<string,string>::iterator itr = registeredUsers.begin(); itr != registeredUsers.end() ; ++itr) {
-                            if((itr->second==peerPassword)&&(itr->first==peerUser)){
-                                TCPMessengerProtocol::sendToServer(LOGIN,itr->first, peer);
-                                loggedInUsers[itr->first]=peer;
+
+                        bool loginSuccess = false;
+
+                        for (map<string, string>::iterator itr = registeredUsers.begin();
+                             itr != registeredUsers.end(); ++itr) {
+                            if ((itr->second == peerPassword) && (itr->first == peerUser)) {
+                                loggedInUsers.insert(pair<string, TCPSocket *>(peerUser, peer));
+                                TCPMessengerProtocol::sendToServer(SUCCESS_LOGIN, peerUser, peer);
+                                loginSuccess = true;
                                 break;
                             }
                         }
+                        if (!loginSuccess)
+                            TCPMessengerProtocol::sendToServer(LOGIN_REFUSE," ", peer);
                     }
-                        TCPMessengerProtocol::sendToServer(LOGIN_REFUSE," ", peer);
-                        break;
                     case REGISTER:{
                         std::istringstream splitter1(data);
                         string peerUser1;
                         string peerPassword1;
                         splitter1 >> peerUser1;
                         splitter1 >> peerPassword1;
+
+                        bool alreadyExist = false;
+
                         for (map<string,string>::iterator itr = registeredUsers.begin(); itr != registeredUsers.end() ; ++itr) {
                             if(itr->second==peerUser1){
                                 TCPMessengerProtocol::sendToServer(REGISTER_REFUSE,data, peer);
+                                alreadyExist = true;
                                 break;
                             }
-                            registeredUsers[peerUser1] = peerPassword1;
-                            TCPMessengerProtocol::sendToServer(REGISTER,data, peer);
+                        }
+                        if (!alreadyExist){
+                            registeredUsers.insert(pair<string,string>(peerUser1,peerPassword1));
+                            loggedInUsers.insert(pair<string,TCPSocket*>(peerUser1,peer));
+                            TCPMessengerProtocol::sendToServer(SUCCESS_REGISTER,peerUser1, peer);
                         }
                     }
-                        break;
+
                     case OPEN_OR_CONNECT_TO_ROOM: {
                         for (map<string, TCPSocket *>::iterator itr = loggedInUsers.begin();
                              itr != loggedInUsers.end(); ++itr){

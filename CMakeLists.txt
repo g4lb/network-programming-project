@@ -26,7 +26,7 @@ set(SERVER_SIDE
     TCPMessengerServer/src/MessengerServer.h
     TCPMessengerServer/src/ServerState.h
     TCPMessengerServer/src/ChatRoom.cpp
-    TCPMessengerServer/src/ChatRoom.h)
+    TCPMessengerServer/src/ChatRoom.h TCPMessengerServer/src/ServerLoader.cpp TCPMessengerServer/src/ServerLoader.h)
 
 set(CLIENT_SIDE
         SocketUtils/src/FileInterface.cpp
@@ -47,6 +47,11 @@ set(CLIENT_SIDE
         TCPMessengerClient/src/MessengerClient.h
         TCPMessengerClient/src/ClientState.h)
 
+set(SERVER_LOADER_TEST
+        TCPMessengerServer/src/tests/ServerLoaderTest.cpp
+        TCPMessengerServer/src/ServerLoader.cpp
+        TCPMessengerServer/src/ServerLoader.h)
 
 add_executable(server ${SERVER_SIDE})
 add_executable(client ${CLIENT_SIDE})
+add_executable(serverLoaderTest ${SERVER_LOADER_TEST})
