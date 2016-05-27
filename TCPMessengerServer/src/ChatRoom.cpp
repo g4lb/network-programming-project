@@ -113,7 +113,7 @@ string ChatRoom::getRoomName(){
 string ChatRoom::getUsers(){
     string users;
     for (map<string,TCPSocket*>::iterator itr = peers.begin(); itr != peers.end() ; ++itr) {
-        users+=itr->first;
+        users+=itr->first+"\n";
     }
     return users;
 }
