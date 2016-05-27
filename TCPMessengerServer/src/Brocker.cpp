@@ -78,4 +78,11 @@ namespace npl {
     void Brocker::close() {
         handler->onClose(this, peerA, peerB);
     }
+
+    string Brocker::getPeerAName(){
+        return this->userNameA;
+    }
+    string Brocker::getPeerBName(){
+        return this->userNameB;
+    }
 }

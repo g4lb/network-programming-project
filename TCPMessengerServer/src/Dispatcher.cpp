@@ -276,19 +276,48 @@ bool Dispatcher::isLogedIn(TCPSocket* sock){
 
 
 void Dispatcher::listUsers(){
-
+    cout << "********Users*******" <<endl;
+    for (map<string, string>::iterator itr = registeredUsers.begin();
+         itr != registeredUsers.end(); ++itr) {
+        cout << itr->first << endl;
+    }
+    cout << "*******************" <<endl;
 }
 void Dispatcher::listConnectedUsers(){
-
+    cout << "********Connected Users*******" <<endl;
+    for (map<string, TCPSocket*>::iterator itr = loggedInUsers.begin();
+         itr != loggedInUsers.end(); ++itr) {
+        cout << itr->first << endl;
+    }
+    cout << "*******************" <<endl;
 }
 void Dispatcher::listSessions(){
-
+    cout << "********Active Sessions*******" <<endl;
+    for (vector<Brocker*>::iterator itr = brockers.begin(); itr != brockers.end(); ++itr) {
+        cout <<"Session: ";
+        cout << "["<< (*itr)->getPeerAName() <<"] and ["<< (*itr)->getPeerBName() <<"]" << endl;
+    }
+    cout << "*******************" <<endl;
 }
 void Dispatcher::listRooms(){
-
+    cout << "********Rooms*******" <<endl;
+    for (vector<ChatRoom*>::iterator itr = this->chatRooms.begin();
+         itr != chatRooms.end(); ++itr) {
+        cout << (*itr)->getRoomName() << endl;
+    }
+    cout << "*******************" <<endl;
 }
 void Dispatcher::listRoomUsers(const string& roomName){
-
+    for (vector<ChatRoom*>::iterator itr = this->chatRooms.begin();
+         itr != chatRooms.end(); ++itr) {
+        if ((*itr)->getRoomName() == roomName) {
+            cout << "********Users in Room: [" << (*itr)->getRoomName() << "] *******" <<endl;
+            cout << (*itr)->getUsers() << endl;
+            cout << "*******************" <<endl;
+            return;
+        }
+        cout << "No such room: [" << roomName << "]" << endl;
+    }
 }
 
 

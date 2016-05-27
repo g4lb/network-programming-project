@@ -32,6 +32,8 @@ public:
 	virtual ~Brocker();
 	void run();
 	void close();
+	string getPeerAName();
+	string getPeerBName();
 };
 
 } /* namespace npl */
