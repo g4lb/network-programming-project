@@ -100,22 +100,26 @@ void Dispatcher::run(){
                     }
 
                     case OPEN_OR_CONNECT_TO_ROOM: {
+                        bool entered = false;
                         for (map<string, TCPSocket *>::iterator itr = loggedInUsers.begin();
-                             itr != loggedInUsers.end(); ++itr){
+                             itr != loggedInUsers.end() && !entered; ++itr){
                             if (itr->second==peer) {
                                 for (int i = 0; i <chatRooms.size() ; ++i) {
                                     if (chatRooms[i]->getRoomName() == data) {
                                         TCPMessengerProtocol::sendToServer(SUCCESS_ENTER_ROOM, data, peer);
                                         this->removePeer(peer);
                                         chatRooms[i]->addUser(itr->first, peer);
+                                        entered = true;
                                         break;
                                     }
                                 }
-                                TCPMessengerProtocol::sendToServer(SUCCESS_ENTER_ROOM, data, peer);
-                                this->removePeer(peer);
-                                ChatRoom *room = new ChatRoom(this, data, itr->first, peer);
-                                chatRooms.push_back(room);
-                                break;
+                                if(!entered) {
+                                    TCPMessengerProtocol::sendToServer(SUCCESS_ENTER_ROOM, data, peer);
+                                    this->removePeer(peer);
+                                    ChatRoom *room = new ChatRoom(this, data, itr->first, peer);
+                                    chatRooms.push_back(room);
+                                    break;
+                                }
                             }
                         }
                         break;
