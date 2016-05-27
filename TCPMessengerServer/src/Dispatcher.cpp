@@ -1,3 +1,9 @@
+//TODO: LOGIN TWICE
+//TODO: EXIT IN SESSION OR IN ROOM
+//TODO: ADD PEERS TO ROOM ( CLIENT SIDE )
+//TODO: CLIENT SIDE: command l prints server 0.0.0.0??? why
+//TODO: SAVE TO USERS FILE ON REGISTER
+
 /*
  * Dispatcher.cpp
  *
