@@ -104,7 +104,7 @@ void MessengerClient::run() {
             else if (cmd == CLOSE_SESSION_WITH_PEER){
                 //Expecting input in format: NONE
                 cout << CLOSE_SESSION_WITH_PEER_TEXT << "["<< this->peerInSeesion->first <<"]" << endl;
-                this->clientState = State::CONNECTED;
+                this->clientState = State::LOGGED_IN;
                 this->peerInSeesion = NULL;
             }
             else if (cmd == CLIENT_DISCONNECTED_FROM_ROOM){
