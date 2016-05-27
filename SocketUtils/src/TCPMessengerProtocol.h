@@ -53,7 +53,7 @@
 namespace npl{
 class TCPMessengerProtocol{
 public:
-	void static sendToServer(int command,const string& data, TCPSocket* sock){
+	void static sendToServer(int command,const string& data, Socket* sock){
 
         char commToSend[4];
         *((int*)commToSend) = htonl(command);
@@ -73,7 +73,7 @@ public:
         }
 	}
 
-	void static readFromServer(int& command, string& data, TCPSocket* sock){
+	void static readFromServer(int& command, string& data, Socket* sock){
         char buff[4];
         bzero(buff,4);
 		if (sock->read(buff,4) > 0) {

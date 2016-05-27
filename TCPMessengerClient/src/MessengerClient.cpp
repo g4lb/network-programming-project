@@ -10,6 +10,7 @@
 
 using namespace npl;
 
+
 MessengerClient::MessengerClient(){
 	this->clientState = State::DISCONNECTED;
 	this->currentRoomName = "";
@@ -26,19 +27,38 @@ void MessengerClient::run() {
 		if (cmd > 0)
 		{
             if (cmd == SUCCESS_LOGIN) {
-                //Expecting input in format: <user>
+                //Expecting input in format: <user> <ip>:<port>
+
+                std::istringstream splitter(str);
+                string myUser;
+                string myIp;
+                int myPort;
+                splitter >> myUser;
+                std::getline(splitter,myIp,':');
+                splitter >> myPort;
+
 
                 this->clientState = State::LOGGED_IN;
-                this->currentUserName = str;
-                cout << "You successfully logged in user: ["<<str<<"]"<<endl;
+                this->currentUserName = myUser;
+                this->myConnectionPort = myPort;
+                cout << "You successfully logged in user: ["<<myUser<<"]"<<endl;
             }
             else if (cmd == SUCCESS_REGISTER){
-                //Expecting input in format: <user>
+                //Expecting input in format: <user> <ip>:<port>
+
+                std::istringstream splitter(str);
+                string myUser;
+                string myIp;
+                int myPort;
+                splitter >> myUser;
+                std::getline(splitter,myIp,':');
+                splitter >> myPort;
 
                 this->clientState = State::LOGGED_IN;
-                this->currentUserName = str;
+                this->currentUserName = myUser;
+                this->myConnectionPort = myPort;
 
-                cout << "You successfully registered and logged in user ["<<str<<"]"<<endl;
+                cout << "You successfully registered and logged in user ["<<myUser<<"]"<<endl;
             }
             else if (cmd == LOGIN_REFUSE) {
                 cout << "Login was refused by server, check your username and/or password"<<endl;
@@ -61,7 +81,9 @@ void MessengerClient::run() {
                 cout << SESSION_ESTABLISHED_TEXT << "["<< peerUser<<"]" << endl;
                 this->peerInSeesion = new pair<string,string>(peerUser,peerIpAndPort);
                 //TODO: OPEN UDP IN READER THREAD ON THE PORT WHICH I CONNECTED TO THE MAIN SERVER
-                this->udpPeer = new UDPSocket();
+
+
+                this->udpPeer = new UDPSocket(this->myConnectionPort);
 			}else if (cmd == SUCCESS_ENTER_ROOM){
                 //Expecting input in format: <roomName>
 
@@ -69,7 +91,11 @@ void MessengerClient::run() {
                 this->currentRoomName = str;
 
                 //TODO: OPEN UDP IN READER THREAD ON THE PORT WHICH I CONNECTED TO THE MAIN SERVER
-                this->udpPeer = new UDPSocket();
+                this->udpPeer = new UDPSocket(this->myConnectionPort);
+
+                this->udpReaderThread = new MessengerClientPeerReader(this->udpPeer);
+                this->udpReaderThread->running = true;
+                this->udpReaderThread->start();
             }
             else if (cmd == SESSION_REFUSED) {
                 //Expecting input in format: <user>

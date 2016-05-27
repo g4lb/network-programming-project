@@ -22,23 +22,47 @@ using namespace std;
 namespace npl{
 
 class MessengerClient : public MThread {
+
+private:
+
+    class MessengerClientPeerReader : public MThread{
+    public:
+
+        UDPSocket* udpPeer;
+        bool running;
+
+        MessengerClientPeerReader(UDPSocket* udpPeer):running(false){
+            this->udpPeer = udpPeer;
+        }
+
+        void run(){
+            int command = 0;
+            string data = "";
+            while (running){
+                TCPMessengerProtocol::readFromServer(command,data,this->udpPeer);
+                if (command == SEND_MSG_TO_PEER)
+                    cout << data << endl;
+            }
+        }
+    };
+
 	State clientState;
 
     string currentUserName;
     string currentRoomName;
+    int myConnectionPort;
 
 	TCPSocket* mainServer;
+
     UDPSocket* udpPeer;
+    MessengerClientPeerReader* udpReaderThread;
 
     //maps user,IP:PORT
     map<string,string>* peersInRoom;
     //pair of user,IP:PORT
     pair<string,string>* peerInSeesion;
 
-
-protected:
 public:
-	
 	MessengerClient();
 	void connect(const string& ip);
     void login(const string& user,const string& password);
