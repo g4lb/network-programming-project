@@ -136,14 +136,14 @@ void MessengerClient::run() {
                 cout << "Chat room closed by admin"<<endl;
             }
             else if (cmd == LIST_USERS_RESPONSE){
-                cout << "****Registered Users****\n"<< str << "\n***********" << endl;
+                cout << "****Registered Users****\n"<< str << "***********" << endl;
             }
             else if (cmd == LIST_CONNECTED_USERS_RESPONSE){
-                cout << "****Connected Users****\n"<< str << "\n***********" << endl;
+                cout << "****Connected Users****\n"<< str << "***********" << endl;
             }else if (cmd == LIST_ROOMS_RESPONSE){
-                cout << "****Rooms****\n"<< str << "\n***********" << endl;
+                cout << "****Rooms****\n"<< str << "***********" << endl;
             }else if (cmd == LIST_ROOM_USERS_RESPONSE){
-                cout << "****Room Users****\n"<< str << "\n***********" << endl;
+                cout << "****Room Users****\n"<< str << "***********" << endl;
             }
 		}
 		else
