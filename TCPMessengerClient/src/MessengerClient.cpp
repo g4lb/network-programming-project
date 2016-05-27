@@ -252,16 +252,19 @@ void MessengerClient::closeSessionOrExitRoom(){
 		cout<<"Not in session or room"<<endl;
 }
 void MessengerClient::disconnect(){
-    if (clientState != State::DISCONNECTED)
-        sendToServer(EXIT,"",mainServer);
+    if (clientState != State::DISCONNECTED) {
+        sendToServer(EXIT, "", mainServer);
+        cout << "You have disconnected from server"<<endl;
+    }
     else
         cout<<"Client is already disconnected"<<endl;
 
 }
 void MessengerClient::exit(){
-    if (clientState != State::DISCONNECTED)
-	    sendToServer(EXIT,"",mainServer);
-	cout<<"Disconnected from server"<<endl;
+    if (clientState != State::DISCONNECTED) {
+        sendToServer(EXIT, "", mainServer);
+        cout << "You have disconnected from server"<<endl;
+    }
 	delete mainServer;
 }
 void MessengerClient::sendToServer(int command, const string& data, TCPSocket* mainServer){
