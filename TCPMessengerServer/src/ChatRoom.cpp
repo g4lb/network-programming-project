@@ -12,7 +12,7 @@ using namespace npl;
 ChatRoom::ChatRoom(ChatRoomHandler* handler, string peerName,TCPSocket* peerA){
     this->handler = handler;
     admin = peerA;
-    peers[peerName]=admin;
+    peers.insert(pair<string,TCPSocket*>(peerName,admin));
     active = true;
     start();
 }
@@ -30,41 +30,44 @@ void ChatRoom::run(){
         TCPMessengerProtocol::readFromServer(command,data,sender);
         switch (command)
         {
-            case CLIENT_DISCONNECTED_FROM_ROOM:
-                if(sender==admin){
+            case CLIENT_DISCONNECTED_FROM_ROOM: {
+                if (sender == admin) {
                     active = false;
-                    sendByLoop(CHAT_CLOSED_BY_ADMIN,data,sender);
+                    sendByLoop(CHAT_CLOSED_BY_ADMIN, data, sender);
                     close();
                 }
-                sendByLoop(command,data,sender);
+                sendByLoop(command, data, sender);
                 break;
-            case EXIT:
-                if(sender==admin){
+            }
+            case EXIT: {
+                if (sender == admin) {
                     active = false;
-                    sendByLoop(CHAT_CLOSED_BY_ADMIN,data,sender);
+                    sendByLoop(CHAT_CLOSED_BY_ADMIN, data, sender);
                     this->close();
                 }
-                sendByLoop(CLIENT_DISCONNECTED_FROM_ROOM,data,sender);
-                for (map<string,TCPSocket*>::iterator itr = peers.begin(); itr != peers.end() ; ++itr) {
-                    if(itr->second==sender){
+                sendByLoop(CLIENT_DISCONNECTED_FROM_ROOM, data, sender);
+                for (map<string, TCPSocket *>::iterator itr = peers.begin(); itr != peers.end(); ++itr) {
+                    if (itr->second == sender) {
                         peers.erase(itr->first);
                     }
                 }
                 break;
-            default:
-                cout<<command<<endl;
+            }
+            default: {
+                cout << command << endl;
+            }
         }
     }
     close();
 }
 void ChatRoom::close(){
-   handler->onClose(this,admin);
+   handler->onClose(this, this->peers);
 }
 void ChatRoom::addUser(string userName,TCPSocket* peer){
     if(peers.size()>1){
         sendByLoop(CLIENT_ENTERED_ROOM,userName+" "+peer->fromAddr(),peer);
     }
-    peers[userName]=peer;
+    peers.insert(pair<string,TCPSocket*>(userName,peer));
 }
 void ChatRoom::sendByLoop( int command, const string& data,TCPSocket* sender){
     for (map<string,TCPSocket*>::iterator itr = peers.begin(); itr != peers.end() ; ++itr) {

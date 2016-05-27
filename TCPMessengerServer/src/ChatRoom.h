@@ -16,7 +16,7 @@ class ChatRoom:public MThread {
 public:
     class ChatRoomHandler{
     public:
-        virtual void onClose(ChatRoom* chatRoom, TCPSocket* peerA)=0;
+        virtual void onClose(ChatRoom* chatRoom, map<string,TCPSocket*> peersMap)=0;
     };
 private:
     map<string,TCPSocket*> peers;

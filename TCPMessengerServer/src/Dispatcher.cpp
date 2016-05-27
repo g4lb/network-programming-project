@@ -87,6 +87,7 @@ void Dispatcher::run(){
                         }
                         if (!loginSuccess)
                             TCPMessengerProtocol::sendToServer(LOGIN_REFUSE," ", peer);
+                        break;
                     }
                     case REGISTER:{
                         std::istringstream splitter1(data);
@@ -109,6 +110,7 @@ void Dispatcher::run(){
                             loggedInUsers.insert(pair<string,TCPSocket*>(peerUser1,peer));
                             TCPMessengerProtocol::sendToServer(SUCCESS_REGISTER,peerUser1, peer);
                         }
+                        break;
                     }
 
                     case OPEN_OR_CONNECT_TO_ROOM: {
@@ -127,23 +129,23 @@ void Dispatcher::run(){
                     }
                     case OPEN_SESSION_WITH_PEER: {
                         if (isLogedIn(peer)){
-                        TCPSocket* peerB = this->getPeerByAddress(data); // find second peer according to the data
-                        if (peerB != NULL) {
-                            //tell peerB to change sessionIsActive=true
-                            TCPMessengerProtocol::sendToServer(SESSION_ESTABLISHED,peerB->fromAddr(),peer);
-                            TCPMessengerProtocol::sendToServer(SESSION_ESTABLISHED,peer->fromAddr(),peerB);
-                            //remove peers from the dispatcher responsibility
-                            this->removePeer(peer);
-                            this->removePeer(peerB);
-                            //give responsibility of the peers to a new brocker
-                            Brocker* broker = new Brocker(this, peer, peerB);
-                            //keep reference of brocker in brockers vector
-                            brockers.push_back(broker);
-                        }
-                        else
-                            //if peer does not exist in peers list - refuse the session
-                            TCPMessengerProtocol::sendToServer(SESSION_REFUSED,data,peer);
-                        break;
+                            TCPSocket* peerB = this->getPeerByAddress(data); // find second peer according to the data
+                            if (peerB != NULL) {
+                                //tell peerB to change sessionIsActive=true
+                                TCPMessengerProtocol::sendToServer(SESSION_ESTABLISHED,peerB->fromAddr(),peer);
+                                TCPMessengerProtocol::sendToServer(SESSION_ESTABLISHED,peer->fromAddr(),peerB);
+                                //remove peers from the dispatcher responsibility
+                                this->removePeer(peer);
+                                this->removePeer(peerB);
+                                //give responsibility of the peers to a new brocker
+                                Brocker* broker = new Brocker(this, peer, peerB);
+                                //keep reference of brocker in brockers vector
+                                brockers.push_back(broker);
+                            }
+                            else
+                                //if peer does not exist in peers list - refuse the session
+                                TCPMessengerProtocol::sendToServer(SESSION_REFUSED,data,peer);
+                            break;
                     }
                         TCPMessengerProtocol::sendToServer(NOT_CONNECTED_TO_SERVER," ", peer);
                         break;
@@ -154,7 +156,7 @@ void Dispatcher::run(){
                              itr != registeredUsers.end(); ++itr) {
                             users += itr->first+"/n";
                         }
-                            TCPMessengerProtocol::sendToServer(LIST_USERS_RESPONSE,users,peer);
+                        TCPMessengerProtocol::sendToServer(LIST_USERS_RESPONSE,users,peer);
                         break;
                     }
                     case LIST_CONNECTED_USERS:{

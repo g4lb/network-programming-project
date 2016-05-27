@@ -45,22 +45,27 @@ namespace npl {
 
             TCPMessengerProtocol::readFromServer(command, data, sender);
             switch (command) {
-                case SEND_MSG_TO_PEER:
+                case SEND_MSG_TO_PEER: {
                     TCPMessengerProtocol::sendToServer(command, data, reciver);
                     break;
-                case CLOSE_SESSION_WITH_PEER:
+                }
+                case CLOSE_SESSION_WITH_PEER: {
                     TCPMessengerProtocol::sendToServer(command, reciver->fromAddr(), sender);
                     TCPMessengerProtocol::sendToServer(command, sender->fromAddr(), reciver);
                     active = false;
                     break;
-                case EXIT:
+                }
+                case EXIT: {
                     TCPMessengerProtocol::sendToServer(command, reciver->fromAddr(), sender);
                     TCPMessengerProtocol::sendToServer(command, sender->fromAddr(), reciver);
                     active = false;
                     TCPMessengerProtocol::sendToServer(EXIT, " ", sender);
                     break;
-                default:
+                }
+                default: {
                     cout << command << endl;
+                    break;
+                }
             }
         }
         close();
