@@ -21,8 +21,20 @@ MessengerServer::~MessengerServer() {
 
 }
 
-void MessengerServer::listPeers(){
-	dispatcher->listPeers();
+void MessengerServer::listUsers(){
+	this->dispatcher->listUsers();
+}
+void MessengerServer::listConnectedUsers(){
+	this->dispatcher->listConnectedUsers();
+}
+void MessengerServer::listSessions(){
+	this->dispatcher->listSessions();
+}
+void MessengerServer::listRooms(){
+	this->dispatcher->listRooms();
+}
+void MessengerServer::listRoomUsers(const string& roomName){
+	this->dispatcher->listRoomUsers(roomName);
 }
 
 void MessengerServer::exit(){

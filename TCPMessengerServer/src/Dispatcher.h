@@ -31,9 +31,15 @@ class Dispatcher : public MThread, ChatRoom::ChatRoomHandler, Brocker::BrockerHa
 	bool running;
 public:
 	Dispatcher();
+
+    void listUsers();
+    void listConnectedUsers();
+    void listSessions();
+    void listRooms();
+    void listRoomUsers(const string& roomName);
+
 	void add(TCPSocket* peer);
 	void removePeer(TCPSocket* peer);
-	void listPeers();
 	void run();
 	void close();
 	virtual ~Dispatcher();

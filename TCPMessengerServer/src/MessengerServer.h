@@ -20,7 +20,12 @@ public:
 	MessengerServer();
 	virtual ~MessengerServer();
 
-	void listPeers();
+
+	void listUsers();
+	void listConnectedUsers();
+	void listSessions();
+	void listRooms();
+	void listRoomUsers(const string& roomName);
 	void exit();
 	void run();
 };

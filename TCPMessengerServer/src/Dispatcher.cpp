@@ -273,6 +273,25 @@ bool Dispatcher::isLogedIn(TCPSocket* sock){
     }
     return false;
 }
+
+
+void Dispatcher::listUsers(){
+
+}
+void Dispatcher::listConnectedUsers(){
+
+}
+void Dispatcher::listSessions(){
+
+}
+void Dispatcher::listRooms(){
+
+}
+void Dispatcher::listRoomUsers(const string& roomName){
+
+}
+
+
 Dispatcher::~Dispatcher() {
 	// TODO Auto-generated destructor stub
 }

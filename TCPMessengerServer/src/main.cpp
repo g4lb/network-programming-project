@@ -33,32 +33,32 @@ int main() {
 		string msg;
 		string command;
 		cin >> command;
-		if(command == "lp"){
-			server->listPeers();
 
-		}else if(command == "x"){
+		if(command == "x"){
 			server->exit();
 			break;
 		}else if(command == "lu"){
-
+            server->listUsers();
         }
         else if(command == "lcu"){
-
+            server->listConnectedUsers();
         }
         else if(command == "ls"){
-
+            server->listSessions();
         }
         else if(command == "lr"){
-
+            server->listRooms();
         }
         else if(command == "lru"){
-
+            string roomName;
+            cin >> roomName;
+            server->listRoomUsers(roomName);
         }
         else{
 			cout<<"wrong input"<<endl;
 		}
 	}
 	delete server;
-	cout<<"messenger server was closed"<<endl;
+	cout<<"Messenger Server was closed"<<endl;
 	return 0;
 }
