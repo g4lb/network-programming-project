@@ -9,7 +9,7 @@
 #include "../../SocketUtils/src/MultipleTCPSocketListener.h"
 #include "../../SocketUtils/src/TCPMessengerProtocol.h"
 
-#define TIMEOUT 2
+#define TIMEOUT 0
 
 namespace npl {
 
@@ -53,10 +53,6 @@ namespace npl {
             }
             TCPMessengerProtocol::readFromServer(command, data, sender);
             switch (command) {
-                case SEND_MSG_TO_PEER: {
-                    TCPMessengerProtocol::sendToServer(command, data, reciver);
-                    break;
-                }
                 case CLOSE_SESSION_WITH_PEER: {
                     TCPMessengerProtocol::sendToServer(command, b, sender);
                     TCPMessengerProtocol::sendToServer(command, a, reciver);
@@ -64,8 +60,8 @@ namespace npl {
                     break;
                 }
                 case EXIT: {
-                    TCPMessengerProtocol::sendToServer(command, reciver->fromAddr(), sender);
-                    TCPMessengerProtocol::sendToServer(command, sender->fromAddr(), reciver);
+                    TCPMessengerProtocol::sendToServer(command, b, sender);
+                    TCPMessengerProtocol::sendToServer(command, a, reciver);
                     active = false;
                     TCPMessengerProtocol::sendToServer(EXIT, " ", sender);
                     break;
