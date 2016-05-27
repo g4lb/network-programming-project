@@ -113,7 +113,7 @@ void Dispatcher::run(){
                             if (itr->second==peer) {
                                 TCPMessengerProtocol::sendToServer(SUCCESS_ENTER_ROOM, data, peer);
                                 this->removePeer(peer);
-                                ChatRoom *room = new ChatRoom(this,data,peer);
+                                ChatRoom *room = new ChatRoom(this,data,itr->first,peer);
                                 chatRooms.push_back(room);
                                 break;
                             }

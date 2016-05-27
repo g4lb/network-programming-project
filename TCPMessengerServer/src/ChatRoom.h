@@ -25,7 +25,7 @@ private:
     string roomName;
     bool active;
 public:
-    ChatRoom(ChatRoomHandler* handler, string peerName,TCPSocket* peerA);
+    ChatRoom(ChatRoomHandler* handler, const string& roomName,const string& peerName,TCPSocket* peerA);
     void run();
     void close();
     void addUser(string userName,TCPSocket* peer);

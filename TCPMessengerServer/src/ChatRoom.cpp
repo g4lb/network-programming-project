@@ -9,12 +9,14 @@
 using namespace std;
 using namespace npl;
 
-ChatRoom::ChatRoom(ChatRoomHandler* handler, string peerName,TCPSocket* peerA){
+ChatRoom::ChatRoom(ChatRoomHandler* handler,const string& roomName,const string& peerName,TCPSocket* peerA){
     this->handler = handler;
     admin = peerA;
+    this->roomName = roomName;
     peers.insert(pair<string,TCPSocket*>(peerName,admin));
     active = true;
     start();
+    //sleep(1);
 }
 void ChatRoom::run(){
     MultipleTCPSocketListener listener;
@@ -24,12 +26,11 @@ void ChatRoom::run(){
     int command = 0;
     string data = "";
 
-    while(active){
-        TCPSocket* sender = listener.listen(TIMEOUT);
-
-        TCPMessengerProtocol::readFromServer(command,data,sender);
-        switch (command)
-        {
+    while(active) {
+        TCPSocket *sender = listener.listen(TIMEOUT);
+        if (sender != NULL){
+        TCPMessengerProtocol::readFromServer(command, data, sender);
+        switch (command) {
             case CLIENT_DISCONNECTED_FROM_ROOM: {
                 if (sender == admin) {
                     active = false;
@@ -39,7 +40,7 @@ void ChatRoom::run(){
                 sendByLoop(command, data, sender);
                 break;
             }
-            case DISCONNECT_FROM_ROOM:{
+            case DISCONNECT_FROM_ROOM: {
                 string userName;
                 if (sender == admin) {
                     active = false;
@@ -51,7 +52,7 @@ void ChatRoom::run(){
                         userName = itr->first;
                     }
                 }
-                TCPMessengerProtocol::sendToServer(DISCONNECT_FROM_ROOM_RESPONSE,userName,sender);
+                TCPMessengerProtocol::sendToServer(DISCONNECT_FROM_ROOM_RESPONSE, userName, sender);
                 sendByLoop(CLIENT_DISCONNECTED_FROM_ROOM, userName, sender);
                 for (map<string, TCPSocket *>::iterator itr = peers.begin(); itr != peers.end(); ++itr) {
                     if (itr->second == sender) {
@@ -72,7 +73,7 @@ void ChatRoom::run(){
                         userName = itr->first;
                     }
                 }
-                TCPMessengerProtocol::sendToServer(DISCONNECT_FROM_ROOM_RESPONSE,userName,sender);
+                TCPMessengerProtocol::sendToServer(DISCONNECT_FROM_ROOM_RESPONSE, userName, sender);
                 sendByLoop(CLIENT_DISCONNECTED_FROM_ROOM, userName, sender);
                 TCPMessengerProtocol::sendToServer(EXIT, " ", sender);
                 for (map<string, TCPSocket *>::iterator itr = peers.begin(); itr != peers.end(); ++itr) {
@@ -86,6 +87,7 @@ void ChatRoom::run(){
                 cout << command << endl;
             }
         }
+    }
     }
     close();
 }
