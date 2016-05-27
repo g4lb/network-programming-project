@@ -310,6 +310,7 @@ void MessengerClient::closeSessionOrExitRoom(){
 }
 void MessengerClient::disconnect(){
     if (clientState != State::DISCONNECTED) {
+        clientState = State::DISCONNECTED;
         sendToServer(EXIT, " ", mainServer);
         cout << "You have disconnected from server"<<endl;
     }
