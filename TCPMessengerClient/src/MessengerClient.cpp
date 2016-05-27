@@ -61,7 +61,8 @@ void MessengerClient::run() {
                 cout << "You successfully registered and logged in user ["<<myUser<<"]"<<endl;
             }
             else if (cmd == LOGIN_REFUSE) {
-                cout << "Login was refused by server, check your username and/or password"<<endl;
+                cout << "Login was refused by server, check your username and/or password; "
+                                "or the user is already logged in"<<endl;
             }
             else if (cmd == REGISTER_REFUSE) {
                 cout << "Register was refused by server, your username exists already"<<endl;
@@ -333,24 +334,29 @@ void MessengerClient::readFromServer(int & command,string& data,TCPSocket* mainS
 }
 void MessengerClient::send(const string & msg){
 
-    std::istringstream splitter(this->peerInSeesion->second);
     string peerIp;
     int peerPort;
 
-    std::getline(splitter, peerIp, ':');
-    splitter >> peerPort;
-
     if (clientState == State::IN_SESSION) {
+
+        std::istringstream splitter(this->peerInSeesion->second);
+
+        std::getline(splitter, peerIp, ':');
+        splitter >> peerPort;
+
         //send peer in session the msg
         this->udpPeer->sendTo(">["+currentUserName+"] " + msg, peerIp, peerPort);
     }
     else if (clientState == State::IN_ROOM) {
+
+        std::istringstream splitter;
+
         //iterate over all peers in room and send msg
         for (map<string, string>::iterator peer = peersInRoom->begin(); peer != peersInRoom->end(); ++peer)
         {
             splitter.clear();
             splitter.str(peer->second);
-            splitter >> peerIp;
+            std::getline(splitter, peerIp, ':');
             splitter >> peerPort;
 
             this->udpPeer->sendTo(">["+currentUserName+"] " + msg, peerIp, peerPort);
