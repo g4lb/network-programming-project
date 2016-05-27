@@ -13,10 +13,12 @@
 
 namespace npl {
 
-    Brocker::Brocker(BrockerHandler *handler, TCPSocket *peerA, TCPSocket *peerB) {
+    Brocker::Brocker(BrockerHandler *handler, TCPSocket *peerA, TCPSocket *peerB,const string& userNameA, const string& userNameB) {
         this->handler = handler;
         this->peerA = peerA;
         this->peerB = peerB;
+        this->userNameA = userNameA;
+        this->userNameB = userNameB;
         active = true;
         start();
     }
@@ -38,11 +40,17 @@ namespace npl {
         while (active) {
             sender = listener.listen(TIMEOUT);
             //IF SENDER IS NULL THEN TIMEOUT HANDLING
-            if (sender == peerA)
+            string a,b;
+            if (sender == peerA) {
                 reciver = peerB;
-            else
+                a = userNameA;
+                b = userNameB;
+            }
+            else {
                 reciver = peerA;
-
+                b = userNameA;
+                a = userNameB;
+            }
             TCPMessengerProtocol::readFromServer(command, data, sender);
             switch (command) {
                 case SEND_MSG_TO_PEER: {
@@ -50,8 +58,8 @@ namespace npl {
                     break;
                 }
                 case CLOSE_SESSION_WITH_PEER: {
-                    TCPMessengerProtocol::sendToServer(command, reciver->fromAddr(), sender);
-                    TCPMessengerProtocol::sendToServer(command, sender->fromAddr(), reciver);
+                    TCPMessengerProtocol::sendToServer(command, b, sender);
+                    TCPMessengerProtocol::sendToServer(command, a, reciver);
                     active = false;
                     break;
                 }

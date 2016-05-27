@@ -80,7 +80,7 @@ void Dispatcher::run(){
                              itr != registeredUsers.end(); ++itr) {
                             if ((itr->second == peerPassword) && (itr->first == peerUser)) {
                                 loggedInUsers.insert(pair<string, TCPSocket *>(peerUser, peer));
-                                TCPMessengerProtocol::sendToServer(SUCCESS_LOGIN, peerUser, peer);
+                                TCPMessengerProtocol::sendToServer(SUCCESS_LOGIN, peerUser+" "+ peer->fromAddr(), peer);
                                 loginSuccess = true;
                                 break;
                             }
@@ -108,7 +108,7 @@ void Dispatcher::run(){
                         if (!alreadyExist){
                             registeredUsers.insert(pair<string,string>(peerUser1,peerPassword1));
                             loggedInUsers.insert(pair<string,TCPSocket*>(peerUser1,peer));
-                            TCPMessengerProtocol::sendToServer(SUCCESS_REGISTER,peerUser1, peer);
+                            TCPMessengerProtocol::sendToServer(SUCCESS_REGISTER,peerUser1+" "+peer->fromAddr(), peer);
                         }
                         break;
                     }
@@ -117,8 +117,8 @@ void Dispatcher::run(){
                         for (map<string, TCPSocket *>::iterator itr = loggedInUsers.begin();
                              itr != loggedInUsers.end(); ++itr){
                             if (itr->second==peer) {
-                                ChatRoom *room = new ChatRoom(this,itr->first, peer);
-                                TCPMessengerProtocol::sendToServer(SUCCESS_ENTER_ROOM, itr->first, peer);
+                                ChatRoom *room = new ChatRoom(this,data, peer);
+                                TCPMessengerProtocol::sendToServer(SUCCESS_ENTER_ROOM, data, peer);
                                 this->removePeer(peer);
                                 chatRooms.push_back(room);
                                 break;
@@ -149,14 +149,23 @@ void Dispatcher::run(){
                                 this->removePeer(peer);
                                 this->removePeer(peerB);
                                 //give responsibility of the peers to a new brocker
-                                Brocker* broker = new Brocker(this, peer, peerB);
+                                Brocker* broker = new Brocker(this, peer, peerB,peerName,peerBName);
                                 //keep reference of brocker in brockers vector
                                 brockers.push_back(broker);
                             }
-                            else
+                            else {
+                                //get peer name
+                                string peerName;
+                                for (map<string, TCPSocket *>::iterator itr = loggedInUsers.begin();
+                                     itr != loggedInUsers.end(); ++itr) {
+                                    if (itr->second == peer) {
+                                        peerName = itr->first;
+                                    }
+                                }
                                 //if peer does not exist in peers list - refuse the session
-                                TCPMessengerProtocol::sendToServer(SESSION_REFUSED,data,peer);
-                            break;
+                                TCPMessengerProtocol::sendToServer(SESSION_REFUSED, peerName, peer);
+                                break;
+                            }
                     }
                         TCPMessengerProtocol::sendToServer(NOT_CONNECTED_TO_SERVER," ", peer);
                         break;

@@ -24,10 +24,11 @@ public:
 private:
 	TCPSocket* peerA;
 	TCPSocket* peerB;
+	string userNameA, userNameB;
 	BrockerHandler* handler;
 	bool active;
 public:
-	Brocker(BrockerHandler* handler, TCPSocket* peerA, TCPSocket* peerB);
+	Brocker(BrockerHandler* handler, TCPSocket* peerA, TCPSocket* peerB,const string& userNameA, const string& userNameB);
 	virtual ~Brocker();
 	void run();
 	void close();
