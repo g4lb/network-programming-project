@@ -129,45 +129,50 @@ void Dispatcher::run(){
                     }
                     case OPEN_SESSION_WITH_PEER: {
                         if (isLogedIn(peer)){
-                            TCPSocket* peerB = this->getPeerByAddress(data); // find second peer according to the data
-                            if (peerB != NULL) {
-                                //get the username from the peers
-                                string peerName,peerBName;
-                                for (map<string, TCPSocket *>::iterator itr = loggedInUsers.begin();
-                                     itr != loggedInUsers.end(); ++itr) {
-                                    if (itr->second == peer) {
-                                        peerName=itr->first;
+                            if (loggedInUsers.find(data) != loggedInUsers.end()) {
+                                TCPSocket *peerB = loggedInUsers[data]; // find second peer according to the data
+
+                                if (peerB != NULL)
+                                {
+                                    //get the username from the peers
+                                    string peerName, peerBName;
+                                    for (map<string, TCPSocket *>::iterator itr = loggedInUsers.begin();
+                                         itr != loggedInUsers.end(); ++itr) {
+                                        if (itr->second == peer) {
+                                            peerName = itr->first;
+                                        }
+                                        if (itr->second == peerB) {
+                                            peerBName = itr->first;
+                                        }
                                     }
-                                    if (itr->second==peerB) {
-                                        peerBName=itr->first;
-                                    }
+                                    //tell peerB to change sessionIsActive=true
+                                    TCPMessengerProtocol::sendToServer(SESSION_ESTABLISHED,
+                                                                       peerBName + " " + peerB->fromAddr(), peer);
+                                    TCPMessengerProtocol::sendToServer(SESSION_ESTABLISHED,
+                                                                       peerName + " " + peer->fromAddr(), peerB);
+                                    //remove peers from the dispatcher responsibility
+                                    this->removePeer(peer);
+                                    this->removePeer(peerB);
+                                    //give responsibility of the peers to a new brocker
+                                    Brocker *broker = new Brocker(this, peer, peerB, peerName, peerBName);
+                                    //keep reference of brocker in brockers vector
+                                    brockers.push_back(broker);
                                 }
-                                //tell peerB to change sessionIsActive=true
-                                TCPMessengerProtocol::sendToServer(SESSION_ESTABLISHED,peerBName+" "+peerB->fromAddr(),peer);
-                                TCPMessengerProtocol::sendToServer(SESSION_ESTABLISHED,peerName+" "+peer->fromAddr(),peerB);
-                                //remove peers from the dispatcher responsibility
-                                this->removePeer(peer);
-                                this->removePeer(peerB);
-                                //give responsibility of the peers to a new brocker
-                                Brocker* broker = new Brocker(this, peer, peerB,peerName,peerBName);
-                                //keep reference of brocker in brockers vector
-                                brockers.push_back(broker);
-                            }
-                            else {
-                                //get peer name
-                                string peerName;
-                                for (map<string, TCPSocket *>::iterator itr = loggedInUsers.begin();
-                                     itr != loggedInUsers.end(); ++itr) {
-                                    if (itr->second == peer) {
-                                        peerName = itr->first;
+                                else {
+                                    //get peer name
+                                    string peerName;
+                                    for (map<string, TCPSocket *>::iterator itr = loggedInUsers.begin();
+                                         itr != loggedInUsers.end(); ++itr) {
+                                        if (itr->second == peer) {
+                                            peerName = itr->first;
+                                        }
                                     }
+                                    //if peer does not exist in peers list - refuse the session
+                                    TCPMessengerProtocol::sendToServer(SESSION_REFUSED, peerName, peer);
+                                    break;
                                 }
-                                //if peer does not exist in peers list - refuse the session
-                                TCPMessengerProtocol::sendToServer(SESSION_REFUSED, peerName, peer);
-                                break;
                             }
                     }
-                        TCPMessengerProtocol::sendToServer(NOT_CONNECTED_TO_SERVER," ", peer);
                         break;
                     }
                     case LIST_USERS:{
@@ -183,15 +188,15 @@ void Dispatcher::run(){
                         string connectedUsers;
                         for (map<string, TCPSocket *>::iterator itr = loggedInUsers.begin();
                              itr != loggedInUsers.end(); ++itr) {
-                            connectedUsers += itr->first+"/n";
+                            connectedUsers += itr->first+"\n";
                         }
                         TCPMessengerProtocol::sendToServer(LIST_CONNECTED_USERS_RESPONSE,connectedUsers,peer);
                         break;
                     }
                     case LIST_ROOMS:{
-                        string rooms;
+                        string rooms = " ";
                         for (int i = 0; i <chatRooms.size(); ++i) {
-                            rooms+=chatRooms[i]->getRoomName();
+                            rooms+=chatRooms[i]->getRoomName()+"\n";
                         }
                         TCPMessengerProtocol::sendToServer(LIST_ROOMS_RESPONSE,rooms,peer);
                         break;
