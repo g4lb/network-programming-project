@@ -38,15 +38,6 @@ void Dispatcher::removePeer(TCPSocket* peer){
     listener->remove(peer);
 
 }
-void Dispatcher::listPeers(){
-    cout << "Connected clients:" << endl;
-    for (int i=0; i<peers.size();i++)
-        cout << peers[i]->fromAddr() << endl;
-    cout << "********" << endl;
-
-}
-
-
 void Dispatcher::run(){
     int command;
     string data;
@@ -258,9 +249,8 @@ void Dispatcher::onClose(ChatRoom* chatRoom, map<string,TCPSocket*> peersMap){
     chatRooms.erase(std::remove(chatRooms.begin(),chatRooms.end(), chatRoom),chatRooms.end());
     //return the peers to the vector
     for (map<string,TCPSocket*>::iterator itr = peersMap.begin(); itr != peersMap.end() ; ++itr) {
-        peers.push_back(itr->second);
+       this->add(itr->second);
     }
-
     //delete the brocker
     chatRoom->waitForThread();
 }
