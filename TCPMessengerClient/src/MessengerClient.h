@@ -36,12 +36,10 @@ private:
         }
 
         void run(){
-            int command = 0;
-            string data = "";
+            char buffer[1024];
             while (running){
-                //TCPMessengerProtocol::readFromServer(command,data,this->udpPeer);
-                if (command == SEND_MSG_TO_PEER)
-                    cout << data << endl;
+                udpPeer->read(buffer,1024);
+                cout << buffer << endl;
             }
         }
     };

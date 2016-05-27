@@ -81,9 +81,12 @@ void MessengerClient::run() {
                 cout << SESSION_ESTABLISHED_TEXT << "["<< peerUser<<"]" << endl;
                 this->peerInSeesion = new pair<string,string>(peerUser,peerIpAndPort);
                 //TODO: OPEN UDP IN READER THREAD ON THE PORT WHICH I CONNECTED TO THE MAIN SERVER
-
-
                 this->udpPeer = new UDPSocket(this->myConnectionPort);
+
+                this->udpReaderThread = new MessengerClientPeerReader(this->udpPeer);
+                this->udpReaderThread->running = true;
+                this->udpReaderThread->start();
+
 			}else if (cmd == SUCCESS_ENTER_ROOM){
                 //Expecting input in format: <roomName>
 
@@ -106,8 +109,17 @@ void MessengerClient::run() {
             else if (cmd == CLOSE_SESSION_WITH_PEER){
                 //Expecting input in format: NONE
                 cout << CLOSE_SESSION_WITH_PEER_TEXT << "["<< this->peerInSeesion->first <<"]" << endl;
-                this->clientState = State::LOGGED_IN;
+
                 this->peerInSeesion = NULL;
+                if (this->udpReaderThread != NULL) {
+                    this->udpReaderThread->running = false;
+                    this->udpReaderThread->waitForThread();
+
+                    delete this->udpReaderThread;
+                }
+                delete this->udpPeer;
+
+                this->clientState = State::LOGGED_IN;
             }
             else if (cmd == CLIENT_DISCONNECTED_FROM_ROOM){
                 //Expecting input in format: <user>
@@ -131,11 +143,22 @@ void MessengerClient::run() {
                 this->peersInRoom->insert(make_pair(peerUser,peerIpAndPort));
                 cout << "User ["<<str<<"]"<<" has entered the room"<<endl;
             }
-            else if (cmd == CHAT_CLOSED_BY_ADMIN){
+            else if (cmd == CHAT_CLOSED_BY_ADMIN or cmd == DISCONNECT_FROM_ROOM_RESPONSE){
                 this->peersInRoom->clear();
-                this->clientState = State::LOGGED_IN;
 
-                cout << "Chat room closed by admin"<<endl;
+                if (this->udpReaderThread != NULL) {
+                    this->udpReaderThread->running = false;
+                    this->udpReaderThread->waitForThread();
+
+                    delete this->udpReaderThread;
+                }
+                delete this->udpPeer;
+
+                this->clientState = State::LOGGED_IN;
+                if (cmd == CHAT_CLOSED_BY_ADMIN)
+                    cout << "Chat room closed by admin"<<endl;
+                else if (cmd == DISCONNECT_FROM_ROOM_RESPONSE)
+                    cout << "You disconnected from the room" <<endl;
             }
             else if (cmd == LIST_USERS_RESPONSE){
                 cout << "****Registered Users****\n"<< str << "***********" << endl;
@@ -256,9 +279,9 @@ void MessengerClient::openSession(const string& peerUser){
 		cout<<"Not logged in to server"<<endl;
 }
 void MessengerClient::closeSessionOrExitRoom(){
-	if(clientState == State::IN_SESSION){
+	if(clientState == State::IN_SESSION)
 		sendToServer(CLOSE_SESSION_WITH_PEER," ",mainServer);
-	}else if (clientState == State::IN_ROOM)
+	else if (clientState == State::IN_ROOM)
         sendToServer(DISCONNECT_FROM_ROOM,this->currentRoomName,mainServer);
 	else
 		cout<<"Not in session or room"<<endl;
@@ -287,16 +310,15 @@ void MessengerClient::readFromServer(int & command,string& data,TCPSocket* mainS
 }
 void MessengerClient::send(const string & msg){
 
-    cout << "peer in session second: "<<this->peerInSeesion->second<<endl;
     std::istringstream splitter(this->peerInSeesion->second);
     string peerIp;
     int peerPort;
-    splitter >> peerIp;
+
+    std::getline(splitter, peerIp, ':');
     splitter >> peerPort;
 
     if (clientState == State::IN_SESSION) {
         //send peer in session the msg
-        cout <<"sending: "<< msg<<" IP: "<<peerIp<<" port:"<<peerPort<<endl;
         this->udpPeer->sendTo(">["+currentUserName+"] " + msg, peerIp, peerPort);
     }
     else if (clientState == State::IN_ROOM) {

@@ -19,7 +19,6 @@
 #define CLOSE_SESSION_WITH_PEER 	    1
 #define OPEN_SESSION_WITH_PEER 		    2
 #define EXIT						    3
-#define SEND_MSG_TO_PEER			    4
 #define SESSION_REFUSED				    5
 #define SESSION_ESTABLISHED			    6
 #define CLIENT_DISCONNECTED_FROM_ROOM   7
@@ -43,6 +42,7 @@
 #define LIST_CONNECTED_USERS_RESPONSE   25
 #define LIST_ROOMS_RESPONSE             26
 #define LIST_ROOM_USERS_RESPONSE        27
+#define DISCONNECT_FROM_ROOM_RESPONSE   28
 
 
 #define SESSION_REFUSED_TEXT "Connection refused to peer: "
