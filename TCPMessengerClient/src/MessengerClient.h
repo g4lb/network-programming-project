@@ -39,7 +39,7 @@ private:
             int command = 0;
             string data = "";
             while (running){
-                TCPMessengerProtocol::readFromServer(command,data,this->udpPeer);
+                //TCPMessengerProtocol::readFromServer(command,data,this->udpPeer);
                 if (command == SEND_MSG_TO_PEER)
                     cout << data << endl;
             }

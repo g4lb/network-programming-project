@@ -96,6 +96,8 @@ void MessengerClient::run() {
                 this->udpReaderThread = new MessengerClientPeerReader(this->udpPeer);
                 this->udpReaderThread->running = true;
                 this->udpReaderThread->start();
+
+                cout << "Entered room ["<<str<<"]"<<endl;
             }
             else if (cmd == SESSION_REFUSED) {
                 //Expecting input in format: <user>
@@ -285,6 +287,7 @@ void MessengerClient::readFromServer(int & command,string& data,TCPSocket* mainS
 }
 void MessengerClient::send(const string & msg){
 
+    cout << "peer in session second: "<<this->peerInSeesion->second<<endl;
     std::istringstream splitter(this->peerInSeesion->second);
     string peerIp;
     int peerPort;
@@ -293,6 +296,7 @@ void MessengerClient::send(const string & msg){
 
     if (clientState == State::IN_SESSION) {
         //send peer in session the msg
+        cout <<"sending: "<< msg<<" IP: "<<peerIp<<" port:"<<peerPort<<endl;
         this->udpPeer->sendTo(">["+currentUserName+"] " + msg, peerIp, peerPort);
     }
     else if (clientState == State::IN_ROOM) {
