@@ -131,9 +131,20 @@ void Dispatcher::run(){
                         if (isLogedIn(peer)){
                             TCPSocket* peerB = this->getPeerByAddress(data); // find second peer according to the data
                             if (peerB != NULL) {
+                                //get the username from the peers
+                                string peerName,peerBName;
+                                for (map<string, TCPSocket *>::iterator itr = loggedInUsers.begin();
+                                     itr != loggedInUsers.end(); ++itr) {
+                                    if (itr->second == peer) {
+                                        peerName=itr->first;
+                                    }
+                                    if (itr->second==peerB) {
+                                        peerBName=itr->first;
+                                    }
+                                }
                                 //tell peerB to change sessionIsActive=true
-                                TCPMessengerProtocol::sendToServer(SESSION_ESTABLISHED,peerB->fromAddr(),peer);
-                                TCPMessengerProtocol::sendToServer(SESSION_ESTABLISHED,peer->fromAddr(),peerB);
+                                TCPMessengerProtocol::sendToServer(SESSION_ESTABLISHED,peerBName+" "+peerB->fromAddr(),peer);
+                                TCPMessengerProtocol::sendToServer(SESSION_ESTABLISHED,peerName+" "+peer->fromAddr(),peerB);
                                 //remove peers from the dispatcher responsibility
                                 this->removePeer(peer);
                                 this->removePeer(peerB);
