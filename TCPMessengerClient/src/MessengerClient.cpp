@@ -177,7 +177,7 @@ void MessengerClient::reg(const string& user,const string& password) {
 
 void MessengerClient::listUsers(){
     if (clientState == State::LOGGED_IN){
-        sendToServer(LIST_USERS,"",mainServer);
+        sendToServer(LIST_USERS," ",mainServer);
     }
     else{
         cout << "You are not logged in" << endl;
@@ -185,7 +185,7 @@ void MessengerClient::listUsers(){
 }
 void MessengerClient::listConnectedUsers(){
     if (clientState == State::LOGGED_IN){
-        sendToServer(LIST_CONNECTED_USERS,"",mainServer);
+        sendToServer(LIST_CONNECTED_USERS," ",mainServer);
     }
     else{
         cout << "You are not logged in" << endl;
@@ -193,7 +193,7 @@ void MessengerClient::listConnectedUsers(){
 }
 void MessengerClient::listRooms(){
     if (clientState == State::LOGGED_IN){
-        sendToServer(LIST_ROOMS,"",mainServer);
+        sendToServer(LIST_ROOMS," ",mainServer);
     }
     else{
         cout << "You are not logged in" << endl;
@@ -245,7 +245,7 @@ void MessengerClient::openSession(const string& ipAndPort){
 }
 void MessengerClient::closeSessionOrExitRoom(){
 	if(clientState == State::IN_SESSION){
-		sendToServer(CLOSE_SESSION_WITH_PEER,"",mainServer);
+		sendToServer(CLOSE_SESSION_WITH_PEER," ",mainServer);
 	}else if (clientState == State::IN_ROOM)
         sendToServer(DISCONNECT_FROM_ROOM,this->currentRoomName,mainServer);
 	else
@@ -253,7 +253,7 @@ void MessengerClient::closeSessionOrExitRoom(){
 }
 void MessengerClient::disconnect(){
     if (clientState != State::DISCONNECTED) {
-        sendToServer(EXIT, "", mainServer);
+        sendToServer(EXIT, " ", mainServer);
         cout << "You have disconnected from server"<<endl;
     }
     else
@@ -262,7 +262,7 @@ void MessengerClient::disconnect(){
 }
 void MessengerClient::exit(){
     if (clientState != State::DISCONNECTED) {
-        sendToServer(EXIT, "", mainServer);
+        sendToServer(EXIT, " ", mainServer);
         cout << "You have disconnected from server"<<endl;
     }
 	delete mainServer;
