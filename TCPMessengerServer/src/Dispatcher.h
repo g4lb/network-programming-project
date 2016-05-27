@@ -32,7 +32,6 @@ class Dispatcher : public MThread, ChatRoom::ChatRoomHandler, Brocker::BrockerHa
 public:
 	Dispatcher();
 	void add(TCPSocket* peer);
-	TCPSocket* getPeerByAddress(const string& address);
 	void removePeer(TCPSocket* peer);
 	void listPeers();
 	void run();

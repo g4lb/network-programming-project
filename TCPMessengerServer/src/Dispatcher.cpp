@@ -45,12 +45,6 @@ void Dispatcher::listPeers(){
 
 }
 
-TCPSocket* Dispatcher::getPeerByAddress(const string& address){
-    for (int i=0;i<peers.size();i++)
-        if (peers[i]->fromAddr() == address)
-            return peers[i];
-    return NULL;
-}
 
 void Dispatcher::run(){
     int command;
@@ -117,9 +111,9 @@ void Dispatcher::run(){
                         for (map<string, TCPSocket *>::iterator itr = loggedInUsers.begin();
                              itr != loggedInUsers.end(); ++itr){
                             if (itr->second==peer) {
-                                ChatRoom *room = new ChatRoom(this,data,peer);
                                 TCPMessengerProtocol::sendToServer(SUCCESS_ENTER_ROOM, data, peer);
                                 this->removePeer(peer);
+                                ChatRoom *room = new ChatRoom(this,data,peer);
                                 chatRooms.push_back(room);
                                 break;
                             }
