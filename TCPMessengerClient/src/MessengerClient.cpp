@@ -164,16 +164,43 @@ void MessengerClient::run() {
                 cout << "****Rooms****\n"<< str << "***********" << endl;
             }else if (cmd == LIST_ROOM_USERS_RESPONSE){
                 cout << "****Room Users****\n"<< str << "***********" << endl;
+            }else if (cmd == EXIT){
+
             }
 		}
 		else
 		{
 			cout << "Server disconnected" << endl;
-			this->clientState = State::DISCONNECTED;
+            this->close();
 		}
 
 	}
 }
+
+void MessengerClient::close(){
+    if (this->udpReaderThread != NULL) {
+        this->udpReaderThread->stop();
+
+        delete this->udpReaderThread;
+    }
+    if (this->udpPeer != NULL)
+        delete this->udpPeer;
+    if (this->clientState != State::DISCONNECTED)
+        this->clientState = State::DISCONNECTED;
+    this->currentRoomName = "";
+    this->currentUserName = "";
+    this->myConnectionPort = 0;
+    if (this->peerInSeesion != NULL)
+        delete this->peerInSeesion;
+    if (this->peersInRoom != NULL)
+        delete this->peersInRoom;
+    if (this->mainServer != NULL) {
+        this->mainServer->close();
+        delete this->mainServer;
+    }
+
+}
+
 void MessengerClient::connect(const string& ip){
 	if(clientState == State::DISCONNECTED){
 		mainServer = new TCPSocket(ip, MSNGR_PORT);
@@ -295,7 +322,7 @@ void MessengerClient::exit(){
         sendToServer(EXIT, " ", mainServer);
         cout << "You have disconnected from server"<<endl;
     }
-	delete mainServer;
+	close();
 }
 void MessengerClient::sendToServer(int command, const string& data, TCPSocket* mainServer){
 	TCPMessengerProtocol::sendToServer(command,data,mainServer);

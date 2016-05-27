@@ -84,6 +84,8 @@ public:
 	void disconnect();
 	void run();
 	void exit();
+private:
+    void close();
 };
 
 } /* namespace npl */
