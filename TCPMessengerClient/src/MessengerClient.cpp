@@ -246,9 +246,9 @@ void MessengerClient::closeCurrentRoom(){
     }
 }
 
-void MessengerClient::openSession(const string& ipAndPort){
+void MessengerClient::openSession(const string& peerUser){
 	if(clientState == State::LOGGED_IN){
-		sendToServer(OPEN_SESSION_WITH_PEER,ipAndPort,mainServer);
+		sendToServer(OPEN_SESSION_WITH_PEER,peerUser,mainServer);
 	}
 	else
 		cout<<"Not logged in to server"<<endl;
