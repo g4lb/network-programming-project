@@ -306,8 +306,8 @@ void Dispatcher::listRoomUsers(const string& roomName){
             cout << "*******************" <<endl;
             return;
         }
-        cout << "No such room: [" << roomName << "]" << endl;
     }
+    cout << "No such room: [" << roomName << "]" << endl;
 }
 
 
