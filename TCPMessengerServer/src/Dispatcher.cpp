@@ -174,7 +174,7 @@ void Dispatcher::run(){
                         string users;
                         for (map<string, string>::iterator itr = registeredUsers.begin();
                              itr != registeredUsers.end(); ++itr) {
-                            users += itr->first+"/n";
+                            users += itr->first+"\n";
                         }
                         TCPMessengerProtocol::sendToServer(LIST_USERS_RESPONSE,users,peer);
                         break;
