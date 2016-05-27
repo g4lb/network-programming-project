@@ -31,7 +31,7 @@ private:
         UDPSocket* udpPeer;
         bool running;
 
-        MessengerClientPeerReader(UDPSocket* udpPeer):running(false){
+        MessengerClientPeerReader(UDPSocket* udpPeer):running(true){
             this->udpPeer = udpPeer;
         }
 
@@ -41,6 +41,10 @@ private:
                 udpPeer->read(buffer,1024);
                 cout << buffer << endl;
             }
+            cout << "Stopped reading from peer"<<endl;
+        }
+        void stop() {
+            running = false;
         }
     };
 

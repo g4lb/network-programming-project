@@ -80,11 +80,10 @@ void MessengerClient::run() {
 
                 cout << SESSION_ESTABLISHED_TEXT << "["<< peerUser<<"]" << endl;
                 this->peerInSeesion = new pair<string,string>(peerUser,peerIpAndPort);
-                //TODO: OPEN UDP IN READER THREAD ON THE PORT WHICH I CONNECTED TO THE MAIN SERVER
+
                 this->udpPeer = new UDPSocket(this->myConnectionPort);
 
                 this->udpReaderThread = new MessengerClientPeerReader(this->udpPeer);
-                this->udpReaderThread->running = true;
                 this->udpReaderThread->start();
 
 			}else if (cmd == SUCCESS_ENTER_ROOM){
@@ -93,11 +92,9 @@ void MessengerClient::run() {
                 this->clientState = State::IN_ROOM;
                 this->currentRoomName = str;
 
-                //TODO: OPEN UDP IN READER THREAD ON THE PORT WHICH I CONNECTED TO THE MAIN SERVER
                 this->udpPeer = new UDPSocket(this->myConnectionPort);
 
                 this->udpReaderThread = new MessengerClientPeerReader(this->udpPeer);
-                this->udpReaderThread->running = true;
                 this->udpReaderThread->start();
 
                 cout << "Entered room ["<<str<<"]"<<endl;
@@ -110,10 +107,9 @@ void MessengerClient::run() {
                 //Expecting input in format: NONE
                 cout << CLOSE_SESSION_WITH_PEER_TEXT << "["<< this->peerInSeesion->first <<"]" << endl;
 
-                this->peerInSeesion = NULL;
+                delete this->peerInSeesion;
                 if (this->udpReaderThread != NULL) {
-                    this->udpReaderThread->running = false;
-                    this->udpReaderThread->waitForThread();
+                    this->udpReaderThread->stop();
 
                     delete this->udpReaderThread;
                 }
@@ -147,8 +143,7 @@ void MessengerClient::run() {
                 this->peersInRoom->clear();
 
                 if (this->udpReaderThread != NULL) {
-                    this->udpReaderThread->running = false;
-                    this->udpReaderThread->waitForThread();
+                    this->udpReaderThread->stop();
 
                     delete this->udpReaderThread;
                 }
