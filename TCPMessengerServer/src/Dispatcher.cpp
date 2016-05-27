@@ -124,7 +124,7 @@ void Dispatcher::run(){
                                 break;
                             }
                         }
-                        TCPMessengerProtocol::sendToServer(NOT_CONNECTED_TO_SERVER," ", peer);
+
                         break;
                     }
                     case OPEN_SESSION_WITH_PEER: {

@@ -49,5 +49,4 @@ map<string,string> ServerLoader::loadAllUserFromFile(){
     nameFileout.close();
 
     return this->usersAndPasswords;
-
 };
