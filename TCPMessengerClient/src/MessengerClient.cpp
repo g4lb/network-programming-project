@@ -20,7 +20,7 @@ MessengerClient::MessengerClient(){
 }
 void MessengerClient::run() {
     //Main server reader thread
-	while (clientState == State::CONNECTED) {
+	while (clientState != State::DISCONNECTED) {
 		int cmd;
 		string str;
 		readFromServer(cmd,str,mainServer);
