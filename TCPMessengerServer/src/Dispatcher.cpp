@@ -56,7 +56,7 @@ void Dispatcher::run(){
     int command;
     string data;
 	while(running){
-			if(peers.size() == 0){
+			if(this->loggedInUsers.size() == 0){
 				running = false;
 				break;
 			}
@@ -220,7 +220,6 @@ void Dispatcher::run(){
                             }
                             break;
                         }
-                        TCPMessengerProtocol::sendToServer(NOT_CONNECTED_TO_SERVER," ", peer);
                         break;
                     }
                     default: {

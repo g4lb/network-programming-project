@@ -19,11 +19,14 @@
 namespace npl {
 
 class Dispatcher : public MThread, ChatRoom::ChatRoomHandler, Brocker::BrockerHandler {
+
 	vector<TCPSocket*> peers;
 	vector<Brocker*> brockers;
 	vector<ChatRoom*> chatRooms;
+
 	map<string,string> registeredUsers;
 	map<string,TCPSocket*> loggedInUsers;
+
 	MultipleTCPSocketListener* listener;
 	bool running;
 public:
