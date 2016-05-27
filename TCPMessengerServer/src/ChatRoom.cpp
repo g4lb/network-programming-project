@@ -40,12 +40,18 @@ void ChatRoom::run(){
                 break;
             }
             case EXIT: {
+                string userName;
                 if (sender == admin) {
                     active = false;
                     sendByLoop(CHAT_CLOSED_BY_ADMIN, data, sender);
                     this->close();
                 }
-                sendByLoop(CLIENT_DISCONNECTED_FROM_ROOM, data, sender);
+                for (map<string, TCPSocket *>::iterator itr = peers.begin(); itr != peers.end(); ++itr) {
+                    if (itr->second == sender) {
+                        userName = itr->first;
+                    }
+                }
+                sendByLoop(CLIENT_DISCONNECTED_FROM_ROOM, userName, sender);
                 for (map<string, TCPSocket *>::iterator itr = peers.begin(); itr != peers.end(); ++itr) {
                     if (itr->second == sender) {
                         peers.erase(itr->first);
