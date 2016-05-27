@@ -19,7 +19,7 @@ void printInstructions(){
 	cout<<"Print the connected users list type: lcu"<<endl;
 	cout<<"Print available rooms type: lr"<<endl;
 	cout<<"Print users in room type: lru <room name>"<<endl;
-	cout<<"To open session with peer type: o <peer ip>:<peer port>"<<endl;
+	cout<<"To open session with peer type: o <username>"<<endl;
 	cout<<"To enter a chat room(or create if not exist) type: or <room name>"<<endl;
 	cout<<"To send a message type: s <message>"<<endl;
 	cout<<"Print user status type: l"<<endl;
@@ -74,9 +74,9 @@ int main(){
             client->closeCurrentRoom();
         }
         else if(command == "o"){
-			string ipAndPort;
-			cin>>ipAndPort;
-			client->openSession(ipAndPort);
+			string peerUser;
+			cin>>peerUser;
+			client->openSession(peerUser);
 		}else if(command == "s"){
 			getline(std::cin,msg);
 			if(msg.size()>0 && msg[0] == ' ')msg.erase(0,1);
