@@ -56,7 +56,7 @@ void Dispatcher::run(){
     int command;
     string data;
 	while(running){
-			if(this->loggedInUsers.size() == 0){
+			if(peers.size() == 0){
 				running = false;
 				break;
 			}
