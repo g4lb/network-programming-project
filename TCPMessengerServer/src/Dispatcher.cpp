@@ -112,9 +112,17 @@ void Dispatcher::run(){
                         for (map<string, TCPSocket *>::iterator itr = loggedInUsers.begin();
                              itr != loggedInUsers.end(); ++itr){
                             if (itr->second==peer) {
+                                for (int i = 0; i <chatRooms.size() ; ++i) {
+                                    if (chatRooms[i]->getRoomName() == data) {
+                                        TCPMessengerProtocol::sendToServer(SUCCESS_ENTER_ROOM, data, peer);
+                                        this->removePeer(peer);
+                                        chatRooms[i]->addUser(itr->first, peer);
+                                        break;
+                                    }
+                                }
                                 TCPMessengerProtocol::sendToServer(SUCCESS_ENTER_ROOM, data, peer);
                                 this->removePeer(peer);
-                                ChatRoom *room = new ChatRoom(this,data,itr->first,peer);
+                                ChatRoom *room = new ChatRoom(this, data, itr->first, peer);
                                 chatRooms.push_back(room);
                                 break;
                             }
@@ -205,8 +213,14 @@ void Dispatcher::run(){
                         break;
                     }
                     case EXIT: {
+                        this->removePeer(peer);
                         if (isLogedIn(peer)) {
-                            this->removePeer(peer);
+                            for (map<string, TCPSocket *>::iterator itr = loggedInUsers.begin();
+                                 itr != loggedInUsers.end(); ++itr){
+                                if(itr->second==peer){
+                                    loggedInUsers.erase(itr->first);
+                                }
+                            }
                             TCPMessengerProtocol::sendToServer(EXIT, " ", peer);
                             cout << "Client " << peer->fromAddr() << " has disconnected" << endl;
                             if (peers.size() == 0) {
