@@ -117,14 +117,13 @@ void Dispatcher::run(){
                         for (map<string, TCPSocket *>::iterator itr = loggedInUsers.begin();
                              itr != loggedInUsers.end(); ++itr){
                             if (itr->second==peer) {
-                                ChatRoom *room = new ChatRoom(this,data, peer);
+                                ChatRoom *room = new ChatRoom(this,data,peer);
                                 TCPMessengerProtocol::sendToServer(SUCCESS_ENTER_ROOM, data, peer);
                                 this->removePeer(peer);
                                 chatRooms.push_back(room);
                                 break;
                             }
                         }
-
                         break;
                     }
                     case OPEN_SESSION_WITH_PEER: {

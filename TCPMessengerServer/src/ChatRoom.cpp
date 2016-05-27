@@ -39,6 +39,27 @@ void ChatRoom::run(){
                 sendByLoop(command, data, sender);
                 break;
             }
+            case DISCONNECT_FROM_ROOM:{
+                string userName;
+                if (sender == admin) {
+                    active = false;
+                    sendByLoop(CHAT_CLOSED_BY_ADMIN, data, sender);
+                    this->close();
+                }
+                for (map<string, TCPSocket *>::iterator itr = peers.begin(); itr != peers.end(); ++itr) {
+                    if (itr->second == sender) {
+                        userName = itr->first;
+                    }
+                }
+                TCPMessengerProtocol::sendToServer(DISCONNECT_FROM_ROOM_RESPONSE,userName,sender);
+                sendByLoop(CLIENT_DISCONNECTED_FROM_ROOM, userName, sender);
+                for (map<string, TCPSocket *>::iterator itr = peers.begin(); itr != peers.end(); ++itr) {
+                    if (itr->second == sender) {
+                        peers.erase(itr->first);
+                    }
+                }
+                break;
+            }
             case EXIT: {
                 string userName;
                 if (sender == admin) {
@@ -51,7 +72,9 @@ void ChatRoom::run(){
                         userName = itr->first;
                     }
                 }
+                TCPMessengerProtocol::sendToServer(DISCONNECT_FROM_ROOM_RESPONSE,userName,sender);
                 sendByLoop(CLIENT_DISCONNECTED_FROM_ROOM, userName, sender);
+                TCPMessengerProtocol::sendToServer(EXIT, " ", sender);
                 for (map<string, TCPSocket *>::iterator itr = peers.begin(); itr != peers.end(); ++itr) {
                     if (itr->second == sender) {
                         peers.erase(itr->first);
