@@ -37,6 +37,7 @@ private:
 
         void run(){
             char buffer[100];
+            bzero(buffer,sizeof(buffer));
             while (running){
                 udpPeer->read(buffer,100);
                 cout << buffer << endl;
