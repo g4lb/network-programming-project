@@ -41,12 +41,12 @@ void ChatRoom::run(){
                     }
                 }
                 TCPMessengerProtocol::sendToServer(DISCONNECT_FROM_ROOM_RESPONSE, userName, sender);
-                sendByLoop(CLIENT_DISCONNECTED_FROM_ROOM, userName, sender);
                 for (map<string, TCPSocket *>::iterator itr = peers.begin(); itr != peers.end(); ++itr) {
                     if (itr->second == sender) {
                         peers.erase(itr->first);
                     }
                 }
+                sendByLoop(CLIENT_DISCONNECTED_FROM_ROOM, userName, sender);
                 break;
             }
             case EXIT: {
@@ -59,6 +59,7 @@ void ChatRoom::run(){
                 for (map<string, TCPSocket *>::iterator itr = peers.begin(); itr != peers.end(); ++itr) {
                     if (itr->second == sender) {
                         userName = itr->first;
+                        break;
                     }
                 }
                 TCPMessengerProtocol::sendToServer(DISCONNECT_FROM_ROOM_RESPONSE, userName, sender);
