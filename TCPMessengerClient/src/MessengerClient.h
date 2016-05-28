@@ -1,7 +1,7 @@
 /*
  * MessengerClient.h
  *
- *  this class is implements the client. each client is in thread ,connects in TCP, and  between two clients the communication is on UDP.
+ *  this class implements the client. each client is in thread ,connects in TCP, and  between two clients the communication is on UDP.the class inherited from MThread.
  *  data members:
  *  UDPSocket* udpPeer: holds an object of udp socket.
  * bool running: hold boolean variable, true as long as runing.

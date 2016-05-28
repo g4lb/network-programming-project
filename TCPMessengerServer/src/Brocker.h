@@ -2,7 +2,7 @@
  * Brocker.h
  *
  *  the Brocker class manages an open session between two peers.
- *  The Broker reads the incoming commands and messages from the peers and perform the required operations according to the incoming commands.
+ *  The Broker reads the incoming commands and messages from the peers and perform the required operations according to the incoming commands.the class inherited from MThread.
  *  contain inner class:
  *  BrockerHandler:
  *  this class implements the chat room.

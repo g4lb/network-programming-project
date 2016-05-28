@@ -2,6 +2,7 @@
  * Dispatcher.h
  *
  *  the Dispatcher class is a class that listen to all the peers and handle the incoming commands from the peers.
+    the class inherited from MThread, ChatRoom-ChatRoomHandler, Brocker-BrockerHandler classes.
  *  data members:
  *  vector<TCPSocket*> peers: holds a vector of tcp sockets peers.
  *  vector<Brocker*> brockers: holds a vector of brocker .

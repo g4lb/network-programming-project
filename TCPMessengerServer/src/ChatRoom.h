@@ -1,5 +1,5 @@
 /*
- * this class is the chat room
+ * this class is the chat room,the class inherited from MThread.
  * ChatRoomHandler class is: is the same functionality of the brocker but handle the room itself.
  * methods of ChatRoomHandler class:
  * virtual void onClose(ChatRoom* chatRoom, map<string,TCPSocket*> peersMap)=0 :
