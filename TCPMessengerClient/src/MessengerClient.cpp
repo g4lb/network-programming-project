@@ -120,13 +120,14 @@ void MessengerClient::run() {
             }
             else if (cmd == CLIENT_DISCONNECTED_FROM_ROOM){
                 //Expecting input in format: <user>
-
-                map<string,string>::iterator iter = this->peersInRoom->find(str);
-                if(iter != this->peersInRoom->end())
-                    this->peersInRoom->erase(iter);
-                else
-                    cout << "Unsuccessful delete of user: ["<<str<<"] from room"<<endl;
-
+                for (map<string, string>::iterator peer = peersInRoom->begin(); peer != peersInRoom->end(); ++peer)
+                {
+                    if (peer->first == str){
+                        this->peersInRoom->erase(peer);
+                        cout << "Client ["<<peer->first<<"] has left the room"<<endl;
+                        break;
+                    }
+                }
             }
             else if (cmd == CLIENT_ENTERED_ROOM){
                 //Expecting input in format: <user> <ip>:<port>
@@ -279,9 +280,9 @@ void MessengerClient::printClientState(){
     else if (clientState == State::IN_SESSION)
         cout << "Client is in session"<<endl;
     else if (clientState == State::LOGGED_IN)
-        cout << "Client is logged in to server ["<<this->mainServer->fromAddr()<<"]"<<endl;
+        cout << "Client is logged in to server" <<endl;
     else if (clientState == State::CONNECTED)
-        cout << "Client is connected to server ["<<this->mainServer->fromAddr()<<"]"<<endl;
+        cout << "Client is connected to server" <<endl;
     else if (clientState == State::DISCONNECTED)
         cout << "Client is not connected to any server"<<endl;
 }

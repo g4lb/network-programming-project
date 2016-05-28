@@ -16,7 +16,7 @@
 #include "ServerLoader.h"
 
 #define TIMEOUT 2
-#define USERS_PATH "/home/bar/cpprepo/eliav/users.txt"
+#define USERS_PATH "users.txt"
 
 using namespace std;
 using namespace npl;
