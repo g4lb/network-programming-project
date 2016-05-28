@@ -31,7 +31,6 @@ int FileInterface::write(const char* buff,int length){
 }
 FileInterface::~ FileInterface(){
 
-
 }
 
 
