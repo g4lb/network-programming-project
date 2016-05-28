@@ -66,7 +66,6 @@ void ChatRoom::run(){
                         break;
                     }
                 }
-                TCPMessengerProtocol::sendToServer(DISCONNECT_FROM_ROOM_RESPONSE, userName, sender);
                 sendByLoop(CLIENT_DISCONNECTED_FROM_ROOM, userName, sender);
                 closeByPeer(sender);
                 break;

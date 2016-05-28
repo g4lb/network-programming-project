@@ -123,7 +123,7 @@ void MessengerClient::run() {
                 {
                     if (peer->first == str){
                         this->peersInRoom->erase(peer->first);
-                        cout << "Client ["<<peer->first<<"] has left the room"<<endl;
+                        cout << "A Client has left the room"<<endl;
                         break;
                     }
                 }

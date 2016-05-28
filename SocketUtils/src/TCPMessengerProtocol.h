@@ -56,8 +56,6 @@ class TCPMessengerProtocol{
 public:
 	void static sendToServer(int command,const string& data, TCPSocket* sock){
         try {
-
-
             char commToSend[4];
             *((int *) commToSend) = htonl(command);
 
@@ -88,14 +86,11 @@ public:
             bzero(buff, 4);
             if (sock->read(buff, 4) > 0) {
                 command = ntohl(*(int *) buff);
-                switch (command) {
-                    case EXIT:
-                        return;
-                }
+
                 if (sock->read(buff, 4) > 0) {
                     int len = ntohl(*(int *) buff);
 
-                    char dataRead[len];
+                    char dataRead[len+1];
                     bzero(dataRead, len);
                     if (sock->read(dataRead, len) > 0) {
                         dataRead[len] = '\0';
