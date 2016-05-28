@@ -40,35 +40,37 @@ namespace npl {
         while (active) {
             sender = listener.listen(TIMEOUT);
             //IF SENDER IS NULL THEN TIMEOUT HANDLING
-            string a,b;
-            if (sender == peerA) {
-                reciver = peerB;
-                a = userNameA;
-                b = userNameB;
-            }
-            else {
-                reciver = peerA;
-                b = userNameA;
-                a = userNameB;
-            }
-            TCPMessengerProtocol::readFromServer(command, data, sender);
-            switch (command) {
-                case CLOSE_SESSION_WITH_PEER: {
-                    TCPMessengerProtocol::sendToServer(command, b, sender);
-                    TCPMessengerProtocol::sendToServer(command, a, reciver);
-                    active = false;
-                    break;
+            if (sender != NULL) {
+                string a, b;
+                if (sender == peerA) {
+                    reciver = peerB;
+                    a = userNameA;
+                    b = userNameB;
                 }
-                case EXIT: {
-                    TCPMessengerProtocol::sendToServer(command, b, sender);
-                    TCPMessengerProtocol::sendToServer(command, a, reciver);
-                    active = false;
-                    TCPMessengerProtocol::sendToServer(EXIT, " ", sender);
-                    break;
+                else {
+                    reciver = peerA;
+                    b = userNameA;
+                    a = userNameB;
                 }
-                default: {
-                    cout << command << endl;
-                    break;
+                TCPMessengerProtocol::readFromServer(command, data, sender);
+                switch (command) {
+                    case CLOSE_SESSION_WITH_PEER: {
+                        TCPMessengerProtocol::sendToServer(command, b, sender);
+                        TCPMessengerProtocol::sendToServer(command, a, reciver);
+                        active = false;
+                        break;
+                    }
+                    case EXIT: {
+                        TCPMessengerProtocol::sendToServer(command, b, sender);
+                        TCPMessengerProtocol::sendToServer(command, a, reciver);
+                        active = false;
+                        TCPMessengerProtocol::sendToServer(EXIT, " ", sender);
+                        break;
+                    }
+                    default: {
+                        cout << command << endl;
+                        break;
+                    }
                 }
             }
         }

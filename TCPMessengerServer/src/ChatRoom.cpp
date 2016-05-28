@@ -3,7 +3,6 @@
 //
 #define TIMEOUT 2
 #include "ChatRoom.h"
-#include "../../SocketUtils/src/MultipleTCPSocketListener.h"
 #include "../../SocketUtils/src/TCPMessengerProtocol.h"
 
 using namespace std;
@@ -86,11 +85,12 @@ void ChatRoom::run(){
             }
         }
     }
-    }
     close();
+    }
 }
 void ChatRoom::close(){
-   handler->onClose(this, this->peers);
+    active=false;
+    handler->onClose(this, this->peers);
 }
 void ChatRoom::addUser(string userName,TCPSocket* peer){
     //insert the new peer (insert after send so the loop won't send to peer itself

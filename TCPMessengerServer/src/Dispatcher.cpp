@@ -71,7 +71,7 @@ void Dispatcher::run(){
 
                                 pair<map<string,TCPSocket*>::iterator,bool> ret = loggedInUsers.
                                         insert(pair<string, TCPSocket *>(peerUser, peer));
-                                if (ret.second == true) {
+                                if (ret.second) {
                                     TCPMessengerProtocol::sendToServer(SUCCESS_LOGIN, peerUser + " " + peer->fromAddr(),
                                                                        peer);
                                     loginSuccess = true;
@@ -257,14 +257,14 @@ void Dispatcher::onClose(Brocker * brocker, TCPSocket* peerA,TCPSocket* peerB){
 
 }
 void Dispatcher::onClose(ChatRoom* chatRoom, map<string,TCPSocket*> peersMap){
-    //remove the brocker from the brockers vector
-    chatRooms.erase(std::remove(chatRooms.begin(),chatRooms.end(), chatRoom),chatRooms.end());
-    //return the peers to the vector
-    for (map<string,TCPSocket*>::iterator itr = peersMap.begin(); itr != peersMap.end() ; ++itr) {
-       this->add(itr->second);
-    }
-    //delete the brocker
-    chatRoom->waitForThread();
+        //remove the brocker from the brockers vector
+        chatRooms.erase(std::remove(chatRooms.begin(), chatRooms.end(), chatRoom), chatRooms.end());
+        //return the peers to the vector
+        for (map<string, TCPSocket *>::iterator itr = peersMap.begin(); itr != peersMap.end(); ++itr) {
+            this->add(itr->second);
+        }
+        //delete the brocker
+        chatRoom->waitForThread();
 }
 bool Dispatcher::isLogedIn(TCPSocket* sock){
     for (map<string, TCPSocket *>::iterator itr = loggedInUsers.begin();
