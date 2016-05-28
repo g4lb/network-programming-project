@@ -111,12 +111,9 @@ void MessengerClient::run() {
                 delete this->peerInSeesion;
                 if (this->udpReaderThread != NULL) {
                     this->udpReaderThread->stop();
-
                     this->udpReaderThread->waitForThread();
-                    delete this->udpReaderThread;
                 }
                 this->udpPeer->close();
-                delete this->udpPeer;
 
                 this->clientState = State::LOGGED_IN;
             }
@@ -149,10 +146,8 @@ void MessengerClient::run() {
                 if (this->udpReaderThread != NULL) {
                     this->udpReaderThread->stop();
                     this->udpReaderThread->waitForThread();
-                    delete this->udpReaderThread;
                 }
                 this->udpPeer->close();
-                delete this->udpPeer;
 
                 this->clientState = State::LOGGED_IN;
                 if (cmd == CHAT_CLOSED_BY_ADMIN)
@@ -193,14 +188,12 @@ void MessengerClient::close(){
 
     if (this->udpReaderThread != NULL) {
         this->udpReaderThread->stop();
-
-        delete this->udpReaderThread;
+        this->udpReaderThread->waitForThread();
         cout<<"stopped reading p2p messages..";
     }
     if (this->udpPeer != NULL) {
         this->udpPeer->close();
         cout<<"stopped sending p2p messages..";
-        delete this->udpPeer;
     }
     if (this->clientState != State::DISCONNECTED) {
         this->clientState = State::DISCONNECTED;
@@ -208,7 +201,6 @@ void MessengerClient::close(){
     }
     if (this->mainServer != NULL) {
         this->mainServer->close();
-        delete this->mainServer;
         cout<<"closed the main server..";
     }
     cout<<"Done."<<endl;
