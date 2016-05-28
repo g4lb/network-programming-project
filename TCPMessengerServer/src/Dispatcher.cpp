@@ -1,5 +1,3 @@
-//TODO: EXIT IN SESSION OR IN ROOM
-
 #include <sstream>
 #include "Dispatcher.h"
 

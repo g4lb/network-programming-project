@@ -178,15 +178,8 @@ void MessengerClient::run() {
 }
 
 void MessengerClient::close(){
-    if (this->udpReaderThread != NULL) {
-        this->udpReaderThread->stop();
+    cout << "Initiating closing sequence..";
 
-        delete this->udpReaderThread;
-    }
-    if (this->udpPeer != NULL)
-        delete this->udpPeer;
-    if (this->clientState != State::DISCONNECTED)
-        this->clientState = State::DISCONNECTED;
     this->currentRoomName = "";
     this->currentUserName = "";
     this->myConnectionPort = 0;
@@ -194,11 +187,28 @@ void MessengerClient::close(){
         delete this->peerInSeesion;
     if (this->peersInRoom != NULL)
         delete this->peersInRoom;
+
+    if (this->udpReaderThread != NULL) {
+        this->udpReaderThread->stop();
+
+        delete this->udpReaderThread;
+        cout<<"stopped reading p2p messages..";
+    }
+    if (this->udpPeer != NULL) {
+        this->udpPeer->close();
+        cout<<"stopped sending p2p messages..";
+        delete this->udpPeer;
+    }
+    if (this->clientState != State::DISCONNECTED) {
+        this->clientState = State::DISCONNECTED;
+        cout<<"stopped reading from main server..";
+    }
     if (this->mainServer != NULL) {
         this->mainServer->close();
         delete this->mainServer;
+        cout<<"closed the main server..";
     }
-
+    cout<<"Done."<<endl;
 }
 
 void MessengerClient::connect(const string& ip){
