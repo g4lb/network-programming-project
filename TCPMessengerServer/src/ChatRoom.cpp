@@ -19,8 +19,6 @@ ChatRoom::ChatRoom(ChatRoomHandler* handler,const string& roomName,const string&
     //sleep(1);
 }
 void ChatRoom::run(){
-    MultipleTCPSocketListener listener;
-
     listener.add(admin);
 
     int command = 0;
@@ -95,16 +93,17 @@ void ChatRoom::close(){
    handler->onClose(this, this->peers);
 }
 void ChatRoom::addUser(string userName,TCPSocket* peer){
+    //insert the new peer (insert after send so the loop won't send to peer itself
+    pair<string,TCPSocket*> newPeer(userName,peer);
+    peers.insert(newPeer);
+    listener.add(peer);
     //send the new peer to all other peers
     if(peers.size()>1){
         sendByLoop(CLIENT_ENTERED_ROOM,userName+" "+peer->fromAddr(),peer);
     }
-    //insert the new peer (insert after send so the loop won't send to peer itself
-    pair<string,TCPSocket*> newPeer(userName,peer);
-    peers.insert(newPeer);
     //send the new peer all other peers
     for (map<string,TCPSocket*>::iterator itr = peers.begin(); itr != peers.end() ; ++itr) {
-        if ((*itr).first != newPeer.first)
+        if ((*itr).first == newPeer.first)
             continue;
         TCPMessengerProtocol::sendToServer(CLIENT_ENTERED_ROOM, (*itr).first + " "+ (*itr).second->fromAddr(), newPeer.second);
     }

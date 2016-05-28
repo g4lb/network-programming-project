@@ -9,6 +9,7 @@
 #include <map>
 #include "../../SocketUtils/src/MThread.h"
 #include "../../SocketUtils/src/TCPSocket.h"
+#include "../../SocketUtils/src/MultipleTCPSocketListener.h"
 
 namespace npl {
 
@@ -23,6 +24,7 @@ private:
     TCPSocket * admin;
     ChatRoomHandler* handler;
     string roomName;
+    MultipleTCPSocketListener listener;
     bool active;
 public:
     ChatRoom(ChatRoomHandler* handler, const string& roomName,const string& peerName,TCPSocket* peerA);
