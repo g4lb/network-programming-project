@@ -1,8 +1,13 @@
 /*
  * FileInterface.h
  *
- *  Created on: Jan 1, 2016
- *      Author: parallels
+ *  this is an interface that the class socket inherited from him.
+ *  data members:
+ *  int socket_fd holds the number of the socket.
+ *  close method: the method close the socket.
+ *  read method: the method read information from the socket.
+ *  write method: the method write into the socket.
+ *  getSocketFd method: the method returns the number of the socket.
  */
 
 #ifndef FILEINTERFACE_H_

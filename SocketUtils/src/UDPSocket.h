@@ -1,8 +1,11 @@
 /*
  * UDPSocket.h
  *
- *  Created on: Feb 6, 2013
- *      Author: Eliav Menachi
+ *the UDPSocket implements a udp connection.the class inherited from socket.
+ * recv method: receive information from the server.returns number that is bigger the 0 it means that there was information the receive.
+ * sendTo method: send information to the server.returns number that is bigger the 0 it means that there was information to send.
+ * replay method: replays to last one that send a message.
+ * close method: closing the udp socket.
  */
 
 #ifndef UDPSOCKET_H_

@@ -1,8 +1,13 @@
 /*
  * TCPSocket.h
  *
- *  Created on: Mar 21, 2016
- *      Author: user
+ *  the TCPSocket implements a tcp connection.the class inherited from socket.
+ *  data members:
+ *  struct sockaddr_in serv_name: holds the struct of the protocol network.
+ *  int connect_sock: holds the number of the socket.
+ *  listenAndAccept method: is on listening and once there has been a chance to connect the method returns a socket to communicate through.
+ *
+ *
  */
 
 #ifndef TCPSOCKET_H_

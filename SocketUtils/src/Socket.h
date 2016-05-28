@@ -1,8 +1,12 @@
 /*
  * Socket.h
  *
- *  Created on: Jan 1, 2016
- *      Author: parallels
+ * the class socket inherited from Fileinterface and reset the variable and methods in order to prepare the socket for using.
+ * data members: bool sessionConnected returns true if the
+ * bind method: is for making the bind action
+ * connect method: uses in the TCP socket .if return number that is bigger the 0 it means that the communication is established.
+ * fromAddr method: returns the number of the ip address.
+ *
  */
 
 #ifndef SOCKET_H_

@@ -1,8 +1,13 @@
 /*
  * MultipleTCPSocketListener.h
  *
- *  Created on: Mar 20, 2016
- *      Author: user
+ *  this class enable to listen to multiple sockets simultaneously.
+ *  data members:
+ *  vector<TCPSocket*> tSockets:
+ *  add method: to add a socket to the vector of sockets.
+ *  the second add method:
+ *  remove method: remove the socket from the vector.
+ *
  */
 
 #ifndef MultipleTCPSocketListener_H_

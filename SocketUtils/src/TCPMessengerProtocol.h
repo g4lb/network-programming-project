@@ -1,8 +1,10 @@
 /*
  * TCPMessengerProtocol.h
  *
- *  Created on: Feb 13, 2013
- *      Author:
+ *  this class holds the protocol of the tcp messenger, aholds the names of the commands that the clients would like to commit.
+ *  sendToServer method: with this method we will send the number of command we want to perform and if needed, a data.
+ *  readFromServer method: reading the answer from the server about the command we asked to perform.
+ *
  */
 
 #ifndef TCPMESSENGERPROTOCOL_H_
