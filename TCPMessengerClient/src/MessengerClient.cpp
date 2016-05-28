@@ -209,6 +209,8 @@ void MessengerClient::close(){
         cout<<"closed the main server..";
     }
     cout<<"Done."<<endl;
+
+    this->waitForThread();
 }
 
 void MessengerClient::connect(const string& ip){
