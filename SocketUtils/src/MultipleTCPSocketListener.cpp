@@ -15,10 +15,7 @@ using namespace npl;
 	}
 
 	void MultipleTCPSocketListener::remove(TCPSocket *socket) {
-
 		sockets.erase(std::remove(sockets.begin(),sockets.end(), socket),sockets.end());
-
-
 	}
 
 	void MultipleTCPSocketListener::add(vector<TCPSocket*> sockets){
@@ -29,7 +26,7 @@ using namespace npl;
 		fd_set set;
 		int nfd = 0;
 		FD_ZERO(&set);
-		tSockets::iterator iter = sockets.begin();
+		vector<TCPSocket*>::iterator iter = sockets.begin();
 		for(;iter!= sockets.end();iter++){
 			TCPSocket* sock = *iter;
 			int fd = sock->getSocketFd();

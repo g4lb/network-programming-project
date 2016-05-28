@@ -3,9 +3,9 @@
  *
  *  this class enable to listen to multiple sockets simultaneously.
  *  data members:
- *  vector<TCPSocket*> tSockets:
+ *  vector<TCPSocket*> tSockets: holds a vector of sockets.
  *  add method: to add a socket to the vector of sockets.
- *  the second add method:
+ *  the second add method: to add a socket to the vector of sockets if not exist already.
  *  remove method: remove the socket from the vector.
  *
  */
@@ -21,7 +21,6 @@ using namespace std;
 namespace npl {
 
 	class MultipleTCPSocketListener {
-		typedef vector<TCPSocket*> tSockets;
 		vector<TCPSocket*> sockets;
 
 	public:
