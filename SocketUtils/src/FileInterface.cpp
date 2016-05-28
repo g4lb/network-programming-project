@@ -30,7 +30,6 @@ int FileInterface::write(const char* buff,int length){
 	return ::write(socket_fd, buff,length);
 }
 FileInterface::~ FileInterface(){
-
 }
 
 
