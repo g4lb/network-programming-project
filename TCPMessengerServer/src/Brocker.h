@@ -33,7 +33,7 @@ public:
 	virtual ~Brocker();
 	void run();
 	void close();
-	void closeByExit();
+	void closeByExit(TCPSocket* disconnectingPeer);
 	string getPeerAName();
 	string getPeerBName();
 };

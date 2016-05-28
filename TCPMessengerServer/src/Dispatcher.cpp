@@ -290,9 +290,6 @@ void Dispatcher::onClientExit(Brocker *brocker, TCPSocket *peerA, TCPSocket *pee
             }
         }
         cout << "Client " << peerA->fromAddr() << " has disconnected" << endl;
-        if (peers.size() == 0) {
-            running = false;
-        }
     }
     //delete the brocker
     brocker->waitForThread();
