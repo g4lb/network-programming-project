@@ -51,13 +51,9 @@ void ChatRoom::run(){
             case EXIT: {
                 string userName;
                 if (sender == admin) {
-                    cout << "admin shutdown"<<endl;
                     sendByLoop(CHAT_CLOSED_BY_ADMIN," ", sender);
-                    cout << "send chat closed to all"<<endl;
                     closeByPeer(sender);
-                    cout << "removed admin peer"<<endl;
                     close();
-                    cout << "closed room"<<endl;
                     break;
                 }
                 for (map<string, TCPSocket *>::iterator itr = peers.begin(); itr != peers.end(); ++itr) {

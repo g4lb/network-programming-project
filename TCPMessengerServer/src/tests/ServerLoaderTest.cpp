@@ -8,7 +8,7 @@ void listAllUsers(map<string,string> map1);
 
 int main(){
 
-    ServerLoader test("/home/bar/cpprepo/eliav/users.txt");
+    ServerLoader test("/home/parallels/github/eliav/users.txt");
 
     map<string,string> mapTest = test.loadAllUserFromFile();
     listAllUsers(mapTest);
