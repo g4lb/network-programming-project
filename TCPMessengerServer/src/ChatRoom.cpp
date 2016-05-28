@@ -28,15 +28,6 @@ void ChatRoom::run(){
         if (sender != NULL){
         TCPMessengerProtocol::readFromServer(command, data, sender);
         switch (command) {
-            case CLIENT_DISCONNECTED_FROM_ROOM: {
-                if (sender == admin) {
-                    active = false;
-                    sendByLoop(CHAT_CLOSED_BY_ADMIN, data, sender);
-                    close();
-                }
-                sendByLoop(command, data, sender);
-                break;
-            }
             case DISCONNECT_FROM_ROOM: {
                 string userName;
                 if (sender == admin) {

@@ -22,8 +22,8 @@ int main() {
 	}
 	cout<<endl<<endl<<endl;
 
-	TcpSocketTest tcpTest;
 	if(!tcpTest.test()){
+	TcpSocketTest tcpTest;
 		cerr<<endl<<endl<<"TCP test failed"<<endl;
 		passFlag = false;
 	}else{
