@@ -111,7 +111,7 @@ void MessengerClient::run() {
                 delete this->peerInSeesion;
                 if (this->udpReaderThread != NULL) {
                     this->udpReaderThread->stop();
-                    this->udpReaderThread->waitForThread();
+                    //this->udpReaderThread->waitForThread();
                 }
                 this->udpPeer->close();
 
@@ -145,7 +145,7 @@ void MessengerClient::run() {
 
                 if (this->udpReaderThread != NULL) {
                     this->udpReaderThread->stop();
-                    this->udpReaderThread->waitForThread();
+                    //delete this->udpReaderThread;
                 }
                 this->udpPeer->close();
 
