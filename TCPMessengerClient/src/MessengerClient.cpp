@@ -108,7 +108,7 @@ void MessengerClient::run() {
                 //Expecting input in format: NONE
                 cout << CLOSE_SESSION_WITH_PEER_TEXT << "["<< this->peerInSeesion->first <<"]" << endl;
 
-                delete this->peerInSeesion;//a
+                delete this->peerInSeesion;
                 if (this->udpReaderThread != NULL) {
                     this->udpReaderThread->stop();
                     this->udpReaderThread->waitForThread();
