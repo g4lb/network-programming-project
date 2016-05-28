@@ -78,6 +78,7 @@ namespace npl {
     }
 
     void Brocker::close() {
+        active=false;
         handler->onClose(this, peerA, peerB);
     }
 
