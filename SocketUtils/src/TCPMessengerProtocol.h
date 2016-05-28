@@ -53,49 +53,62 @@ namespace npl{
 class TCPMessengerProtocol{
 public:
 	void static sendToServer(int command,const string& data, TCPSocket* sock){
+        try {
 
-        char commToSend[4];
-        *((int*)commToSend) = htonl(command);
 
-		sock->write(commToSend,4);
-        cout << "sent command: "<<ntohl(*(int*)commToSend)<<" ";
+            char commToSend[4];
+            *((int *) commToSend) = htonl(command);
 
-		if(data.length()>0) {
-            const char* dataToSend = data.c_str();
-            char lenToSend[4];
-            *((int*)lenToSend) = htonl(strlen(dataToSend));
+            sock->write(commToSend, 4);
+            cout << "sent command: " << ntohl(*(int *) commToSend) << " ";
 
-            sock->write(lenToSend, 4);
-            sock->write(dataToSend, strlen(dataToSend));
+            if (data.length() > 0) {
+                const char *dataToSend = data.c_str();
+                char lenToSend[4];
+                *((int *) lenToSend) = htonl(strlen(dataToSend));
 
-            cout << "len: "<<ntohl(*(int*)lenToSend)<<" data: "<<dataToSend<<endl;
+                sock->write(lenToSend, 4);
+                sock->write(dataToSend, strlen(dataToSend));
+
+                cout << "len: " << ntohl(*(int *) lenToSend) << " data: " << dataToSend << endl;
+            }
+        }
+        catch (...){
+            cout <<"Broken pipe"<<endl;
         }
 	}
 
 	void static readFromServer(int& command, string& data, TCPSocket* sock){
-        char buff[4];
-        bzero(buff,4);
-		if (sock->read(buff,4) > 0) {
-            command = ntohl(*(int *) buff);
-            switch (command)
-            {
-                case EXIT:
-                    return;
-            }
-            if (sock->read(buff, 4) > 0) {
-                int len = ntohl(*(int *) buff);
+        try {
 
-                char dataRead[len];
-                bzero(dataRead, len);
-                if (sock->read(dataRead, len) > 0) {
-                    dataRead[len] = '\0';
-                    data = dataRead;
+
+            char buff[4];
+            bzero(buff, 4);
+            if (sock->read(buff, 4) > 0) {
+                command = ntohl(*(int *) buff);
+                switch (command) {
+                    case EXIT:
+                        return;
+                }
+                if (sock->read(buff, 4) > 0) {
+                    int len = ntohl(*(int *) buff);
+
+                    char dataRead[len];
+                    bzero(dataRead, len);
+                    if (sock->read(dataRead, len) > 0) {
+                        dataRead[len] = '\0';
+                        data = dataRead;
+                    }
                 }
             }
+            else {
+                command = -1;
+            }
         }
-        else
-        {
-            command=-1;
+        catch (...){
+            command = -1;
+            data = "";
+            cout <<"Broken pipe"<<endl;
         }
 	}
 };
