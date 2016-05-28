@@ -261,11 +261,9 @@ void Dispatcher::onClose(Brocker * brocker, TCPSocket* peerA,TCPSocket* peerB){
 void Dispatcher::onClose(ChatRoom* chatRoom, map<string,TCPSocket*> peersMap){
         //remove the brocker from the brockers vector
         chatRooms.erase(std::remove(chatRooms.begin(), chatRooms.end(), chatRoom), chatRooms.end());
-        loggedInUsers.erase(peersMap.begin());
         //return the peers to the vector
         for (map<string, TCPSocket *>::iterator itr = peersMap.begin(); itr != peersMap.end(); ++itr) {
-            if(itr!=peersMap.begin())
-                this->add(itr->second);
+            this->add(itr->second);
         }
         //delete the brocker
         chatRoom->waitForThread();
