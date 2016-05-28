@@ -63,7 +63,7 @@ void ChatRoom::run(){
                 if (sender == admin) {
                     active = false;
                     sendByLoop(CHAT_CLOSED_BY_ADMIN, data, sender);
-                    this->close();
+                    close();
                 }
                 for (map<string, TCPSocket *>::iterator itr = peers.begin(); itr != peers.end(); ++itr) {
                     if (itr->second == sender) {
@@ -80,7 +80,6 @@ void ChatRoom::run(){
             }
         }
     }
-    close();
     }
 }
 void ChatRoom::close(){

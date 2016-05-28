@@ -136,7 +136,8 @@ void Dispatcher::run(){
                             if (loggedInUsers.find(data) != loggedInUsers.end()) {
                                 TCPSocket *peerB = loggedInUsers[data]; // find second peer according to the data
 
-                                if (peerB != NULL)
+                                //if peer was found and client did not open session with himself then allow session
+                                if (peerB != NULL && peer != peerB)
                                 {
                                     //get the username from the peers
                                     string peerName, peerBName;
@@ -229,8 +230,14 @@ void Dispatcher::run(){
                         break;
                     }
                     default: {
-                        cout << "Problems with client: " << peer->fromAddr() <<". disconnecting that shit"<<endl;
+                        cout << "Problems with client: " << peer->fromAddr() <<". disconnecting"<<endl;
                         removePeer(peer);
+                        for (map<string, TCPSocket *>::iterator itr = loggedInUsers.begin();
+                             itr != loggedInUsers.end(); ++itr){
+                            if(itr->second==peer){
+                                loggedInUsers.erase(itr->first);
+                            }
+                        }
                         break;
                     }
 				}
@@ -280,17 +287,17 @@ void Dispatcher::onClientExit(Brocker *brocker, TCPSocket *disconnectingPeer, TC
     this->brockers.erase(std::remove(brockers.begin(),brockers.end(), brocker),brockers.end());
     //return peerA and B to the vector
     this->add(peerB);
-    if (isLoggedIn(disconnectingPeer)) {
-        for (map<string, TCPSocket *>::iterator itr = loggedInUsers.begin();
-             itr != loggedInUsers.end(); ++itr){
-            if(itr->second == disconnectingPeer){
-                loggedInUsers.erase(itr);
-            }
+
+    for (map<string, TCPSocket *>::iterator itr = loggedInUsers.begin();
+         itr != loggedInUsers.end(); ++itr){
+        if(itr->second == disconnectingPeer){
+            loggedInUsers.erase(itr);
         }
-        cout << "Client " << disconnectingPeer->fromAddr() << " has disconnected" << endl;
     }
+    cout << "Client " << disconnectingPeer->fromAddr() << " has disconnected" << endl;
     //delete the brocker
     brocker->waitForThread();
+    cout << "Closed a session"<<endl;
 }
 bool Dispatcher::isLoggedIn(TCPSocket *sock){
     for (map<string, TCPSocket *>::iterator itr = loggedInUsers.begin();

@@ -57,11 +57,11 @@ namespace npl {
                     case CLOSE_SESSION_WITH_PEER: {
                         TCPMessengerProtocol::sendToServer(command, b, sender);
                         TCPMessengerProtocol::sendToServer(command, a, reciver);
-                        active = false;
+                        close();
                         break;
                     }
                     case EXIT: {
-                        active = false;
+                        TCPMessengerProtocol::sendToServer(CLOSE_SESSION_WITH_PEER, a, reciver);
                         closeByExit(sender);
                         break;
                     }
@@ -72,7 +72,6 @@ namespace npl {
                 }
             }
         }
-        close();
     }
 
     void Brocker::close() {
