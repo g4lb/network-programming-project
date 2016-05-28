@@ -1,5 +1,4 @@
 //TODO: EXIT IN SESSION OR IN ROOM
-//TODO: SAVE TO USERS FILE ON REGISTER
 
 #include <sstream>
 #include "Dispatcher.h"
