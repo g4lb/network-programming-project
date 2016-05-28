@@ -15,6 +15,7 @@
 #include "../../SocketUtils/src/MultipleTCPSocketListener.h"
 #include "../../SocketUtils/src/TCPMessengerProtocol.h"
 #include "ChatRoom.h"
+#include "ServerLoader.h"
 
 namespace npl {
 
@@ -28,6 +29,9 @@ class Dispatcher : public MThread, ChatRoom::ChatRoomHandler, Brocker::BrockerHa
 	map<string,TCPSocket*> loggedInUsers;
 
 	MultipleTCPSocketListener* listener;
+
+    ServerLoader* serverLoader;
+
 	bool running;
 public:
 	Dispatcher();

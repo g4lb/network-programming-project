@@ -1,13 +1,6 @@
 //TODO: EXIT IN SESSION OR IN ROOM
 //TODO: SAVE TO USERS FILE ON REGISTER
 
-/*
- * Dispatcher.cpp
- *
- *  Created on: May 8, 2016
- *      Author: parallels
- */
-
 #include <sstream>
 #include "Dispatcher.h"
 #include "ServerLoader.h"
@@ -20,8 +13,8 @@ using namespace npl;
 
 Dispatcher::Dispatcher() {
     //read users map
-    ServerLoader sl(USERS_PATH);
-    this->registeredUsers = sl.loadAllUserFromFile();
+    serverLoader = new ServerLoader(USERS_PATH);
+    this->registeredUsers = serverLoader->loadAllUserFromFile();
 
 	running = false;
     listener = new MultipleTCPSocketListener();
@@ -100,9 +93,19 @@ void Dispatcher::run(){
                             }
                         }
                         if (!alreadyExist){
-                            registeredUsers.insert(pair<string,string>(peerUser1,peerPassword1));
-                            loggedInUsers.insert(pair<string,TCPSocket*>(peerUser1,peer));
-                            TCPMessengerProtocol::sendToServer(SUCCESS_REGISTER,peerUser1+" "+peer->fromAddr(), peer);
+                            //write the new user to database and check if succeeded writing
+                            if (serverLoader->addNewUser(peerUser1,peerPassword1)) {
+                                //insert peer to registered cache
+                                registeredUsers.insert(pair<string, string>(peerUser1, peerPassword1));
+                                //insert peer to logged in users cache
+                                loggedInUsers.insert(pair<string, TCPSocket *>(peerUser1, peer));
+
+                                //alert user register (and login) success
+                                TCPMessengerProtocol::sendToServer(SUCCESS_REGISTER, peerUser1 + " " + peer->fromAddr(),
+                                                                   peer);
+                            }
+                            else
+                                cout << "Error writing new user to database" <<endl;
                         }
                         break;
                     }
