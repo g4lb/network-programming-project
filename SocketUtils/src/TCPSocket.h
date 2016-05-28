@@ -26,7 +26,6 @@ public:
 	TCPSocket(int port);
 	TCPSocket(const string & peerIp , int port);
 	TCPSocket* listenAndAccept();
-	int reply(const string& msg);
 	virtual ~TCPSocket();
 };
 }

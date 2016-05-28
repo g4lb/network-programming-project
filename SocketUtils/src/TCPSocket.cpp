@@ -6,13 +6,7 @@
  */
 
 #include "TCPSocket.h"
-#include <sys/types.h>
 #include <arpa/inet.h>
-#include <netdb.h>
-#include <sys/socket.h>
-#include <unistd.h>
-#include <string.h>
-#include <fcntl.h>
 
 using namespace npl;
 TCPSocket::TCPSocket(int connect_sock,struct sockaddr_in serverAddr,struct sockaddr_in peerAddr):connect_sock(0) {
@@ -57,7 +51,6 @@ TCPSocket* TCPSocket::listenAndAccept()
 	listen(socket_fd,1);
     bzero((char*)&peerAddr, sizeof(peerAddr));
 
-	//TODO: call accept on the socket
 	unsigned int len = sizeof(peerAddr);
 
 	connect_sock = accept(socket_fd, (struct sockaddr *)&peerAddr, &len);
@@ -66,12 +59,3 @@ TCPSocket* TCPSocket::listenAndAccept()
 	return (new TCPSocket(connect_sock, serv_name, peerAddr));
 }
 
-int TCPSocket::reply(const string& msg){
-	int reply;
-	socklen_t peerAddrSize = sizeof(serv_name);
-	reply =  sendto(socket_fd , msg.c_str() , msg.length(), 0 , (struct sockaddr*)&peerAddr , peerAddrSize);
-	if (reply < 0){
-		cout << "Error reply" << endl;
-	}
-	return reply;
-}
