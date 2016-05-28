@@ -72,7 +72,36 @@ set(mainTest
         SocketUtils/src/UDPSocket.cpp
         SocketUtils/src/UDPSocket.h)
 
+set(TestTwoClients
+        TCPMessengerServer/src/Brocker.cpp
+        TCPMessengerServer/src/Brocker.h
+        TCPMessengerServer/src/Dispatcher.cpp
+        TCPMessengerServer/src/Dispatcher.h
+        TCPMessengerServer/src/MessengerServer.cpp
+        TCPMessengerServer/src/MessengerServer.h
+        TCPMessengerServer/src/ServerState.h
+        TCPMessengerServer/src/ChatRoom.cpp
+        TCPMessengerServer/src/ChatRoom.h TCPMessengerServer/src/ServerLoader.cpp TCPMessengerServer/src/ServerLoader.h
+        TCPMessengerServer/src/tests/TestTwoClients.cpp
+        TCPMessengerClient/src/MessengerClient.cpp
+        TCPMessengerClient/src/MessengerClient.h
+        TCPMessengerClient/src/ClientState.h
+        SocketUtils/src/FileInterface.cpp
+        SocketUtils/src/FileInterface.h
+        SocketUtils/src/MThread.cpp
+        SocketUtils/src/MThread.h
+        SocketUtils/src/MultipleTCPSocketListener.cpp
+        SocketUtils/src/MultipleTCPSocketListener.h
+        SocketUtils/src/Socket.cpp
+        SocketUtils/src/Socket.h
+        SocketUtils/src/TCPMessengerProtocol.h
+        SocketUtils/src/TCPSocket.cpp
+        SocketUtils/src/TCPSocket.h
+        SocketUtils/src/UDPSocket.cpp
+        SocketUtils/src/UDPSocket.h)
+
 add_executable(server ${SERVER_SIDE})
 add_executable(client ${CLIENT_SIDE})
 add_executable(serverLoaderTest ${serverLoaderTest})
 add_executable(mainTest ${mainTest})
+add_executable(TestTwoClients ${TestTwoClients})

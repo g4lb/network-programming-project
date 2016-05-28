@@ -6,7 +6,6 @@
  */
 #include "UdpSocketTest.h"
 #include "TcpSocketTest.h"
-#include "ProtocolTest.h"
 
 using namespace std;
 using namespace npl;

@@ -3,6 +3,7 @@
 //
 #include <iostream>
 #include "../MessengerServer.h"
+#include "../../../TCPMessengerClient/src/MessengerClient.h"
 #include <thread>
 #include <unistd.h>
 
@@ -26,7 +27,7 @@ void runServer() {
 void runClientOne(){
     MessengerClient * clientOne = new MessengerClient();
     clientOne->connect("127.0.0.1");
-    clientOne->reg("client1","1234");
+    clientOne->login("client1","1234");
     sleep(16);
     clientOne->send("msg2");
 
@@ -34,7 +35,7 @@ void runClientOne(){
 void runClientTwo(){
     MessengerClient * clientTwo = new MessengerClient();
     clientTwo->connect("127.0.0.1");
-    clientTwo->reg("client2","321");
+    clientTwo->login("client2","321");
     sleep(10);
     clientTwo->openSession("client1");
     sleep(2);
@@ -55,8 +56,6 @@ int main(){
     second.join();
     sleep(3);
     third.join();
-
-
 
     return 0;
 }

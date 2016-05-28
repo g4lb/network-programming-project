@@ -28,6 +28,7 @@
       <sourceFolder url="file://$MODULE_DIR$/TCPMessengerServer/src/tests/TcpSocketTest.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/TCPMessengerServer/src/tests/main.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/TCPMessengerServer/src/tests/UdpSocketTest.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/TCPMessengerServer/src/tests/TestTwoClients.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/TCPMessengerServer/src/tests/UdpSocketTest.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/TCPMessengerServer/src/tests/ServerLoaderTest.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/TCPMessengerServer/src/tests/TcpSocketTest.h" isTestSource="false" />
