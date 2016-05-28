@@ -1,3 +1,9 @@
+//TODO: LOGIN TWICE : DONE
+//TODO: EXIT IN SESSION OR IN ROOM
+//TODO: ADD PEERS TO ROOM ( CLIENT SIDE )
+//TODO: CLIENT SIDE: command l prints server 0.0.0.0??? why
+//TODO: SAVE TO USERS FILE ON REGISTER
+
 /*
  * Dispatcher.cpp
  *
@@ -65,9 +71,14 @@ void Dispatcher::run(){
                         for (map<string, string>::iterator itr = registeredUsers.begin();
                              itr != registeredUsers.end(); ++itr) {
                             if ((itr->second == peerPassword) && (itr->first == peerUser)) {
-                                loggedInUsers.insert(pair<string, TCPSocket *>(peerUser, peer));
-                                TCPMessengerProtocol::sendToServer(SUCCESS_LOGIN, peerUser+" "+ peer->fromAddr(), peer);
-                                loginSuccess = true;
+
+                                pair<map<string,TCPSocket*>::iterator,bool> ret = loggedInUsers.
+                                        insert(pair<string, TCPSocket *>(peerUser, peer));
+                                if (ret.second == true) {
+                                    TCPMessengerProtocol::sendToServer(SUCCESS_LOGIN, peerUser + " " + peer->fromAddr(),
+                                                                       peer);
+                                    loginSuccess = true;
+                                }
                                 break;
                             }
                         }
@@ -100,26 +111,26 @@ void Dispatcher::run(){
                     }
 
                     case OPEN_OR_CONNECT_TO_ROOM: {
-                        bool entered = false;
+                        bool roomExists = false;
                         for (map<string, TCPSocket *>::iterator itr = loggedInUsers.begin();
-                             itr != loggedInUsers.end() && !entered; ++itr){
+                             itr != loggedInUsers.end(); ++itr){
                             if (itr->second==peer) {
                                 for (int i = 0; i <chatRooms.size() ; ++i) {
                                     if (chatRooms[i]->getRoomName() == data) {
                                         TCPMessengerProtocol::sendToServer(SUCCESS_ENTER_ROOM, data, peer);
                                         this->removePeer(peer);
                                         chatRooms[i]->addUser(itr->first, peer);
-                                        entered = true;
+                                        roomExists = true;
                                         break;
                                     }
                                 }
-                                if(!entered) {
+                                if (!roomExists) {
                                     TCPMessengerProtocol::sendToServer(SUCCESS_ENTER_ROOM, data, peer);
                                     this->removePeer(peer);
                                     ChatRoom *room = new ChatRoom(this, data, itr->first, peer);
                                     chatRooms.push_back(room);
-                                    break;
                                 }
+                                break;
                             }
                         }
                         break;
