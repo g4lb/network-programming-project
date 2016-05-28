@@ -166,8 +166,6 @@ void MessengerClient::run() {
                 cout << "****Rooms****\n"<< str << "***********" << endl;
             }else if (cmd == LIST_ROOM_USERS_RESPONSE){
                 cout << "****Room Users****\n"<< str << "***********" << endl;
-            }else if (cmd == EXIT){
-
             }
 		}
 		else
@@ -235,7 +233,7 @@ void MessengerClient::reg(const string& user,const string& password) {
 }
 
 void MessengerClient::listUsers(){
-    if (clientState == State::LOGGED_IN){
+    if (clientState == State::LOGGED_IN || clientState == State::IN_ROOM || clientState == State::IN_SESSION){
         sendToServer(LIST_USERS," ",mainServer);
     }
     else{
@@ -243,7 +241,7 @@ void MessengerClient::listUsers(){
     }
 }
 void MessengerClient::listConnectedUsers(){
-    if (clientState == State::LOGGED_IN){
+    if (clientState == State::LOGGED_IN || clientState == State::IN_ROOM || clientState == State::IN_SESSION){
         sendToServer(LIST_CONNECTED_USERS," ",mainServer);
     }
     else{
@@ -251,7 +249,7 @@ void MessengerClient::listConnectedUsers(){
     }
 }
 void MessengerClient::listRooms(){
-    if (clientState == State::LOGGED_IN){
+    if (clientState == State::LOGGED_IN || clientState == State::IN_ROOM || clientState == State::IN_SESSION){
         sendToServer(LIST_ROOMS," ",mainServer);
     }
     else{
@@ -259,7 +257,7 @@ void MessengerClient::listRooms(){
     }
 }
 void MessengerClient::listRoomUsers(const string& roomName){
-    if (clientState == State::LOGGED_IN){
+    if (clientState == State::LOGGED_IN || clientState == State::IN_ROOM || clientState == State::IN_SESSION){
         sendToServer(LIST_ROOM_USERS,roomName,mainServer);
     }
     else{
@@ -267,12 +265,15 @@ void MessengerClient::listRoomUsers(const string& roomName){
     }
 }
 void MessengerClient::openOrConnectToRoom(const string& roomName){
-    if (clientState == State::LOGGED_IN){
+    if (clientState == State::LOGGED_IN)
         sendToServer(OPEN_OR_CONNECT_TO_ROOM,roomName,mainServer);
-    }
-    else{
+    else if (clientState == State::IN_SESSION)
+        cout << "You are already in a session. use command: cs"<<endl;
+    else if (clientState == State::IN_ROOM)
+        cout << "You are already in a room. use command: cs"<<endl;
+    else
         cout << "You are not logged in" << endl;
-    }
+
 }
 void MessengerClient::printClientState(){
     if (clientState == State::IN_ROOM)
@@ -296,11 +297,14 @@ void MessengerClient::closeCurrentRoom(){
 }
 
 void MessengerClient::openSession(const string& peerUser){
-	if(clientState == State::LOGGED_IN){
+	if(clientState == State::LOGGED_IN)
 		sendToServer(OPEN_SESSION_WITH_PEER,peerUser,mainServer);
-	}
-	else
-		cout<<"Not logged in to server"<<endl;
+    else if (clientState == State::IN_SESSION)
+        cout << "You are already in a session. use command: cs"<<endl;
+    else if (clientState == State::IN_ROOM)
+        cout << "You are already in a room. use command: cs"<<endl;
+    else
+        cout << "You are not logged in" << endl;
 }
 void MessengerClient::closeSessionOrExitRoom(){
 	if(clientState == State::IN_SESSION)
@@ -312,8 +316,8 @@ void MessengerClient::closeSessionOrExitRoom(){
 }
 void MessengerClient::disconnect(){
     if (clientState != State::DISCONNECTED) {
-        clientState = State::DISCONNECTED;
         sendToServer(EXIT, " ", mainServer);
+        close();
         cout << "You have disconnected from server"<<endl;
     }
     else
@@ -323,9 +327,9 @@ void MessengerClient::disconnect(){
 void MessengerClient::exit(){
     if (clientState != State::DISCONNECTED) {
         sendToServer(EXIT, " ", mainServer);
-        cout << "You have disconnected from server"<<endl;
     }
 	close();
+    cout << "You have disconnected from server"<<endl;
 }
 void MessengerClient::sendToServer(int command, const string& data, TCPSocket* mainServer){
 	TCPMessengerProtocol::sendToServer(command,data,mainServer);

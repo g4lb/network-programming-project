@@ -225,15 +225,11 @@ void Dispatcher::run(){
                                  itr != loggedInUsers.end(); ++itr){
                                 if(itr->second==peer){
                                     loggedInUsers.erase(itr->first);
+                                    break;
                                 }
                             }
-                            TCPMessengerProtocol::sendToServer(EXIT, " ", peer);
-                            cout << "Client " << peer->fromAddr() << " has disconnected" << endl;
-                            if (peers.size() == 0) {
-                                running = false;
-                            }
-                            break;
                         }
+                        cout << "Client " << peer->fromAddr() << " has disconnected" << endl;
                         break;
                     }
                     default: {
