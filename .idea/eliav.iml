@@ -21,14 +21,19 @@
       <sourceFolder url="file://$MODULE_DIR$/TCPMessengerClient/src/MessengerClient.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/TCPMessengerServer/src/Dispatcher.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/TCPMessengerServer/src/MessengerServer.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/TCPMessengerServer/src/Dispatcher.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/TCPMessengerServer/src/main.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/TCPMessengerServer/src/Brocker.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/TCPMessengerServer/src/tests/ServerLoaderTest.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/TCPMessengerServer/src/ServerLoader.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/TCPMessengerServer/src/Dispatcher.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/TCPMessengerServer/src/ChatRoom.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/TCPMessengerServer/src/Brocker.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/TCPMessengerServer/src/tests/TcpSocketTest.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/TCPMessengerServer/src/tests/main.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/TCPMessengerServer/src/tests/UdpSocketTest.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/TCPMessengerServer/src/tests/UdpSocketTest.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/TCPMessengerServer/src/tests/ServerLoaderTest.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/TCPMessengerServer/src/tests/TcpSocketTest.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/TCPMessengerServer/src/main.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/TCPMessengerServer/src/ChatRoom.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/TCPMessengerServer/src/ServerState.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/TCPMessengerServer/src/ChatRoom.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/TCPMessengerServer/src/Brocker.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/TCPMessengerServer/src/ServerLoader.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/TCPMessengerServer/src/MessengerServer.h" isTestSource="false" />

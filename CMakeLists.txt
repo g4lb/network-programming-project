@@ -47,11 +47,32 @@ set(CLIENT_SIDE
         TCPMessengerClient/src/MessengerClient.h
         TCPMessengerClient/src/ClientState.h)
 
-set(SERVER_LOADER_TEST
+set(serverLoaderTest
         TCPMessengerServer/src/tests/ServerLoaderTest.cpp
         TCPMessengerServer/src/ServerLoader.cpp
         TCPMessengerServer/src/ServerLoader.h)
 
+set(mainTest
+        TCPMessengerServer/src/tests/main.cpp
+        TCPMessengerServer/src/tests/TcpSocketTest.cpp
+        TCPMessengerServer/src/tests/TcpSocketTest.h
+        TCPMessengerServer/src/tests/UdpSocketTest.h
+        TCPMessengerServer/src/tests/UdpSocketTest.cpp
+        SocketUtils/src/FileInterface.cpp
+        SocketUtils/src/FileInterface.h
+        SocketUtils/src/MThread.cpp
+        SocketUtils/src/MThread.h
+        SocketUtils/src/MultipleTCPSocketListener.cpp
+        SocketUtils/src/MultipleTCPSocketListener.h
+        SocketUtils/src/Socket.cpp
+        SocketUtils/src/Socket.h
+        SocketUtils/src/TCPMessengerProtocol.h
+        SocketUtils/src/TCPSocket.cpp
+        SocketUtils/src/TCPSocket.h
+        SocketUtils/src/UDPSocket.cpp
+        SocketUtils/src/UDPSocket.h)
+
 add_executable(server ${SERVER_SIDE})
 add_executable(client ${CLIENT_SIDE})
-add_executable(serverLoaderTest ${SERVER_LOADER_TEST})
+add_executable(serverLoaderTest ${serverLoaderTest})
+add_executable(mainTest ${mainTest})
