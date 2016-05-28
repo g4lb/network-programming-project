@@ -19,14 +19,14 @@ void FileInterface::close(){
 	::close(socket_fd);
 }
 
-int FileInterface::read(char * buffer, int length){
+ssize_t FileInterface::read(char * buffer, int length){
 	return ::read(socket_fd,buffer,length);
 }
 
 int FileInterface::getSocketFd(){
 	return socket_fd;
 }
-int FileInterface::write(const char* buff,int length){
+ssize_t FileInterface::write(const char* buff,int length){
 	return ::write(socket_fd, buff,length);
 }
 FileInterface::~ FileInterface(){

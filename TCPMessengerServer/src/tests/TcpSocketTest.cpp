@@ -21,12 +21,13 @@ bool TcpSocketTest::test(){
 	client->write(msg.c_str(), msg.length());
 	cout<<"client sent: "<<msg<<endl;
 	char buff[1024];
-	int rc = client->read(buff,sizeof(buff));
+	ssize_t rc = client->read(buff,sizeof(buff));
 	buff[rc] = '\0';
 	cout<<"client recv: "<<buff<<endl;
 
 	client->close();
 	delete client;
+
 
 	if(rc == (int)msg.size()){
 		if(strcmp(msg.c_str(),buff) == 0){
@@ -49,7 +50,7 @@ void TcpSocketTest::run(){
 	buff[rc] = '\0';
 	cout<<"server recv: "<<buff<<endl;
 
-	peer->write(buff, sizeof(buff));
+	peer->write(buff, strlen(buff));
 	cout<<"server sent: "<<buff<<endl;
 
 	peer->close();

@@ -23,8 +23,8 @@ public:
 	int socket_fd;
 	virtual void close();
 	virtual~ FileInterface();
-	virtual int read(char * buffer, int length);
-	virtual int write(const char* buff,int length);
+	virtual ssize_t read(char * buffer, int length);
+	virtual ssize_t write(const char* buff,int length);
 	virtual int getSocketFd();
 };
 

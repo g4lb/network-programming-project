@@ -61,7 +61,7 @@ public:
         cout << "sent command: "<<ntohl(*(int*)commToSend)<<" ";
 
 		if(data.length()>0) {
-            const char* dataToSend =data.c_str();
+            const char* dataToSend = data.c_str();
             char lenToSend[4];
             *((int*)lenToSend) = htonl(strlen(dataToSend));
 
