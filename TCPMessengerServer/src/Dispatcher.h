@@ -1,8 +1,15 @@
 /*
  * Dispatcher.h
  *
- *  Created on: May 8, 2016
- *      Author: parallels
+ *  the Dispatcher class is a class that listen to all the peers and handle the incoming commands from the peers.
+ *  data members:
+ *  vector<TCPSocket*> peers: holds a vector of tcp sockets peers.
+ *  vector<Brocker*> brockers: holds a vector of brocker .
+ *  vector<ChatRoom*> chatRooms: holds a vector of chatRooms.
+ *  map<string,string> registeredUsers: holds information of the registered users.
+ *  map<string,TCPSocket*> loggedInUsers: holds information of the logged in users.
+ *  MultipleTCPSocketListener* listener: holds an object from the type of MultipleTCPSocketListener.
+ *  ServerLoader* serverLoader:
  */
 
 #ifndef SRC_DISPATCHER_H_

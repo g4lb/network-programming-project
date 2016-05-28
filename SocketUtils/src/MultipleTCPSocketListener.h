@@ -3,7 +3,7 @@
  *
  *  this class enable to listen to multiple sockets simultaneously.
  *  data members:
- *  vector<TCPSocket*> tSockets: holds a vector of sockets.
+ *  vector<TCPSocket*> Sockets: holds a vector of sockets.
  *  add method: to add a socket to the vector of sockets.
  *  the second add method: to add a socket to the vector of sockets if not exist already.
  *  remove method: remove the socket from the vector.

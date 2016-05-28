@@ -1,8 +1,9 @@
 /*
  * Brocker.h
  *
- *  Created on: May 8, 2016
- *      Author: parallels
+ *  the Brocker class manages an open session between two peers.
+ *  The Broker reads the incoming commands and messages from the peers and perform the required operations according to the incoming commands.
+ *
  */
 
 #ifndef SRC_BROCKER_H_

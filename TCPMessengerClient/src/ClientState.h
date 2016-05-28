@@ -1,6 +1,8 @@
-//
-// Created by bar on 5/25/16.
-//
+/**
+ * this class holds the numbers of the possible commands.
+ *
+ *
+ */
 
 #ifndef CPPPROJECT_COPY_CLIENTSTATE_H
 #define CPPPROJECT_COPY_CLIENTSTATE_H
