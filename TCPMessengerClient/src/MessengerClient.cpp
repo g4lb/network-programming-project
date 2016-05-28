@@ -188,7 +188,7 @@ void MessengerClient::close(){
 
     if (this->udpReaderThread != NULL) {
         this->udpReaderThread->stop();
-        this->udpReaderThread->waitForThread();
+        delete this->udpReaderThread;
         cout<<"stopped reading p2p messages..";
     }
     if (this->udpPeer != NULL) {
@@ -205,7 +205,7 @@ void MessengerClient::close(){
     }
     cout<<"Done."<<endl;
 
-    this->waitForThread();
+    ::exit(0);
 }
 
 void MessengerClient::connect(const string& ip){
