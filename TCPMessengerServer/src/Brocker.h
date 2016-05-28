@@ -3,8 +3,18 @@
  *
  *  the Brocker class manages an open session between two peers.
  *  The Broker reads the incoming commands and messages from the peers and perform the required operations according to the incoming commands.
- *
- */
+ *  contain inner class:
+ *  BrockerHandler:
+ *  this class implements the chat room.
+ * virtual void onClose(Brocker* brocker, TCPSocket* peerA, TCPSocket* peerB)=0: this method is closing the brocker and returns the peers to the dispacther.
+ * virtual void onClientExit(Brocker* brocker, TCPSocket* disconnectingPeer, TCPSocket* peerB)=0: once one of the client enterd exit, the onther peer is returned and the onther one is deleted.
+ * data member of the class Brocker:
+ * TCPSocket* peerA: holds an objects of TCPSocket.
+ * TCPSocket* peerB; holds an objects of TCPSocket.
+ * string userNameA, userNameB: holds the name of a user.
+ * BrockerHandler* handler: holds an objects of BrockerHandler.
+ * bool active: telling if it's active or not.
+ * */
 
 #ifndef SRC_BROCKER_H_
 #define SRC_BROCKER_H_

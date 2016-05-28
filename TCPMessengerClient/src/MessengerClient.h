@@ -1,8 +1,26 @@
 /*
  * MessengerClient.h
  *
- *  Created on: Apr 10, 2016
- *      Author: parallels
+ *  this class is implements the client. each client is in thread ,connects in TCP, and  between two clients the communication is on UDP.
+ *  data members:
+ *  UDPSocket* udpPeer: holds an object of udp socket.
+ * bool running: hold boolean variable, true as long as runing.
+ * MessengerClientPeerReader(UDPSocket* udpPeer):running(true): this method returns an object of udp socket.
+ * run method: is use to open a new thread.once stopping reading , the variable running will change to false.
+ *State clientState: holds an object of state.
+ * string currentUserName: holds the current name of the user.
+ * string currentRoomName: holds the current name of the room.
+ * int myConnectionPort: the number of the connected port.
+ * TCPSocket* mainServer: holds an object of TCPSocket.
+ * UDPSocket* udpPeer: holds an object of UDPSocket.
+ * MessengerClientPeerReader* udpReaderThread: holds an object of MessengerClientPeerReader.
+ * map<string,string>* peersInRoom: maps between peers to rooms.
+ * pair<string,string>* peerInSeesion: the map holds the peers in sessions.
+ * 	void connect(const string& ip):this method is making a connection.
+ *  void login(const string& user,const string& password): this method is making a login to the room chat.
+ * void reg(const string& user,const string& password);his method is making a register to the room chat.
+ * void closeSessionOrExitRoom method: closing session when the client asked to.
+ *
  */
 
 #ifndef SRC_MESSENGERCLIENT_H_

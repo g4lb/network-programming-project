@@ -1,8 +1,11 @@
 /*
  * MessengerServer.h
  *
- *  Created on: May 1, 2016
- *      Author: user
+ *  this class has the run method, a thread that in on listening,once one client/user was try to make a connection, it turned to the dispacther.
+ *  data members:
+ *  TCPSocket* socket: object from type TCP socket.
+ *  Dispatcher* dispatcher: object from type Dispatcher.
+ *
  */
 
 #ifndef MESSENGERSERVER_H_

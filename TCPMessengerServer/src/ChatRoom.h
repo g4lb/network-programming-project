@@ -1,6 +1,26 @@
-//
-// Created by parallels on 5/25/16.
-//
+/*
+ * this class is the chat room
+ * ChatRoomHandler class is: is the same functionality of the brocker but handle the room itself.
+ * methods of ChatRoomHandler class:
+ * virtual void onClose(ChatRoom* chatRoom, map<string,TCPSocket*> peersMap)=0 :
+ * virtual void onClientExit(ChatRoom* chatRoom, TCPSocket* peer)=0 :
+ * in chat room class:
+ * data members:
+ * map<string,TCPSocket*> peers : map that holds the peers.
+ * TCPSocket * admin: holds an object of the TCPSocket, this will be the user admin.
+ * ChatRoomHandler* handler: object fromn the type ChatRoomHandler.
+ * string roomName: holds the name of the room.
+ *  MultipleTCPSocketListener listener: object from the type MultipleTCPSocketListener.
+ *  bool active: if active or not.
+ *  void run(): opening a thread.
+ *  void close();
+ *  void closeByPeer(TCPSocket* peer): closing a specific peer.
+ *  void addUser(string userName,TCPSocket* peer): adding a user.
+ *  void sendByLoop(int command,const string& data,TCPSocket* sender): once one user send a messege, this method sends the messege to all the usres in the room.
+ *  string getRoomName();getting the room name.
+ *  string getUsers(): getting the user
+ *
+ */
 
 #ifndef CPPPROJECT_COPY_CHATROOM_H
 #define CPPPROJECT_COPY_CHATROOM_H
