@@ -52,9 +52,9 @@ void ChatRoom::run(){
             case EXIT: {
                 string userName;
                 if (sender == admin) {
-                    active = false;
-                    sendByLoop(CHAT_CLOSED_BY_ADMIN, data, sender);
+                    sendByLoop(CHAT_CLOSED_BY_ADMIN, " ", sender);
                     close();
+                    break;
                 }
                 for (map<string, TCPSocket *>::iterator itr = peers.begin(); itr != peers.end(); ++itr) {
                     if (itr->second == sender) {
@@ -68,7 +68,7 @@ void ChatRoom::run(){
                 break;
             }
             default: {
-                cout << command << endl;
+                closeByPeer(sender);
             }
         }
     }

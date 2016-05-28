@@ -9,10 +9,10 @@
       <sourceFolder url="file://$MODULE_DIR$/SocketUtils/src/UDPSocket.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/SocketUtils/src/MThread.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/SocketUtils/src/MultipleTCPSocketListener.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/SocketUtils/src/TCPSocket.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/SocketUtils/src/FileInterface.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/SocketUtils/src/TCPMessengerProtocol.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/SocketUtils/src/Socket.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/SocketUtils/src/TCPSocket.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/SocketUtils/src/FileInterface.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/SocketUtils/src/MultipleTCPSocketListener.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/TCPMessengerClient/src/MessengerClient.cpp" isTestSource="false" />
@@ -44,14 +44,14 @@
     <orderEntry type="module-library">
       <library name="Header Search Paths">
         <CLASSES>
-          <root url="file:///usr/lib/gcc/x86_64-linux-gnu/5/include-fixed" />
-          <root url="file:///usr/lib/gcc/x86_64-linux-gnu/5/include" />
+          <root url="file:///usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed" />
+          <root url="file:///usr/lib/gcc/x86_64-linux-gnu/4.8/include" />
           <root url="file:///usr/include" />
           <root url="file:///usr/local/include" />
         </CLASSES>
         <SOURCES>
-          <root url="file:///usr/lib/gcc/x86_64-linux-gnu/5/include-fixed" />
-          <root url="file:///usr/lib/gcc/x86_64-linux-gnu/5/include" />
+          <root url="file:///usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed" />
+          <root url="file:///usr/lib/gcc/x86_64-linux-gnu/4.8/include" />
           <root url="file:///usr/include" />
           <root url="file:///usr/local/include" />
         </SOURCES>

@@ -66,7 +66,7 @@ namespace npl {
                         break;
                     }
                     default: {
-                        cout << command << endl;
+                        closeByExit(sender);
                         break;
                     }
                 }
