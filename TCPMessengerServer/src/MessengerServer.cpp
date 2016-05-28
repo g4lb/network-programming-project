@@ -39,7 +39,6 @@ void MessengerServer::listRoomUsers(const string& roomName){
 
 void MessengerServer::exit(){
 	socket->close();
-	waitForThread();
 	delete socket;
 	dispatcher->close();
 	delete dispatcher;

@@ -20,7 +20,7 @@ public:
 	class BrockerHandler{
 	public:
 		virtual void onClose(Brocker* brocker, TCPSocket* peerA, TCPSocket* peerB)=0;
-		virtual void onClientExit(Brocker* brocker, TCPSocket* peerA, TCPSocket* peerB)=0;
+		virtual void onClientExit(Brocker* brocker, TCPSocket* disconnectingPeer, TCPSocket* peerB)=0;
 	};
 private:
 	TCPSocket* peerA;
@@ -33,7 +33,7 @@ public:
 	virtual ~Brocker();
 	void run();
 	void close();
-	void closeByExit();
+	void closeByExit(TCPSocket* disconnectingPeer);
 	string getPeerAName();
 	string getPeerBName();
 };
