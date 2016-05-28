@@ -112,8 +112,10 @@ void MessengerClient::run() {
                 if (this->udpReaderThread != NULL) {
                     this->udpReaderThread->stop();
 
+                    this->udpReaderThread->waitForThread();
                     delete this->udpReaderThread;
                 }
+                this->udpPeer->close();
                 delete this->udpPeer;
 
                 this->clientState = State::LOGGED_IN;
@@ -123,7 +125,7 @@ void MessengerClient::run() {
                 for (map<string, string>::iterator peer = peersInRoom->begin(); peer != peersInRoom->end(); ++peer)
                 {
                     if (peer->first == str){
-                        this->peersInRoom->erase(peer);
+                        this->peersInRoom->erase(peer->first);
                         cout << "Client ["<<peer->first<<"] has left the room"<<endl;
                         break;
                     }
@@ -146,9 +148,10 @@ void MessengerClient::run() {
 
                 if (this->udpReaderThread != NULL) {
                     this->udpReaderThread->stop();
-
+                    this->udpReaderThread->waitForThread();
                     delete this->udpReaderThread;
                 }
+                this->udpPeer->close();
                 delete this->udpPeer;
 
                 this->clientState = State::LOGGED_IN;
@@ -186,7 +189,7 @@ void MessengerClient::close(){
     if (this->peerInSeesion != NULL)
         delete this->peerInSeesion;
     if (this->peersInRoom != NULL)
-        delete this->peersInRoom;
+        this->peersInRoom->clear();
 
     if (this->udpReaderThread != NULL) {
         this->udpReaderThread->stop();
