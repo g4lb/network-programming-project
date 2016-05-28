@@ -15,7 +15,6 @@ ChatRoom::ChatRoom(ChatRoomHandler* handler,const string& roomName,const string&
     peers.insert(pair<string,TCPSocket*>(peerName,admin));
     active = true;
     start();
-    //sleep(1);
 }
 void ChatRoom::run(){
     listener.add(admin);
@@ -89,7 +88,7 @@ void ChatRoom::close(){
 void ChatRoom::closeByPeer(TCPSocket* peer){
     active=false;
     for (map<string,TCPSocket*>::iterator itr = peers.begin(); itr != peers.end() ; ++itr) {
-        if(itr->second!=peer){
+        if(itr->second == peer){
             peers.erase(itr->first);
             listener.remove(peer);
         }
