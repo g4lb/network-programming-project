@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="CPP_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/SocketUtils/src/TCPSocket.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/SocketUtils/src/Socket.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/SocketUtils/src/MThread.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/SocketUtils/src/UDPSocket.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/SocketUtils/src/UDPSocket.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/SocketUtils/src/MThread.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/SocketUtils/src/MultipleTCPSocketListener.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/SocketUtils/src/FileInterface.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/SocketUtils/src/TCPMessengerProtocol.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/SocketUtils/src/Socket.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/SocketUtils/src/TCPSocket.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/SocketUtils/src/FileInterface.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/SocketUtils/src/MultipleTCPSocketListener.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/TCPMessengerClient/src/MessengerClient.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/TCPMessengerClient/src/main.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/TCPMessengerClient/src/ClientState.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/TCPMessengerClient/src/MessengerClient.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/TCPMessengerServer/src/ChatRoom.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/TCPMessengerServer/src/MessengerServer.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/TCPMessengerServer/src/Dispatcher.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/TCPMessengerServer/src/main.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/TCPMessengerServer/src/Brocker.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/TCPMessengerServer/src/tests/ServerLoaderTest.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/TCPMessengerServer/src/ServerLoader.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/TCPMessengerServer/src/Dispatcher.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/TCPMessengerServer/src/ChatRoom.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/TCPMessengerServer/src/ServerState.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/TCPMessengerServer/src/Brocker.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/TCPMessengerServer/src/ServerLoader.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/TCPMessengerServer/src/MessengerServer.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/CMakeLists.txt" isTestSource="false" />
+    </content>
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module-library">
+      <library name="Header Search Paths">
+        <CLASSES>
+          <root url="file:///usr/lib/gcc/x86_64-linux-gnu/4.7/include-fixed" />
+          <root url="file:///usr/lib/gcc/x86_64-linux-gnu/4.7/include" />
+          <root url="file:///usr/include" />
+          <root url="file:///usr/local/include" />
+        </CLASSES>
+        <SOURCES>
+          <root url="file:///usr/lib/gcc/x86_64-linux-gnu/4.7/include-fixed" />
+          <root url="file:///usr/lib/gcc/x86_64-linux-gnu/4.7/include" />
+          <root url="file:///usr/include" />
+          <root url="file:///usr/local/include" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+  </component>
+</module>
