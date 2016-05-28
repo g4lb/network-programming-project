@@ -264,8 +264,8 @@ void Dispatcher::onClose(ChatRoom* chatRoom, map<string,TCPSocket*> peersMap){
         loggedInUsers.erase(peersMap.begin());
         //return the peers to the vector
         for (map<string, TCPSocket *>::iterator itr = peersMap.begin(); itr != peersMap.end(); ++itr) {
-            itr++;
-            this->add(itr->second);
+            if(itr!=peersMap.begin())
+                this->add(itr->second);
         }
         //delete the brocker
         chatRoom->waitForThread();

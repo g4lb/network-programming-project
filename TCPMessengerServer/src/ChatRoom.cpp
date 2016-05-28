@@ -52,7 +52,7 @@ void ChatRoom::run(){
             case EXIT: {
                 string userName;
                 if (sender == admin) {
-                    sendByLoop(CHAT_CLOSED_BY_ADMIN, " ", sender);
+                    sendByLoop(CHAT_CLOSED_BY_ADMIN," ", sender);
                     close();
                     break;
                 }
