@@ -61,8 +61,6 @@ namespace npl {
                         break;
                     }
                     case EXIT: {
-                        TCPMessengerProtocol::sendToServer(command, b, sender);
-                        TCPMessengerProtocol::sendToServer(command, a, reciver);
                         active = false;
                         closeByExit(sender);
                         break;
@@ -82,11 +80,12 @@ namespace npl {
         handler->onClose(this, peerA, peerB);
     }
     void Brocker::closeByExit(TCPSocket* disconnectingPeer){
+        active=false;
+
         if(disconnectingPeer == this->peerA)
             handler->onClientExit(this, peerA, peerB);
         else
             handler->onClientExit(this, peerB, peerA);
-        active=false;
     }
     string Brocker::getPeerAName(){
         return this->userNameA;

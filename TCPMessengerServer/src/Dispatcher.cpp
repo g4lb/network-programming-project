@@ -275,19 +275,19 @@ void Dispatcher::onClientExit(ChatRoom *chatRoom, TCPSocket * peer){
         }
     }
 }
-void Dispatcher::onClientExit(Brocker *brocker, TCPSocket *peerA, TCPSocket *peerB) {
+void Dispatcher::onClientExit(Brocker *brocker, TCPSocket *disconnectingPeer, TCPSocket *peerB) {
     //remove the brocker from the brockers vector
     this->brockers.erase(std::remove(brockers.begin(),brockers.end(), brocker),brockers.end());
     //return peerA and B to the vector
     this->add(peerB);
-    if (isLoggedIn(peerA)) {
+    if (isLoggedIn(disconnectingPeer)) {
         for (map<string, TCPSocket *>::iterator itr = loggedInUsers.begin();
              itr != loggedInUsers.end(); ++itr){
-            if(itr->second==peerA){
-                loggedInUsers.erase(itr->first);
+            if(itr->second == disconnectingPeer){
+                loggedInUsers.erase(itr);
             }
         }
-        cout << "Client " << peerA->fromAddr() << " has disconnected" << endl;
+        cout << "Client " << disconnectingPeer->fromAddr() << " has disconnected" << endl;
     }
     //delete the brocker
     brocker->waitForThread();
@@ -295,7 +295,7 @@ void Dispatcher::onClientExit(Brocker *brocker, TCPSocket *peerA, TCPSocket *pee
 bool Dispatcher::isLoggedIn(TCPSocket *sock){
     for (map<string, TCPSocket *>::iterator itr = loggedInUsers.begin();
          itr != loggedInUsers.end(); ++itr) {
-        if(itr->second==sock){
+        if(itr->second == sock){
             return true;
         }
     }
