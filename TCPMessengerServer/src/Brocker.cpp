@@ -64,7 +64,7 @@ namespace npl {
                         TCPMessengerProtocol::sendToServer(command, b, sender);
                         TCPMessengerProtocol::sendToServer(command, a, reciver);
                         active = false;
-                        TCPMessengerProtocol::sendToServer(EXIT, " ", sender);
+                        closeByExit();
                         break;
                     }
                     default: {
@@ -81,7 +81,10 @@ namespace npl {
         active=false;
         handler->onClose(this, peerA, peerB);
     }
-
+    void Brocker::closeByExit(){
+        active=false;
+        handler->onClientExit(this, peerA, peerB);
+    }
     string Brocker::getPeerAName(){
         return this->userNameA;
     }

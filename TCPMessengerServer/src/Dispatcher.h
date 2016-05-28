@@ -49,7 +49,9 @@ public:
 	virtual ~Dispatcher();
 	virtual void onClose(ChatRoom* chatRoom, map<string,TCPSocket*> peersMap);
 	virtual void onClose(Brocker * brocker, TCPSocket* peerA,TCPSocket* peerB);
-	bool isLogedIn(TCPSocket* sock);
+	virtual void onClientExit(ChatRoom* chatRoom, TCPSocket* peer);
+	virtual void onClientExit(Brocker * brocker, TCPSocket* peerA,TCPSocket* peerB);
+	bool isLoggedIn(TCPSocket *sock);
 
 };
 
