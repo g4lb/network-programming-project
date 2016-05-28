@@ -43,7 +43,7 @@ int UDPSocket::sendTo(const string& msg,const string& ip, int port){
 	s_in.sin_addr.s_addr = inet_addr(ip.data());
 	s_in.sin_port = htons(port);
 
-	send = sendto(socket_fd, msg.data(), msg.length(), 0, (struct sockaddr*)&s_in, sizeof(s_in));
+	send = sendto(socket_fd, msg.c_str(), msg.length(), 0, (struct sockaddr*)&s_in, sizeof(s_in));
 
 	if (send < 0)
 		cout << "Error send to" << endl;

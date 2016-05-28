@@ -32,9 +32,14 @@ void printInstructions(){
 int main(){
 	MessengerClient * client = new MessengerClient();
 	printInstructions();
+
+    string msg;
+    string command;
+
 	while(true){
-		string msg;
-		string command;
+	    msg.clear();
+        command.clear();
+
 		cin >> command;
 		if(command == "c"){
 			string ip;
@@ -78,8 +83,9 @@ int main(){
 			cin>>peerUser;
 			client->openSession(peerUser);
 		}else if(command == "s"){
-			getline(std::cin,msg);
-			if(msg.size()>0 && msg[0] == ' ')msg.erase(0,1);
+			cin >> msg;
+			if(msg.length()>0 && msg[0] == ' ')
+				msg.erase(0,1);
 			client->send(msg);
 		}else if(command == "cs"){
 				client->closeSessionOrExitRoom();

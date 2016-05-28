@@ -36,10 +36,11 @@ private:
         }
 
         void run(){
-            char buffer[1024];
+            char buffer[100];
             while (running){
-                udpPeer->read(buffer,1024);
+                udpPeer->read(buffer,100);
                 cout << buffer << endl;
+                bzero(buffer,sizeof(buffer));
             }
             cout << "Stopped reading from peer"<<endl;
         }
