@@ -1,7 +1,5 @@
 /**
- * this class holds the numbers of the possible commands.
- *
- *
+ * this class holds the status of the client.
  */
 
 #ifndef CPPPROJECT_COPY_CLIENTSTATE_H

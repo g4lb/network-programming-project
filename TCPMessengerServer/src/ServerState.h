@@ -1,6 +1,10 @@
-//
-// Created by bar on 5/25/16.
-//
+
+/*
+ * this class holds the status of the server.
+ *
+ *
+ */
+
 
 #ifndef CPPPROJECT_COPY_SERVERSTATE_H
 #define CPPPROJECT_COPY_SERVERSTATE_H

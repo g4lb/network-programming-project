@@ -212,16 +212,16 @@ void Dispatcher::run(){
                                 TCPMessengerProtocol::sendToServer(LIST_ROOM_USERS_RESPONSE,chatRooms[i]->getUsers(),peer);
                                 break;
                             }
+                            default: {
+                                cout << "Problems with client: " << peer->fromAddr() <<". disconnecting"<<endl;
+                                removePeer(peer);
+                                for (map<string, TCPSocket *>::iterator itr = loggedInUsers.begin();
                         }
                         break;
                     }
                     case EXIT: {
                         this->removePeer(peer);
                         if (isLoggedIn(peer)) {
-                            for (map<string, TCPSocket *>::iterator itr = loggedInUsers.begin();
-                                 itr != loggedInUsers.end(); ++itr){
-                                if(itr->second==peer){
-                                    loggedInUsers.erase(itr->first);
                                     break;
                                 }
                             }
@@ -229,15 +229,15 @@ void Dispatcher::run(){
                         cout << "Client " << peer->fromAddr() << " has disconnected" << endl;
                         break;
                     }
-                    default: {
-                        cout << "Problems with client: " << peer->fromAddr() <<". disconnecting"<<endl;
-                        removePeer(peer);
-                        for (map<string, TCPSocket *>::iterator itr = loggedInUsers.begin();
                              itr != loggedInUsers.end(); ++itr){
                             if(itr->second==peer){
                                 loggedInUsers.erase(itr->first);
-                            }
-                        }
+                            }                            for (map<string, TCPSocket *>::iterator itr = loggedInUsers.begin();
+                                                              itr != loggedInUsers.end(); ++itr){
+                                if(itr->second==peer){
+                                    loggedInUsers.erase(itr->first);
+
+                                }
                         break;
                     }
 				}
