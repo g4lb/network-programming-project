@@ -33,6 +33,7 @@ void ChatRoom::run(){
                     active = false;
                     sendByLoop(CHAT_CLOSED_BY_ADMIN, data, sender);
                     this->close();
+                    break;
                 }
                 for (map<string, TCPSocket *>::iterator itr = peers.begin(); itr != peers.end(); ++itr) {
                     if (itr->second == sender) {
@@ -43,9 +44,11 @@ void ChatRoom::run(){
                 for (map<string, TCPSocket *>::iterator itr = peers.begin(); itr != peers.end(); ++itr) {
                     if (itr->second == sender) {
                         peers.erase(itr->first);
+                        listener.remove(sender);
                     }
                 }
                 sendByLoop(CLIENT_DISCONNECTED_FROM_ROOM, userName, sender);
+                disconnectByPeer(sender);
                 break;
             }
             case EXIT: {
@@ -89,6 +92,14 @@ void ChatRoom::closeByPeer(TCPSocket* peer){
         }
     }
     handler->onClientExit(this, peer);
+}
+void ChatRoom::disconnectByPeer(TCPSocket* peer){
+    listener.remove(peer);
+    for (map<string,TCPSocket*>::iterator itr = peers.begin(); itr != peers.end() ; ++itr) {
+        if(itr->second==peer)
+            peers.erase(itr->first);
+    }
+    handler->onClientDisconnect(this, peer);
 }
 void ChatRoom::addUser(string userName,TCPSocket* peer){
     //insert the new peer (insert after send so the loop won't send to peer itself

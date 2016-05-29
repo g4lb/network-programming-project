@@ -39,6 +39,7 @@ public:
     public:
         virtual void onClose(ChatRoom* chatRoom, map<string,TCPSocket*> peersMap)=0;
         virtual void onClientExit(ChatRoom* chatRoom, TCPSocket* peer)=0;
+        virtual void onClientDisconnect(ChatRoom* chatRoom, TCPSocket* peer)=0;
     };
 private:
     map<string,TCPSocket*> peers;
@@ -52,6 +53,7 @@ public:
     void run();
     void close();
     void closeByPeer(TCPSocket* peer);
+    void disconnectByPeer(TCPSocket* peer);
     void addUser(string userName,TCPSocket* peer);
     void sendByLoop(int command,const string& data,TCPSocket* sender);
     string getRoomName();

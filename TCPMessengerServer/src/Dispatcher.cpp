@@ -137,7 +137,7 @@ void Dispatcher::run(){
                                 TCPSocket *peerB = loggedInUsers[data]; // find second peer according to the data
 
                                 //if peer was found and client did not open session with himself then allow session
-                                if (peerB != NULL && peer != peerB)
+                                if ((peerB != NULL && peer != peerB) && !(std::find(peers.begin(),peers.end(),peerB) == peers.end()))
                                 {
                                     //get the username from the peers
                                     string peerName, peerBName;
@@ -276,6 +276,9 @@ void Dispatcher::onClientExit(ChatRoom *chatRoom, TCPSocket * peer){
             }
         }
         cout << "Client " << peer->fromAddr() << " has disconnected" << endl;
+}
+void Dispatcher::onClientDisconnect(ChatRoom* chatRoom, TCPSocket* peer){
+    this->add(peer);
 }
 void Dispatcher::onClientExit(Brocker *brocker, TCPSocket *disconnectingPeer, TCPSocket *peerB) {
     //remove the brocker from the brockers vector

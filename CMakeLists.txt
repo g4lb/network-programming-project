@@ -24,7 +24,6 @@ set(SERVER_SIDE
     TCPMessengerServer/src/main.cpp
     TCPMessengerServer/src/MessengerServer.cpp
     TCPMessengerServer/src/MessengerServer.h
-    TCPMessengerServer/src/ServerState.h
     TCPMessengerServer/src/ChatRoom.cpp
     TCPMessengerServer/src/ChatRoom.h TCPMessengerServer/src/ServerLoader.cpp TCPMessengerServer/src/ServerLoader.h)
 
@@ -79,7 +78,6 @@ set(TestTwoClients
         TCPMessengerServer/src/Dispatcher.h
         TCPMessengerServer/src/MessengerServer.cpp
         TCPMessengerServer/src/MessengerServer.h
-        TCPMessengerServer/src/ServerState.h
         TCPMessengerServer/src/ChatRoom.cpp
         TCPMessengerServer/src/ChatRoom.h TCPMessengerServer/src/ServerLoader.cpp TCPMessengerServer/src/ServerLoader.h
         TCPMessengerServer/src/tests/TestTwoClients.cpp

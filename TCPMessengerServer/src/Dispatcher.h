@@ -68,6 +68,7 @@ public:
 	virtual void onClose(Brocker * brocker, TCPSocket* peerA,TCPSocket* peerB);
 	virtual void onClientExit(ChatRoom* chatRoom, TCPSocket* peer);
 	virtual void onClientExit(Brocker * brocker, TCPSocket* peerA,TCPSocket* peerB);
+	virtual void onClientDisconnect(ChatRoom* chatRoom, TCPSocket* peer);
 	bool isLoggedIn(TCPSocket *sock);
 
 };
