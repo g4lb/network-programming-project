@@ -182,7 +182,7 @@ void MessengerClient::run() {
 }
 
 void MessengerClient::close(){
-    cout << BOLDBLUE<< "Closing All..;";
+    cout << BOLDBLUE<< "Closing All..\n";
 
     this->currentRoomName = "";
     this->currentUserName = "";

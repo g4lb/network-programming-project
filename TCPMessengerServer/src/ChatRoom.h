@@ -48,6 +48,8 @@ private:
     string roomName;
     MultipleTCPSocketListener listener;
     bool active;
+    void exit(TCPSocket* sock);
+    void disconnect(TCPSocket* sock,const string& data);
 public:
     ChatRoom(ChatRoomHandler* handler, const string& roomName,const string& peerName,TCPSocket* peerA);
     void run();

@@ -27,46 +27,13 @@ void ChatRoom::run(){
         if (sender != NULL){
         TCPMessengerProtocol::readFromServer(command, data, sender);
         switch (command) {
-            case DISCONNECT_FROM_ROOM: {
-                string userName;
-                if (sender == admin) {
-                    TCPMessengerProtocol::sendToServer(ADMIN_LEAVE_ROOM,sender->fromAddr(),sender);
-                    sendByLoop(CHAT_CLOSED_BY_ADMIN, data, sender);
-                    this->close();
-                    break;
-                }
-                for (map<string, TCPSocket *>::iterator itr = peers.begin(); itr != peers.end(); ++itr) {
-                    if (itr->second == sender) {
-                        userName = itr->first;
-                    }
-                }
-                TCPMessengerProtocol::sendToServer(DISCONNECT_FROM_ROOM_RESPONSE, userName, sender);
-                for (map<string, TCPSocket *>::iterator itr = peers.begin(); itr != peers.end(); ++itr) {
-                    if (itr->second == sender) {
-                        peers.erase(itr->first);
-                        listener.remove(sender);
-                    }
-                }
-                sendByLoop(CLIENT_DISCONNECTED_FROM_ROOM, userName, sender);
-                disconnectByPeer(sender);
+            case CLOSE_ROOM:
+            case DISCONNECT_FROM_ROOM : {
+                disconnect(sender,data);
                 break;
             }
             case EXIT: {
-                string userName;
-                if (sender == admin) {
-                    sendByLoop(CHAT_CLOSED_BY_ADMIN," ", sender);
-                    closeByPeer(sender);
-                    close();
-                    break;
-                }
-                for (map<string, TCPSocket *>::iterator itr = peers.begin(); itr != peers.end(); ++itr) {
-                    if (itr->second == sender) {
-                        userName = itr->first;
-                        break;
-                    }
-                }
-                sendByLoop(CLIENT_DISCONNECTED_FROM_ROOM, userName, sender);
-                closeByPeer(sender);
+               exit(sender);
                 break;
             }
             default: {
@@ -84,7 +51,6 @@ void ChatRoom::close(){
     handler->onClose(this, this->peers);
 }
 void ChatRoom::closeByPeer(TCPSocket* peer){
-    active=false;
     for (map<string,TCPSocket*>::iterator itr = peers.begin(); itr != peers.end() ; ++itr) {
         if(itr->second == peer){
             peers.erase(itr->first);
@@ -133,6 +99,48 @@ string ChatRoom::getUsers(){
         users+=itr->first+"\n";
     }
     return users;
+}
+void ChatRoom::exit(TCPSocket* sock){
+    string userName;
+    if (sock == admin) {
+        sendByLoop(CHAT_CLOSED_BY_ADMIN," ", sock);
+        closeByPeer(sock);
+        close();
+    }
+    else {
+        for (map<string, TCPSocket *>::iterator itr = peers.begin(); itr != peers.end(); ++itr) {
+            if (itr->second == sock) {
+                userName = itr->first;
+                break;
+            }
+        }
+        sendByLoop(CLIENT_DISCONNECTED_FROM_ROOM, userName, sock);
+        closeByPeer(sock);
+    }
+}
+void ChatRoom::disconnect(TCPSocket* sock, const string& data){
+    string userName;
+    if (sock == admin) {
+        TCPMessengerProtocol::sendToServer(ADMIN_LEAVE_ROOM,sock->fromAddr(),sock);
+        sendByLoop(CHAT_CLOSED_BY_ADMIN, data, sock);
+        this->close();
+    }
+    else {
+        for (map<string, TCPSocket *>::iterator itr = peers.begin(); itr != peers.end(); ++itr) {
+            if (itr->second == sock) {
+                userName = itr->first;
+            }
+        }
+        TCPMessengerProtocol::sendToServer(DISCONNECT_FROM_ROOM_RESPONSE, userName, sock);
+        for (map<string, TCPSocket *>::iterator itr = peers.begin(); itr != peers.end(); ++itr) {
+            if (itr->second == sock) {
+                peers.erase(itr->first);
+                listener.remove(sock);
+            }
+        }
+        sendByLoop(CLIENT_DISCONNECTED_FROM_ROOM, userName, sock);
+        disconnectByPeer(sock);
+    }
 }
 ChatRoom::~ChatRoom(){
 

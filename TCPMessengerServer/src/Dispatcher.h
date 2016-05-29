@@ -45,15 +45,20 @@ class Dispatcher : public MThread, ChatRoom::ChatRoomHandler, Brocker::BrockerHa
 	vector<TCPSocket*> peers;
 	vector<Brocker*> brockers;
 	vector<ChatRoom*> chatRooms;
-
 	map<string,string> registeredUsers;
 	map<string,TCPSocket*> loggedInUsers;
-
 	MultipleTCPSocketListener* listener;
-
 	Users* users;
-
 	bool running;
+	void login(TCPSocket* peer, const string& data);
+	void reg(TCPSocket* peer, const string& data);
+	void openOrConnectRoom(TCPSocket* peer, const string& data);
+	void openSession(TCPSocket* peer, const string& data);
+	void listUsers(TCPSocket* peer, const string& data);
+	void listConnectedUsers(TCPSocket* peer, const string& data);
+	void listRooms(TCPSocket* peer, const string& data);
+	void listRoomUsers(TCPSocket* peer, const string& data);
+	void exit(TCPSocket* peer, const string& data);
 public:
 	Dispatcher();
 

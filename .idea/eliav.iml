@@ -17,8 +17,8 @@
       <sourceFolder url="file://$MODULE_DIR$/SocketUtils/src/MultipleTCPSocketListener.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/TCPMessengerClient/src/MessengerClient.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/TCPMessengerClient/src/main.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/TCPMessengerClient/src/ClientStatus.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/TCPMessengerClient/src/MessengerClient.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/TCPMessengerClient/src/ClientStatus.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/TCPMessengerServer/src/Dispatcher.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/TCPMessengerServer/src/MessengerServer.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/TCPMessengerServer/src/MessengerServer.h" isTestSource="false" />

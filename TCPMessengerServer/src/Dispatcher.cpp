@@ -46,187 +46,40 @@ void Dispatcher::run(){
 				//cout<<"read command from peer: "<< command << " " << data << endl;
                 switch(command){
                     case LOGIN: {
-                        std::istringstream splitter(data);
-                        string peerUser;
-                        string peerPassword;
-                        splitter >> peerUser;
-                        splitter >> peerPassword;
-
-                        bool loginSuccess = false;
-
-                        for (map<string, string>::iterator itr = registeredUsers.begin();
-                             itr != registeredUsers.end(); ++itr) {
-                            if ((itr->second == peerPassword) && (itr->first == peerUser)) {
-
-                                pair<map<string,TCPSocket*>::iterator,bool> ret = loggedInUsers.
-                                        insert(pair<string, TCPSocket *>(peerUser, peer));
-                                if (ret.second) {
-                                    TCPMessengerProtocol::sendToServer(SUCCESS_LOGIN, peerUser + " " + peer->fromAddr(),
-                                                                       peer);
-                                    loginSuccess = true;
-                                }
-                                break;
-                            }
-                        }
-                        if (!loginSuccess)
-                            TCPMessengerProtocol::sendToServer(LOGIN_REFUSE," ", peer);
+                        login(peer,data);
                         break;
                     }
                     case REGISTER:{
-                        std::istringstream splitter1(data);
-                        string peerUser1;
-                        string peerPassword1;
-                        splitter1 >> peerUser1;
-                        splitter1 >> peerPassword1;
-
-                        bool alreadyExist = false;
-
-                        for (map<string,string>::iterator itr = registeredUsers.begin(); itr != registeredUsers.end() ; ++itr) {
-                            if(itr->second==peerUser1){
-                                TCPMessengerProtocol::sendToServer(REGISTER_REFUSE,data, peer);
-                                alreadyExist = true;
-                                break;
-                            }
-                        }
-                        if (!alreadyExist){
-                            //write the new user to database and check if succeeded writing
-                            if (users->addNewUser(peerUser1,peerPassword1)) {
-                                //insert peer to registered cache
-                                registeredUsers.insert(pair<string, string>(peerUser1, peerPassword1));
-                                //insert peer to logged in users cache
-                                loggedInUsers.insert(pair<string, TCPSocket *>(peerUser1, peer));
-
-                                //alert user register (and login) success
-                                TCPMessengerProtocol::sendToServer(SUCCESS_REGISTER, peerUser1 + " " + peer->fromAddr(),
-                                                                   peer);
-                            }
-                            else
-                                cout << BOLDRED<< "Error writing new user to database" << RESET <<endl;
-                        }
+                        reg(peer,data);
                         break;
                     }
 
                     case OPEN_OR_CONNECT_TO_ROOM: {
-                        bool roomExists = false;
-                        for (map<string, TCPSocket *>::iterator itr = loggedInUsers.begin();
-                             itr != loggedInUsers.end(); ++itr){
-                            if (itr->second==peer) {
-                                for (int i = 0; i <chatRooms.size() ; ++i) {
-                                    if (chatRooms[i]->getRoomName() == data) {
-                                        TCPMessengerProtocol::sendToServer(SUCCESS_ENTER_ROOM, data, peer);
-                                        this->removePeer(peer);
-                                        chatRooms[i]->addUser(itr->first, peer);
-                                        roomExists = true;
-                                        break;
-                                    }
-                                }
-                                if (!roomExists) {
-                                    TCPMessengerProtocol::sendToServer(SUCCESS_ENTER_ROOM, data, peer);
-                                    this->removePeer(peer);
-                                    ChatRoom *room = new ChatRoom(this, data, itr->first, peer);
-                                    chatRooms.push_back(room);
-                                }
-                                break;
-                            }
-                        }
+                        openOrConnectRoom(peer,data);
                         break;
                     }
                     case OPEN_SESSION_WITH_PEER: {
-                        if (isLoggedIn(peer)){
-                            if (loggedInUsers.find(data) != loggedInUsers.end()) {
-                                TCPSocket *peerB = loggedInUsers[data]; // find second peer according to the data
-
-                                //if peer was found and client did not open session with himself then allow session
-                                if ((peerB != NULL && peer != peerB) && !(std::find(peers.begin(),peers.end(),peerB) == peers.end()))
-                                {
-                                    //get the username from the peers
-                                    string peerName, peerBName;
-                                    for (map<string, TCPSocket *>::iterator itr = loggedInUsers.begin();
-                                         itr != loggedInUsers.end(); ++itr) {
-                                        if (itr->second == peer) {
-                                            peerName = itr->first;
-                                        }
-                                        if (itr->second == peerB) {
-                                            peerBName = itr->first;
-                                        }
-                                    }
-                                    //tell peerB to change sessionIsActive=true
-                                    TCPMessengerProtocol::sendToServer(SESSION_ESTABLISHED,
-                                                                       peerBName + " " + peerB->fromAddr(), peer);
-                                    TCPMessengerProtocol::sendToServer(SESSION_ESTABLISHED,
-                                                                       peerName + " " + peer->fromAddr(), peerB);
-                                    //remove peers from the dispatcher responsibility
-                                    this->removePeer(peer);
-                                    this->removePeer(peerB);
-                                    //give responsibility of the peers to a new brocker
-                                    Brocker *broker = new Brocker(this, peer, peerB, peerName, peerBName);
-                                    //keep reference of brocker in brockers vector
-                                    brockers.push_back(broker);
-                                }
-                                else {
-                                    //get peer name
-                                    string peerName;
-                                    for (map<string, TCPSocket *>::iterator itr = loggedInUsers.begin();
-                                         itr != loggedInUsers.end(); ++itr) {
-                                        if (itr->second == peer) {
-                                            peerName = itr->first;
-                                        }
-                                    }
-                                    //if peer does not exist in peers list - refuse the session
-                                    TCPMessengerProtocol::sendToServer(SESSION_REFUSED, peerName, peer);
-                                    break;
-                                }
-                            }
-                        }
+                        openSession(peer,data);
                         break;
                     }
                     case LIST_USERS:{
-                        string users;
-                        for (map<string, string>::iterator itr = registeredUsers.begin();
-                             itr != registeredUsers.end(); ++itr) {
-                            users += itr->first+"\n";
-                        }
-                        TCPMessengerProtocol::sendToServer(LIST_USERS_RESPONSE,users,peer);
+                        listUsers(peer,data);
                         break;
                     }
                     case LIST_CONNECTED_USERS:{
-                        string connectedUsers;
-                        for (map<string, TCPSocket *>::iterator itr = loggedInUsers.begin();
-                             itr != loggedInUsers.end(); ++itr) {
-                            connectedUsers += itr->first+"\n";
-                        }
-                        TCPMessengerProtocol::sendToServer(LIST_CONNECTED_USERS_RESPONSE,connectedUsers,peer);
+                        listConnectedUsers(peer,data);
                         break;
                     }
                     case LIST_ROOMS:{
-                        string rooms = " ";
-                        for (int i = 0; i <chatRooms.size(); ++i) {
-                            rooms+=chatRooms[i]->getRoomName()+"\n";
-                        }
-                        TCPMessengerProtocol::sendToServer(LIST_ROOMS_RESPONSE,rooms,peer);
+                        listRooms(peer,data);
                         break;
                     }
                     case LIST_ROOM_USERS:{
-                        for (int i = 0; i <chatRooms.size() ; ++i) {
-                            if(chatRooms[i]->getRoomName()==data){
-                                TCPMessengerProtocol::sendToServer(LIST_ROOM_USERS_RESPONSE,chatRooms[i]->getUsers(),peer);
-                                break;
-                            }
-                        }
+                        listRoomUsers(peer,data);
                         break;
                     }
                     case EXIT: {
-                        this->removePeer(peer);
-                        if (isLoggedIn(peer)) {
-                            for (map<string, TCPSocket *>::iterator itr = loggedInUsers.begin();
-                                 itr != loggedInUsers.end(); ++itr){
-                                if(itr->second==peer){
-                                    loggedInUsers.erase(itr->first);
-                                    break;
-                                }
-                            }
-                        }
-                        cout << BOLDBLUE<<"Client " << peer->fromAddr() << " has disconnected" << RESET<< endl;
+                        exit(peer,data);
                         break;
                     }
                     default: {
@@ -351,8 +204,183 @@ void Dispatcher::listRoomUsers(const string& roomName){
     }
     cout << BOLDRED<< "No such room: [" << roomName << "]" << RESET<< endl;
 }
+void Dispatcher::login(TCPSocket* peer, const string& data){
+    std::istringstream splitter(data);
+    string peerUser;
+    string peerPassword;
+    splitter >> peerUser;
+    splitter >> peerPassword;
 
+    bool loginSuccess = false;
 
+    for (map<string, string>::iterator itr = registeredUsers.begin();
+         itr != registeredUsers.end(); ++itr) {
+        if ((itr->second == peerPassword) && (itr->first == peerUser)) {
+
+            pair<map<string,TCPSocket*>::iterator,bool> ret = loggedInUsers.
+                    insert(pair<string, TCPSocket *>(peerUser, peer));
+            if (ret.second) {
+                TCPMessengerProtocol::sendToServer(SUCCESS_LOGIN, peerUser + " " + peer->fromAddr(),
+                                                   peer);
+                loginSuccess = true;
+            }
+        }
+    }
+    if (!loginSuccess)
+        TCPMessengerProtocol::sendToServer(LOGIN_REFUSE," ", peer);
+}
+void Dispatcher::reg(TCPSocket* peer, const string& data){
+    std::istringstream splitter1(data);
+    string peerUser1;
+    string peerPassword1;
+    splitter1 >> peerUser1;
+    splitter1 >> peerPassword1;
+
+    bool alreadyExist = false;
+
+    for (map<string,string>::iterator itr = registeredUsers.begin(); itr != registeredUsers.end() ; ++itr) {
+        if(itr->second==peerUser1){
+            TCPMessengerProtocol::sendToServer(REGISTER_REFUSE,data, peer);
+            alreadyExist = true;
+            break;
+        }
+    }
+    if (!alreadyExist){
+        //write the new user to database and check if succeeded writing
+        if (users->addNewUser(peerUser1,peerPassword1)) {
+            //insert peer to registered cache
+            registeredUsers.insert(pair<string, string>(peerUser1, peerPassword1));
+            //insert peer to logged in users cache
+            loggedInUsers.insert(pair<string, TCPSocket *>(peerUser1, peer));
+
+            //alert user register (and login) success
+            TCPMessengerProtocol::sendToServer(SUCCESS_REGISTER, peerUser1 + " " + peer->fromAddr(),
+                                               peer);
+        }
+        else
+            cout << BOLDRED<< "Error writing new user to database" << RESET <<endl;
+    }
+}
+void Dispatcher::openOrConnectRoom(TCPSocket* peer, const string& data){
+    bool roomExists = false;
+    for (map<string, TCPSocket *>::iterator itr = loggedInUsers.begin();
+         itr != loggedInUsers.end(); ++itr){
+        if (itr->second==peer) {
+            for (int i = 0; i <chatRooms.size() ; ++i) {
+                if (chatRooms[i]->getRoomName() == data) {
+                    TCPMessengerProtocol::sendToServer(SUCCESS_ENTER_ROOM, data, peer);
+                    this->removePeer(peer);
+                    chatRooms[i]->addUser(itr->first, peer);
+                    roomExists = true;
+                    break;
+                }
+            }
+            if (!roomExists) {
+                TCPMessengerProtocol::sendToServer(SUCCESS_ENTER_ROOM, data, peer);
+                this->removePeer(peer);
+                ChatRoom *room = new ChatRoom(this, data, itr->first, peer);
+                chatRooms.push_back(room);
+            }
+            break;
+        }
+    }
+}
+void Dispatcher::openSession(TCPSocket* peer, const string& data){
+    if (isLoggedIn(peer)){
+        if (loggedInUsers.find(data) != loggedInUsers.end()) {
+            TCPSocket *peerB = loggedInUsers[data]; // find second peer according to the data
+
+            //if peer was found and client did not open session with himself then allow session
+            if ((peerB != NULL && peer != peerB) && !(std::find(peers.begin(),peers.end(),peerB) == peers.end()))
+            {
+                //get the username from the peers
+                string peerName, peerBName;
+                for (map<string, TCPSocket *>::iterator itr = loggedInUsers.begin();
+                     itr != loggedInUsers.end(); ++itr) {
+                    if (itr->second == peer) {
+                        peerName = itr->first;
+                    }
+                    if (itr->second == peerB) {
+                        peerBName = itr->first;
+                    }
+                }
+                //tell peerB to change sessionIsActive=true
+                TCPMessengerProtocol::sendToServer(SESSION_ESTABLISHED,
+                                                   peerBName + " " + peerB->fromAddr(), peer);
+                TCPMessengerProtocol::sendToServer(SESSION_ESTABLISHED,
+                                                   peerName + " " + peer->fromAddr(), peerB);
+                //remove peers from the dispatcher responsibility
+                this->removePeer(peer);
+                this->removePeer(peerB);
+                //give responsibility of the peers to a new brocker
+                Brocker *broker = new Brocker(this, peer, peerB, peerName, peerBName);
+                //keep reference of brocker in brockers vector
+                brockers.push_back(broker);
+            }
+            else {
+                //get peer name
+                string peerName;
+                for (map<string, TCPSocket *>::iterator itr = loggedInUsers.begin();
+                     itr != loggedInUsers.end(); ++itr) {
+                    if (itr->second == peer) {
+                        peerName = itr->first;
+                    }
+                }
+                //if peer does not exist in peers list - refuse the session
+                TCPMessengerProtocol::sendToServer(SESSION_REFUSED, peerName, peer);
+            }
+        }
+    }
+}
+void Dispatcher::listUsers(TCPSocket* peer, const string& data){
+    string users;
+    for (map<string, string>::iterator itr = registeredUsers.begin();
+         itr != registeredUsers.end(); ++itr) {
+        users += itr->first+"\n";
+    }
+    TCPMessengerProtocol::sendToServer(LIST_USERS_RESPONSE,users,peer);
+}
+void Dispatcher::listConnectedUsers(TCPSocket* peer, const string& data){
+    string connectedUsers;
+    for (map<string, TCPSocket *>::iterator itr = loggedInUsers.begin();
+         itr != loggedInUsers.end(); ++itr) {
+        connectedUsers += itr->first+"\n";
+    }
+    TCPMessengerProtocol::sendToServer(LIST_CONNECTED_USERS_RESPONSE,connectedUsers,peer);
+}
+void Dispatcher::listRooms(TCPSocket* peer, const string& data){
+    string rooms = " ";
+    for (int i = 0; i <chatRooms.size(); ++i) {
+        rooms+=chatRooms[i]->getRoomName()+"\n";
+    }
+    TCPMessengerProtocol::sendToServer(LIST_ROOMS_RESPONSE,rooms,peer);
+}
+void Dispatcher::listRoomUsers(TCPSocket* peer, const string& data){
+    bool flag=false;
+    for (int i = 0; i <chatRooms.size() ; ++i) {
+        if(chatRooms[i]->getRoomName()==data){
+            TCPMessengerProtocol::sendToServer(LIST_ROOM_USERS_RESPONSE,chatRooms[i]->getUsers(),peer);
+            flag = true;
+            break;
+        }
+    }
+    if(!flag){
+        TCPMessengerProtocol::sendToServer(LIST_ROOM_USERS_RESPONSE,"Room dosnt exist\n",peer);
+    }
+}
+void Dispatcher::exit(TCPSocket* peer, const string& data){
+    this->removePeer(peer);
+    if (isLoggedIn(peer)) {
+        for (map<string, TCPSocket *>::iterator itr = loggedInUsers.begin();
+             itr != loggedInUsers.end(); ++itr){
+            if(itr->second==peer){
+                loggedInUsers.erase(itr->first);
+                break;
+            }
+        }
+    }
+    cout << BOLDBLUE<<"Client " << peer->fromAddr() << " has disconnected" << RESET<< endl;
+}
 Dispatcher::~Dispatcher() {
 	// TODO Auto-generated destructor stub
 }
