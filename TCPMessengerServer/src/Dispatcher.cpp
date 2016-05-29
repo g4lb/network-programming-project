@@ -44,7 +44,7 @@ void Dispatcher::run(){
 				data.clear();
 				TCPMessengerProtocol::readFromServer(command, data, peer);
 				cout<<"read command from peer: "<< command << " " << data << endl;
-				switch(command){
+                switch(command){
                     case LOGIN: {
                         std::istringstream splitter(data);
                         string peerUser;
@@ -177,7 +177,7 @@ void Dispatcher::run(){
                                     break;
                                 }
                             }
-                    }
+                        }
                         break;
                     }
                     case LIST_USERS:{
@@ -212,16 +212,16 @@ void Dispatcher::run(){
                                 TCPMessengerProtocol::sendToServer(LIST_ROOM_USERS_RESPONSE,chatRooms[i]->getUsers(),peer);
                                 break;
                             }
-                            default: {
-                                cout << "Problems with client: " << peer->fromAddr() <<". disconnecting"<<endl;
-                                removePeer(peer);
-                                for (map<string, TCPSocket *>::iterator itr = loggedInUsers.begin();
                         }
                         break;
                     }
                     case EXIT: {
                         this->removePeer(peer);
                         if (isLoggedIn(peer)) {
+                            for (map<string, TCPSocket *>::iterator itr = loggedInUsers.begin();
+                                 itr != loggedInUsers.end(); ++itr){
+                                if(itr->second==peer){
+                                    loggedInUsers.erase(itr->first);
                                     break;
                                 }
                             }
@@ -229,21 +229,21 @@ void Dispatcher::run(){
                         cout << "Client " << peer->fromAddr() << " has disconnected" << endl;
                         break;
                     }
+                    default: {
+                        cout << "Problems with client: " << peer->fromAddr() <<". disconnecting"<<endl;
+                        removePeer(peer);
+                        for (map<string, TCPSocket *>::iterator itr = loggedInUsers.begin();
                              itr != loggedInUsers.end(); ++itr){
                             if(itr->second==peer){
                                 loggedInUsers.erase(itr->first);
-                            }                            for (map<string, TCPSocket *>::iterator itr = loggedInUsers.begin();
-                                                              itr != loggedInUsers.end(); ++itr){
-                                if(itr->second==peer){
-                                    loggedInUsers.erase(itr->first);
-
-                                }
+                            }
+                        }
                         break;
                     }
-				}
+                }
 
-			}
-		}
+            }
+    }
 }
 void Dispatcher::close(){
 
