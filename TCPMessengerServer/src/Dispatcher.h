@@ -24,6 +24,10 @@
 
 #ifndef SRC_DISPATCHER_H_
 #define SRC_DISPATCHER_H_
+#define BOLDRED     "\033[1m\033[31m"
+#define RESET "\033[0m"
+#define BOLDBLUE    "\033[1m\033[34m"
+#define BOLDGREEN   "\033[1m\033[32m"
 
 #include <algorithm>
 #include <vector>
@@ -32,7 +36,7 @@
 #include "../../SocketUtils/src/MultipleTCPSocketListener.h"
 #include "../../SocketUtils/src/TCPMessengerProtocol.h"
 #include "ChatRoom.h"
-#include "ServerLoader.h"
+#include "Users.h"
 
 namespace npl {
 
@@ -47,7 +51,7 @@ class Dispatcher : public MThread, ChatRoom::ChatRoomHandler, Brocker::BrockerHa
 
 	MultipleTCPSocketListener* listener;
 
-    ServerLoader* serverLoader;
+	Users* users;
 
 	bool running;
 public:

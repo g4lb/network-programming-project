@@ -1,24 +1,24 @@
-#include "ServerLoader.h"
+#include "Users.h"
 
 using namespace npl;
 
 
-map<string,string> ServerLoader::getUsersAndPasswords() {
+map<string,string> Users::getUsersAndPasswords() {
     return this->usersAndPasswords;
 };
 
-ServerLoader::ServerLoader(string path){
+Users::Users(string path){
     this->path = path;
 };
 
-bool ServerLoader::addNewUser(string user,string password){
+bool Users::addNewUser(string user,string password){
     string nameuser = user;
     string passworduser = password;
 
     for (map<string, string>::iterator it = this->usersAndPasswords.begin();
          it != this->usersAndPasswords.end(); ++it) {
         if (it->first == nameuser){
-            cout << "sorry the user " << "'"<< it->first << "'" << " is connected" << endl;
+            cout << BOLDRED << "ERROR: The client " << "'"<< it->first << "'" << " is connected" << RESET <<  endl;
             return false;
         }
     }
@@ -33,7 +33,7 @@ bool ServerLoader::addNewUser(string user,string password){
     out.close();
     return true;
 };
-map<string,string> ServerLoader::loadAllUserFromFile(){
+map<string,string> Users::loadAllUserFromFile(){
 
     ifstream nameFileout;
     nameFileout.open(this->path, ios::in);

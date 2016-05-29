@@ -13,6 +13,11 @@
 #define MESSENGERSERVER_H_
 
 #include "Dispatcher.h"
+#define BOLDRED     "\033[1m\033[31m"
+#define RESET "\033[0m"
+#define BOLDBLUE    "\033[1m\033[34m"
+#define BOLDGREEN   "\033[1m\033[32m"
+
 
 namespace npl {
 

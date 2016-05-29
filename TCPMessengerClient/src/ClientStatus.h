@@ -2,10 +2,10 @@
  * this class holds the status of the client.
  */
 
-#ifndef CPPPROJECT_COPY_CLIENTSTATE_H
-#define CPPPROJECT_COPY_CLIENTSTATE_H
+#ifndef CPPPROJECT_COPY_CLIENTSTATUS_H
+#define CPPPROJECT_COPY_CLIENTSTATUS_H
 
-enum State
+enum Status
 {
     DISCONNECTED = 0,
     CONNECTED    = 1,
@@ -14,4 +14,4 @@ enum State
     IN_ROOM      = 4
 };
 
-#endif //CPPPROJECT_COPY_CLIENTSTATE_H
+#endif //CPPPROJECT_COPY_CLIENTSTATUS_H

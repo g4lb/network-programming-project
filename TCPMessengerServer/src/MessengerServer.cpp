@@ -16,41 +16,38 @@ MessengerServer::MessengerServer() {
 	socket = new TCPSocket(MSNGR_PORT);
 	start();
 }
+void MessengerServer::listSessions(){
+	this->dispatcher->listSessions();
+}
 
 MessengerServer::~MessengerServer() {
 
 }
-
 void MessengerServer::listUsers(){
 	this->dispatcher->listUsers();
 }
 void MessengerServer::listConnectedUsers(){
 	this->dispatcher->listConnectedUsers();
 }
-void MessengerServer::listSessions(){
-	this->dispatcher->listSessions();
-}
-void MessengerServer::listRooms(){
-	this->dispatcher->listRooms();
-}
-void MessengerServer::listRoomUsers(const string& roomName){
-	this->dispatcher->listRoomUsers(roomName);
-}
-
 void MessengerServer::exit(){
 	socket->close();
 	delete socket;
 	dispatcher->close();
 	delete dispatcher;
 }
-
+void MessengerServer::listRoomUsers(const string& roomName){
+	this->dispatcher->listRoomUsers(roomName);
+}
 void MessengerServer::run(){
 	while(true){
 		TCPSocket* peer = socket->listenAndAccept();
 		if(peer == NULL){
 			break;
 		}
-		cout << "Peer " << socket->fromAddr() << " Connected" << endl;
+		cout << BOLDBLUE << "The peer " << socket->fromAddr() << " Connected" << RESET<< endl;
 		dispatcher->add(peer);
 	}
+}
+void MessengerServer::listRooms(){
+	this->dispatcher->listRooms();
 }

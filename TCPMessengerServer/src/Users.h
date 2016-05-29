@@ -7,8 +7,11 @@
  * bool addNewUser(string user,string password): this method adds a new user to the map and returning the new map.
  */
 
-#ifndef CPPPROJECT_COPY_SERVERLOADER_H
-#define CPPPROJECT_COPY_SERVERLOADER_H
+#ifndef CPPPROJECT_COPY_USERS_H
+#define CPPPROJECT_COPY_USERS_H
+#define BOLDRED     "\033[1m\033[31m"
+#define RESET "\033[0m"
+
 
 #include <iostream>
 #include <string.h>
@@ -17,18 +20,19 @@
 #include <fstream>
 #include <sstream>
 
+
 using namespace std;
 
 namespace npl{
 
-class ServerLoader {
+class Users {
 
     private:
         map<string,string> usersAndPasswords;
         string path;
 
     public:
-    ServerLoader(string path);
+    Users(string path);
     map<string,string> getUsersAndPasswords();
     map<string,string> loadAllUserFromFile();
     bool addNewUser(string user,string password);
@@ -36,4 +40,4 @@ class ServerLoader {
     };
 }
 
-#endif //CPPPROJECT_COPY_SERVERLOADER_H
+#endif //CPPPROJECT_COPY_USERS_H

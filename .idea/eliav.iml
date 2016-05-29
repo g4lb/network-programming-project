@@ -17,41 +17,40 @@
       <sourceFolder url="file://$MODULE_DIR$/SocketUtils/src/MultipleTCPSocketListener.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/TCPMessengerClient/src/MessengerClient.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/TCPMessengerClient/src/main.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/TCPMessengerClient/src/ClientStatus.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/TCPMessengerClient/src/MessengerClient.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/TCPMessengerClient/src/ClientState.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/TCPMessengerServer/src/ChatRoom.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/TCPMessengerServer/src/Dispatcher.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/TCPMessengerServer/src/MessengerServer.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/TCPMessengerServer/src/MessengerServer.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/TCPMessengerServer/src/Dispatcher.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/TCPMessengerServer/src/main.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/TCPMessengerServer/src/ChatRoom.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/TCPMessengerServer/src/Brocker.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/TCPMessengerServer/src/tests/TcpSocketTest.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/TCPMessengerServer/src/tests/main.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/TCPMessengerServer/src/tests/UsersTest.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/TCPMessengerServer/src/tests/UdpSocketTest.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/TCPMessengerServer/src/tests/TestTwoClients.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/TCPMessengerServer/src/tests/UdpSocketTest.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/TCPMessengerServer/src/tests/ServerLoaderTest.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/TCPMessengerServer/src/tests/TcpSocketTest.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/TCPMessengerServer/src/ServerLoader.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/TCPMessengerServer/src/Dispatcher.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/TCPMessengerServer/src/ChatRoom.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/TCPMessengerServer/src/ServerState.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/TCPMessengerServer/src/tests/SessionTear.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/TCPMessengerServer/src/main.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/TCPMessengerServer/src/Users.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/TCPMessengerServer/src/Users.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/TCPMessengerServer/src/Brocker.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/TCPMessengerServer/src/ServerLoader.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/TCPMessengerServer/src/MessengerServer.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/TCPMessengerServer/src/ChatRoom.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/CMakeLists.txt" isTestSource="false" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module-library">
       <library name="Header Search Paths">
         <CLASSES>
-          <root url="file:///usr/lib/gcc/x86_64-linux-gnu/4.7/include-fixed" />
-          <root url="file:///usr/lib/gcc/x86_64-linux-gnu/4.7/include" />
+          <root url="file:///usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed" />
+          <root url="file:///usr/lib/gcc/x86_64-linux-gnu/4.8/include" />
           <root url="file:///usr/include" />
           <root url="file:///usr/local/include" />
         </CLASSES>
         <SOURCES>
-          <root url="file:///usr/lib/gcc/x86_64-linux-gnu/4.7/include-fixed" />
-          <root url="file:///usr/lib/gcc/x86_64-linux-gnu/4.7/include" />
+          <root url="file:///usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed" />
+          <root url="file:///usr/lib/gcc/x86_64-linux-gnu/4.8/include" />
           <root url="file:///usr/include" />
           <root url="file:///usr/local/include" />
         </SOURCES>

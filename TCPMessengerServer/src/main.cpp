@@ -14,14 +14,14 @@ using namespace npl;
 
 
 void printInstructions(){
-	cout<<"Welcome to TCP Messenger Server"<<endl;
-	cout<<"Print the users list from server type: lu"<<endl;
+	cout<< BOLDBLUE << "------->" << RESET << BOLDGREEN <<"Welcome to TCP Messenger Server"<< RESET<< BOLDBLUE<< "<-------" << RESET<<endl;
+	cout<< BOLDBLUE<<"Print the users list from server type: lu"<<endl;
 	cout<<"Print the connected users list type: lcu"<<endl;
     cout<<"Print the sessions: ls"<<endl;
 	cout<<"Print available rooms type: lr"<<endl;
 	cout<<"Print users in room type: lru <room name>"<<endl;
 
-	cout<<"To exit type: x"<<endl;
+	cout<<"To exit type: x"<< RESET<<endl;
 }
 
 int main() {

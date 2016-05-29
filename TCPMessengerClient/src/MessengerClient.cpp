@@ -12,7 +12,7 @@ using namespace npl;
 
 
 MessengerClient::MessengerClient(){
-	this->clientState = State::DISCONNECTED;
+	this->clientStatus = Status::DISCONNECTED;
 	this->currentRoomName = "";
     this->peersInRoom = new map<string,string>();
     this->peerInSeesion = NULL;
@@ -20,7 +20,7 @@ MessengerClient::MessengerClient(){
 }
 void MessengerClient::run() {
     //Main server reader thread
-	while (clientState != State::DISCONNECTED) {
+	while (clientStatus != Status::DISCONNECTED) {
 		int cmd;
 		string str;
 		readFromServer(cmd,str,mainServer);
@@ -38,7 +38,7 @@ void MessengerClient::run() {
                 splitter >> myPort;
 
 
-                this->clientState = State::LOGGED_IN;
+                this->clientStatus = Status::LOGGED_IN;
                 this->currentUserName = myUser;
                 this->myConnectionPort = myPort;
                 cout << "You successfully logged in user: ["<<myUser<<"]"<<endl;
@@ -54,24 +54,23 @@ void MessengerClient::run() {
                 std::getline(splitter,myIp,':');
                 splitter >> myPort;
 
-                this->clientState = State::LOGGED_IN;
+                this->clientStatus = Status::LOGGED_IN;
                 this->currentUserName = myUser;
                 this->myConnectionPort = myPort;
 
-                cout << "You successfully registered and logged in user ["<<myUser<<"]"<<endl;
+                cout << BOLDBLUE<< "registered & logged in user ["<<myUser<<"]"<< RESET<<endl;
             }
             else if (cmd == LOGIN_REFUSE) {
-                cout << "Login was refused by server, check your username and/or password; "
-                                "or the user is already logged in"<<endl;
+                cout << BOLDRED<< "ERROR: please check your username & password "<<RESET<<endl;
             }
             else if (cmd == REGISTER_REFUSE) {
-                cout << "Register was refused by server, your username exists already"<<endl;
+                cout << BOLDRED<<"ERROR: username exist "<< RESET<<endl;
             }
 			else if (cmd == SESSION_ESTABLISHED)
 			{
                 //Expecting input in format: <user> <ip>:<port>
 
-                this->clientState = State::IN_SESSION;
+                this->clientStatus = Status::IN_SESSION;
 
                 std::istringstream splitter(str);
                 string peerUser;
@@ -79,7 +78,7 @@ void MessengerClient::run() {
                 splitter >> peerUser;
                 splitter >> peerIpAndPort;
 
-                cout << SESSION_ESTABLISHED_TEXT << "["<< peerUser<<"]" << endl;
+                cout << BOLDBLUE<< SESSION_ESTABLISHED_TEXT << "["<< peerUser<<"]" << RESET<<endl;
                 this->peerInSeesion = new pair<string,string>(peerUser,peerIpAndPort);
 
                 this->udpPeer = new UDPSocket(this->myConnectionPort);
@@ -90,7 +89,7 @@ void MessengerClient::run() {
 			}else if (cmd == SUCCESS_ENTER_ROOM){
                 //Expecting input in format: <roomName>
 
-                this->clientState = State::IN_ROOM;
+                this->clientStatus = Status::IN_ROOM;
                 this->currentRoomName = str;
 
                 this->udpPeer = new UDPSocket(this->myConnectionPort);
@@ -98,15 +97,15 @@ void MessengerClient::run() {
                 this->udpReaderThread = new MessengerClientPeerReader(this->udpPeer);
                 this->udpReaderThread->start();
 
-                cout << "Entered room ["<<str<<"]"<<endl;
+                cout << BOLDBLUE <<"Entered room ["<<str<<"]"<< RESET <<endl;
             }
             else if (cmd == SESSION_REFUSED) {
                 //Expecting input in format: <user>
-                cout << SESSION_REFUSED_TEXT << "["<< str <<"]" << endl;
+                cout << BOLDBLUE << SESSION_REFUSED_TEXT << "["<< str <<"]" << RESET << endl;
             }
             else if (cmd == CLOSE_SESSION_WITH_PEER){
                 //Expecting input in format: NONE
-                cout << CLOSE_SESSION_WITH_PEER_TEXT << "["<< this->peerInSeesion->first <<"]" << endl;
+                cout << BOLDBLUE << CLOSE_SESSION_WITH_PEER_TEXT << "["<< this->peerInSeesion->first <<"]" << RESET<< endl;
 
                 delete this->peerInSeesion;
                 if (this->udpReaderThread != NULL) {
@@ -115,7 +114,7 @@ void MessengerClient::run() {
                 }
                 this->udpPeer->close();
 
-                this->clientState = State::LOGGED_IN;
+                this->clientStatus = Status::LOGGED_IN;
             }
             else if (cmd == CLIENT_DISCONNECTED_FROM_ROOM){
                 //Expecting input in format: <user>
@@ -123,7 +122,7 @@ void MessengerClient::run() {
                 {
                     if (peer->first == str){
                         this->peersInRoom->erase(peer->first);
-                        cout << "A Client has left the room"<<endl;
+                        cout << BOLDGREEN << "A Client has left the room"<< RESET<<endl;
                         break;
                     }
                 }
@@ -138,7 +137,15 @@ void MessengerClient::run() {
                 splitter >> peerIpAndPort;
 
                 this->peersInRoom->insert(make_pair(peerUser,peerIpAndPort));
-                cout << "User ["<<str<<"]"<<" has entered the room"<<endl;
+                cout << BOLDBLUE<< "User ["<<str<<"]"<<" entere the room"<< RESET<<endl;
+            }
+            else if(cmd==ADMIN_LEAVE_ROOM){
+                if (this->udpReaderThread != NULL) {
+                    this->udpReaderThread->stop();
+                }
+                this->udpPeer->close();
+                this->clientStatus = Status::LOGGED_IN;
+                cout << BOLDGREEN << "You close the chat room" << RESET << endl;
             }
             else if (cmd == CHAT_CLOSED_BY_ADMIN or cmd == DISCONNECT_FROM_ROOM_RESPONSE){
                 this->peersInRoom->clear();
@@ -148,27 +155,26 @@ void MessengerClient::run() {
                     //delete this->udpReaderThread;
                 }
                 this->udpPeer->close();
-
-                this->clientState = State::LOGGED_IN;
+                this->clientStatus = Status::LOGGED_IN;
                 if (cmd == CHAT_CLOSED_BY_ADMIN)
-                    cout << "Chat room closed by admin"<<endl;
+                    cout << BOLDGREEN << "Chat room closed by admin" << RESET << endl;
                 else if (cmd == DISCONNECT_FROM_ROOM_RESPONSE)
-                    cout << "You disconnected from the room" <<endl;
+                    cout << BOLDGREEN<< "You disconnected from the room" <<RESET<<endl;
             }
             else if (cmd == LIST_USERS_RESPONSE){
-                cout << "****Registered Users****\n"<< str << "***********" << endl;
+                cout << BOLDBLUE << "Registered Users:\n"<< str << "--" << RESET<< endl;
             }
             else if (cmd == LIST_CONNECTED_USERS_RESPONSE){
-                cout << "****Connected Users****\n"<< str << "***********" << endl;
+                cout << BOLDBLUE << "Connected Users:\n"<< str << "--" << RESET<< endl;
             }else if (cmd == LIST_ROOMS_RESPONSE){
-                cout << "****Rooms****\n"<< str << "***********" << endl;
+                cout << BOLDBLUE <<"Rooms:\n"<< str << "--" << RESET<<endl;
             }else if (cmd == LIST_ROOM_USERS_RESPONSE){
-                cout << "****Room Users****\n"<< str << "***********" << endl;
+                cout << BOLDBLUE << "Room Users:\n"<< str << "--" << RESET<<endl;
             }
 		}
 		else
 		{
-			cout << "Server disconnected" << endl;
+			cout << BOLDBLUE <<"Server disconnected" <<RESET<< endl;
             this->close();
 		}
 
@@ -176,7 +182,7 @@ void MessengerClient::run() {
 }
 
 void MessengerClient::close(){
-    cout << "Initiating closing sequence..";
+    cout << BOLDBLUE<< "Closing All..;";
 
     this->currentRoomName = "";
     this->currentUserName = "";
@@ -189,154 +195,150 @@ void MessengerClient::close(){
     if (this->udpReaderThread != NULL) {
         this->udpReaderThread->stop();
         delete this->udpReaderThread;
-        cout<<"stopped reading p2p messages..";
     }
     if (this->udpPeer != NULL) {
         this->udpPeer->close();
-        cout<<"stopped sending p2p messages..";
     }
-    if (this->clientState != State::DISCONNECTED) {
-        this->clientState = State::DISCONNECTED;
-        cout<<"stopped reading from main server..";
+    if (this->clientStatus != Status::DISCONNECTED) {
+        this->clientStatus = Status::DISCONNECTED;
     }
     if (this->mainServer != NULL) {
         this->mainServer->close();
-        cout<<"closed the main server..";
     }
-    cout<<"Done."<<endl;
+    cout<<"Done."<<RESET<<endl;
 
     ::exit(0);
 }
 
 void MessengerClient::connect(const string& ip){
-	if(clientState == State::DISCONNECTED){
+	if(clientStatus == Status::DISCONNECTED){
 		mainServer = new TCPSocket(ip, MSNGR_PORT);
 		if(mainServer != NULL){
-			clientState = State::CONNECTED;
+			clientStatus = Status::CONNECTED;
 			start();
 		}
 	}
     else
     {
-        cout << "You are already connected to a server"<<endl;
+        cout << BOLDRED<<"You are already connected to a server"<<RESET<<endl;
     }
 }
 
 void MessengerClient::login(const string& user,const string& password) {
-    if (clientState == State::CONNECTED){
+    if (clientStatus == Status::CONNECTED){
         sendToServer(LOGIN,user + " " + password,mainServer);
     }
     else{
-        cout << "You are not connected to a server" << endl;
+        cout << BOLDRED<<"You are not connected to a server" << RESET<<endl;
     }
 }
 void MessengerClient::reg(const string& user,const string& password) {
-    if (clientState == State::CONNECTED){
+    if (clientStatus == Status::CONNECTED){
         sendToServer(REGISTER,user + " " + password,mainServer);
     }
     else{
-        cout << "You are not connected to a server" << endl;
+        cout << BOLDRED<<"You are not connected to a server" << RESET<<endl;
     }
 }
 
 void MessengerClient::listUsers(){
-    if (clientState == State::LOGGED_IN || clientState == State::IN_ROOM || clientState == State::IN_SESSION){
+    if (clientStatus == Status::LOGGED_IN || clientStatus == Status::IN_ROOM || clientStatus == Status::IN_SESSION){
         sendToServer(LIST_USERS," ",mainServer);
     }
     else{
-        cout << "You are not logged in" << endl;
+        cout << BOLDRED<<"You are not logged in" << RESET<<endl;
     }
 }
 void MessengerClient::listConnectedUsers(){
-    if (clientState == State::LOGGED_IN || clientState == State::IN_ROOM || clientState == State::IN_SESSION){
+    if (clientStatus == Status::LOGGED_IN || clientStatus == Status::IN_ROOM || clientStatus == Status::IN_SESSION){
         sendToServer(LIST_CONNECTED_USERS," ",mainServer);
     }
     else{
-        cout << "You are not logged in" << endl;
+        cout << BOLDRED<<"You are not logged in" << RESET<<endl;
     }
 }
 void MessengerClient::listRooms(){
-    if (clientState == State::LOGGED_IN || clientState == State::IN_ROOM || clientState == State::IN_SESSION){
+    if (clientStatus == Status::LOGGED_IN || clientStatus == Status::IN_ROOM || clientStatus == Status::IN_SESSION){
         sendToServer(LIST_ROOMS," ",mainServer);
     }
     else{
-        cout << "You are not logged in" << endl;
+        cout <<BOLDRED<< "You are not logged in" << RESET<<endl;
     }
 }
 void MessengerClient::listRoomUsers(const string& roomName){
-    if (clientState == State::LOGGED_IN || clientState == State::IN_ROOM || clientState == State::IN_SESSION){
+    if (clientStatus == Status::LOGGED_IN || clientStatus == Status::IN_ROOM || clientStatus == Status::IN_SESSION){
         sendToServer(LIST_ROOM_USERS,roomName,mainServer);
     }
     else{
-        cout << "You are not logged in" << endl;
+        cout << BOLDRED<<"You are not logged in" << RESET<<endl;
     }
 }
 void MessengerClient::openOrConnectToRoom(const string& roomName){
-    if (clientState == State::LOGGED_IN)
+    if (clientStatus == Status::LOGGED_IN)
         sendToServer(OPEN_OR_CONNECT_TO_ROOM,roomName,mainServer);
-    else if (clientState == State::IN_SESSION)
-        cout << "You are already in a session. use command: cs"<<endl;
-    else if (clientState == State::IN_ROOM)
-        cout << "You are already in a room. use command: cs"<<endl;
+    else if (clientStatus == Status::IN_SESSION)
+        cout << BOLDRED<< "You are already in a session. use command: cs"<<RESET<<endl;
+    else if (clientStatus == Status::IN_ROOM)
+        cout <<BOLDRED<< "You are already in a room. use command: cs"<<RESET<<endl;
     else
-        cout << "You are not logged in" << endl;
+        cout << BOLDRED<<"You are not logged in" << RESET<<endl;
 
 }
-void MessengerClient::printClientState(){
-    if (clientState == State::IN_ROOM)
-        cout << "Client in room ["<<this->currentRoomName<<"]"<<endl;
-    else if (clientState == State::IN_SESSION)
-        cout << "Client is in session"<<endl;
-    else if (clientState == State::LOGGED_IN)
-        cout << "Client is logged in to server" <<endl;
-    else if (clientState == State::CONNECTED)
-        cout << "Client is connected to server" <<endl;
-    else if (clientState == State::DISCONNECTED)
-        cout << "Client is not connected to any server"<<endl;
+void MessengerClient::printClientStatus(){
+    if (clientStatus == Status::IN_ROOM)
+        cout << BOLDBLUE << "Client in room ["<<this->currentRoomName<<"]"<<RESET<<endl;
+    else if (clientStatus == Status::IN_SESSION)
+        cout << BOLDBLUE <<"Client is in session"<<RESET<<endl;
+    else if (clientStatus == Status::LOGGED_IN)
+        cout << BOLDBLUE <<"Client is logged in to server" <<RESET<<endl;
+    else if (clientStatus == Status::CONNECTED)
+        cout << BOLDBLUE <<"Client is connected to server" <<RESET<<endl;
+    else if (clientStatus == Status::DISCONNECTED)
+        cout << BOLDBLUE <<"Client is not connected to any server"<<RESET<<endl;
 }
 void MessengerClient::closeCurrentRoom(){
-    if (clientState == State::IN_ROOM){
+    if (clientStatus == Status::IN_ROOM){
         sendToServer(CLOSE_ROOM,this->currentRoomName,mainServer);
     }
     else{
-        cout << "You are not in a room" << endl;
+        cout << BOLDRED<< "You are not in a room" << RESET<<endl;
     }
 }
 
 void MessengerClient::openSession(const string& peerUser){
-	if(clientState == State::LOGGED_IN)
+	if(clientStatus == Status::LOGGED_IN)
 		sendToServer(OPEN_SESSION_WITH_PEER,peerUser,mainServer);
-    else if (clientState == State::IN_SESSION)
-        cout << "You are already in a session. use command: cs"<<endl;
-    else if (clientState == State::IN_ROOM)
-        cout << "You are already in a room. use command: cs"<<endl;
+    else if (clientStatus == Status::IN_SESSION)
+        cout << BOLDRED<<"You are already in a session. use command: cs"<< RESET<< endl;
+    else if (clientStatus == Status::IN_ROOM)
+        cout << BOLDRED<<"You are already in a room. use command: cs"<<RESET<<endl;
     else
-        cout << "You are not logged in" << endl;
+        cout << BOLDRED<<"You are not logged in" << RESET<<endl;
 }
 void MessengerClient::closeSessionOrExitRoom(){
-	if(clientState == State::IN_SESSION)
+	if(clientStatus == Status::IN_SESSION)
 		sendToServer(CLOSE_SESSION_WITH_PEER," ",mainServer);
-	else if (clientState == State::IN_ROOM)
+	else if (clientStatus == Status::IN_ROOM)
         sendToServer(DISCONNECT_FROM_ROOM,this->currentRoomName,mainServer);
 	else
-		cout<<"Not in session or room"<<endl;
+		cout<< BOLDRED<<"Not in session or room"<<RESET<<endl;
 }
 void MessengerClient::disconnect(){
-    if (clientState != State::DISCONNECTED) {
+    if (clientStatus != Status::DISCONNECTED) {
         sendToServer(EXIT, " ", mainServer);
         close();
-        cout << "You have disconnected from server"<<endl;
+        cout << BOLDBLUE<< "You have disconnected from server"<<RESET<<endl;
     }
     else
-        cout<<"Client is already disconnected"<<endl;
+        cout<< BOLDBLUE<<"Client is already disconnected"<< RESET<<endl;
 
 }
 void MessengerClient::exit(){
-    if (clientState != State::DISCONNECTED) {
+    if (clientStatus != Status::DISCONNECTED) {
         sendToServer(EXIT, " ", mainServer);
     }
 	close();
-    cout << "You have disconnected from server"<<endl;
+    cout << BOLDBLUE<< "You have disconnected from server"<< RESET<<endl;
 }
 void MessengerClient::sendToServer(int command, const string& data, TCPSocket* mainServer){
 	TCPMessengerProtocol::sendToServer(command,data,mainServer);
@@ -349,33 +351,32 @@ void MessengerClient::send(const string & msg){
     string peerIp;
     int peerPort;
 
-    if (clientState == State::IN_SESSION) {
+    if (clientStatus == Status::IN_SESSION) {
 
-        std::istringstream splitter(this->peerInSeesion->second);
-
-        std::getline(splitter, peerIp, ':');
+        istringstream splitter(this->peerInSeesion->second);
+        getline(splitter, peerIp, ':');
         splitter >> peerPort;
 
         //send peer in session the msg
         this->udpPeer->sendTo(">["+currentUserName+"] " + msg, peerIp, peerPort);
     }
-    else if (clientState == State::IN_ROOM) {
+    else if (clientStatus == Status::IN_ROOM) {
 
-        std::istringstream splitter;
+        istringstream splitter;
 
         //iterate over all peers in room and send msg
         for (map<string, string>::iterator peer = peersInRoom->begin(); peer != peersInRoom->end(); ++peer)
         {
             splitter.clear();
             splitter.str(peer->second);
-            std::getline(splitter, peerIp, ':');
+            getline(splitter, peerIp, ':');
             splitter >> peerPort;
 
             this->udpPeer->sendTo(">["+currentUserName+"] " + msg, peerIp, peerPort);
         }
     }
     else{
-        cout << "You are not in a room or a session"<<endl;
+        cout << BOLDRED<< "You are not in a room or a session"<< RESET<<endl;
     }
 }
 

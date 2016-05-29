@@ -9,8 +9,8 @@ using namespace npl;
 
 Dispatcher::Dispatcher() {
     //read users map
-    serverLoader = new ServerLoader(USERS_PATH);
-    this->registeredUsers = serverLoader->loadAllUserFromFile();
+    users = new Users(USERS_PATH);
+    this->registeredUsers = users->loadAllUserFromFile();
 
 	running = false;
     listener = new MultipleTCPSocketListener();
@@ -43,7 +43,7 @@ void Dispatcher::run(){
 				command = 0;
 				data.clear();
 				TCPMessengerProtocol::readFromServer(command, data, peer);
-				cout<<"read command from peer: "<< command << " " << data << endl;
+				//cout<<"read command from peer: "<< command << " " << data << endl;
                 switch(command){
                     case LOGIN: {
                         std::istringstream splitter(data);
@@ -90,7 +90,7 @@ void Dispatcher::run(){
                         }
                         if (!alreadyExist){
                             //write the new user to database and check if succeeded writing
-                            if (serverLoader->addNewUser(peerUser1,peerPassword1)) {
+                            if (users->addNewUser(peerUser1,peerPassword1)) {
                                 //insert peer to registered cache
                                 registeredUsers.insert(pair<string, string>(peerUser1, peerPassword1));
                                 //insert peer to logged in users cache
@@ -101,7 +101,7 @@ void Dispatcher::run(){
                                                                    peer);
                             }
                             else
-                                cout << "Error writing new user to database" <<endl;
+                                cout << BOLDRED<< "Error writing new user to database" << RESET <<endl;
                         }
                         break;
                     }
@@ -226,11 +226,11 @@ void Dispatcher::run(){
                                 }
                             }
                         }
-                        cout << "Client " << peer->fromAddr() << " has disconnected" << endl;
+                        cout << BOLDBLUE<<"Client " << peer->fromAddr() << " has disconnected" << RESET<< endl;
                         break;
                     }
                     default: {
-                        cout << "Problems with client: " << peer->fromAddr() <<". disconnecting"<<endl;
+                        cout << BOLDRED<< "Problems with client: " << peer->fromAddr() <<". disconnecting"<< RESET<<endl;
                         removePeer(peer);
                         for (map<string, TCPSocket *>::iterator itr = loggedInUsers.begin();
                              itr != loggedInUsers.end(); ++itr){
@@ -275,7 +275,7 @@ void Dispatcher::onClientExit(ChatRoom *chatRoom, TCPSocket * peer){
                 loggedInUsers.erase(itr->first);
             }
         }
-        cout << "Client " << peer->fromAddr() << " has disconnected" << endl;
+        cout << BOLDBLUE << "Client " << peer->fromAddr() << " has disconnected" << RESET<<endl;
 }
 void Dispatcher::onClientDisconnect(ChatRoom* chatRoom, TCPSocket* peer){
     this->add(peer);
@@ -292,10 +292,10 @@ void Dispatcher::onClientExit(Brocker *brocker, TCPSocket *disconnectingPeer, TC
             loggedInUsers.erase(itr);
         }
     }
-    cout << "Client " << disconnectingPeer->fromAddr() << " has disconnected" << endl;
+    cout << BOLDBLUE<< "Client " << disconnectingPeer->fromAddr() << " has disconnected" << RESET<<endl;
     //delete the brocker
     brocker->waitForThread();
-    cout << "Closed a session"<<endl;
+    cout << BOLDBLUE<<"Closed a session"<< RESET<<endl;
 }
 bool Dispatcher::isLoggedIn(TCPSocket *sock){
     for (map<string, TCPSocket *>::iterator itr = loggedInUsers.begin();
@@ -309,48 +309,47 @@ bool Dispatcher::isLoggedIn(TCPSocket *sock){
 
 
 void Dispatcher::listUsers(){
-    cout << "********Users*******" <<endl;
+    cout << BOLDGREEN<< "Users List:" << RESET<<endl;
     for (map<string, string>::iterator itr = registeredUsers.begin();
          itr != registeredUsers.end(); ++itr) {
         cout << itr->first << endl;
     }
-    cout << "*******************" <<endl;
+    cout << BOLDGREEN<< "--" << RESET<<endl;
 }
 void Dispatcher::listConnectedUsers(){
-    cout << "********Connected Users*******" <<endl;
+    cout << BOLDGREEN<< "Connected Users:" << RESET<<endl;
     for (map<string, TCPSocket*>::iterator itr = loggedInUsers.begin();
          itr != loggedInUsers.end(); ++itr) {
         cout << itr->first << endl;
     }
-    cout << "*******************" <<endl;
+    cout << BOLDGREEN<< "--" << RESET<<endl;
 }
 void Dispatcher::listSessions(){
-    cout << "********Active Sessions*******" <<endl;
+    cout << BOLDGREEN<< "Session Active:" << RESET<<endl;
     for (vector<Brocker*>::iterator itr = brockers.begin(); itr != brockers.end(); ++itr) {
         cout <<"Session: ";
         cout << "["<< (*itr)->getPeerAName() <<"] and ["<< (*itr)->getPeerBName() <<"]" << endl;
     }
-    cout << "*******************" <<endl;
+    cout << BOLDGREEN<< "--" << RESET<<endl;
 }
 void Dispatcher::listRooms(){
-    cout << "********Rooms*******" <<endl;
+    cout << BOLDGREEN<< "Rooms List:" << RESET<<endl;
     for (vector<ChatRoom*>::iterator itr = this->chatRooms.begin();
          itr != chatRooms.end(); ++itr) {
         cout << (*itr)->getRoomName() << endl;
     }
-    cout << "*******************" <<endl;
+    cout << BOLDGREEN<< "--" << RESET<<endl;
 }
 void Dispatcher::listRoomUsers(const string& roomName){
     for (vector<ChatRoom*>::iterator itr = this->chatRooms.begin();
          itr != chatRooms.end(); ++itr) {
         if ((*itr)->getRoomName() == roomName) {
-            cout << "********Users in Room: [" << (*itr)->getRoomName() << "] *******" <<endl;
+            cout << BOLDGREEN << "Users in Room: [" << (*itr)->getRoomName() << "]" << RESET <<endl;
             cout << (*itr)->getUsers() << endl;
-            cout << "*******************" <<endl;
             return;
         }
     }
-    cout << "No such room: [" << roomName << "]" << endl;
+    cout << BOLDRED<< "No such room: [" << roomName << "]" << RESET<< endl;
 }
 
 

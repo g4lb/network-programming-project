@@ -5,14 +5,19 @@
  *      Author: parallels
  */
 
+#define BOLDRED     "\033[1m\033[31m"
+#define RESET "\033[0m"
+#define BOLDBLUE    "\033[1m\033[34m"
+#define BOLDGREEN   "\033[1m\033[32m"
+
 #include <iostream>
 #include "MessengerClient.h"
 
 using namespace std;
 using namespace npl;
 void printInstructions(){
-	cout<<"Welcome to TCP messenger"<<endl;
-	cout<<"Connect to the remote server type: c <ip>"<<endl;
+	cout<< BOLDBLUE << "------->" << RESET << BOLDGREEN << "Welcome to TCP messenger"<< RESET<< BOLDBLUE<< "<-------" << RESET<<endl;
+	cout<<BOLDBLUE<<"Connect to the remote server type: c <ip>"<<endl;
 	cout<<"Log in type: login <user> <password>"<<endl;
 	cout<<"Register type: register <user> <password>"<<endl;
 	cout<<"Print the users list from server type: lu"<<endl;
@@ -26,7 +31,7 @@ void printInstructions(){
 	cout<<"To close the session/exit a room type: cs"<<endl;
 	cout<<"To close a room(if you are the admin) type: cr"<<endl;
 	cout<<"To disconnect from the server type: d"<<endl;
-	cout<<"To exit type: x"<<endl;
+	cout<<"To exit type: x"<< RESET<<endl;
 }
 
 int main(){
@@ -74,7 +79,7 @@ int main(){
             cin >> roomName;
             client->openOrConnectToRoom(roomName);
         }else if (command =="l"){
-            client->printClientState();
+            client->printClientStatus();
         }else if (command =="cr"){
             client->closeCurrentRoom();
         }

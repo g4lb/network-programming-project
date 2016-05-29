@@ -7,7 +7,7 @@
  * bool running: hold boolean variable, true as long as runing.
  * MessengerClientPeerReader(UDPSocket* udpPeer):running(true): this method returns an object of udp socket.
  * run method: is use to open a new thread.once stopping reading , the variable running will change to false.
- *State clientState: holds an object of state.
+ *Status clientStatus: holds an object of Status.
  * string currentUserName: holds the current name of the user.
  * string currentRoomName: holds the current name of the room.
  * int myConnectionPort: the number of the connected port.
@@ -25,12 +25,16 @@
 
 #ifndef SRC_MESSENGERCLIENT_H_
 #define SRC_MESSENGERCLIENT_H_
+#define BOLDRED     "\033[1m\033[31m"
+#define RESET "\033[0m"
+#define BOLDBLUE    "\033[1m\033[34m"
+#define BOLDGREEN   "\033[1m\033[32m"
 #include <iostream>
 #include <strings.h>
 #include "../../SocketUtils/src/TCPMessengerProtocol.h"
 #include "../../SocketUtils/src/MThread.h"
 #include "../../SocketUtils/src/TCPSocket.h"
-#include "ClientState.h"
+#include "ClientStatus.h"
 #include "../../SocketUtils/src/UDPSocket.h"
 #include <sstream>
 #include <algorithm>
@@ -42,7 +46,7 @@ namespace npl{
 class MessengerClient : public MThread {
 
 private:
-
+    //the reader theread by udp socket
     class MessengerClientPeerReader : public MThread{
     public:
 
@@ -68,7 +72,7 @@ private:
         }
     };
 
-	State clientState;
+    Status clientStatus;
 
     string currentUserName;
     string currentRoomName;
@@ -94,7 +98,7 @@ public:
     void listRooms();
     void listRoomUsers(const string& roomName);
     void openOrConnectToRoom(const string& roomName);
-    void printClientState();
+    void printClientStatus();
     void closeCurrentRoom();
     void openSession(const string& ipAndPort);
 	void sendToServer(int command, const string& data, TCPSocket* sock);

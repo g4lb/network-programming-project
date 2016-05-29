@@ -45,6 +45,7 @@
 #define LIST_ROOMS_RESPONSE             26
 #define LIST_ROOM_USERS_RESPONSE        27
 #define DISCONNECT_FROM_ROOM_RESPONSE   28
+#define ADMIN_LEAVE_ROOM                29
 
 
 #define SESSION_REFUSED_TEXT "Connection refused to peer: "

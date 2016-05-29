@@ -30,7 +30,7 @@ void ChatRoom::run(){
             case DISCONNECT_FROM_ROOM: {
                 string userName;
                 if (sender == admin) {
-                    active = false;
+                    TCPMessengerProtocol::sendToServer(ADMIN_LEAVE_ROOM,sender->fromAddr(),sender);
                     sendByLoop(CHAT_CLOSED_BY_ADMIN, data, sender);
                     this->close();
                     break;

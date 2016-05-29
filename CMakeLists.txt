@@ -25,7 +25,7 @@ set(SERVER_SIDE
     TCPMessengerServer/src/MessengerServer.cpp
     TCPMessengerServer/src/MessengerServer.h
     TCPMessengerServer/src/ChatRoom.cpp
-    TCPMessengerServer/src/ChatRoom.h TCPMessengerServer/src/ServerLoader.cpp TCPMessengerServer/src/ServerLoader.h)
+    TCPMessengerServer/src/ChatRoom.h TCPMessengerServer/src/Users.cpp TCPMessengerServer/src/Users.h)
 
 set(CLIENT_SIDE
         SocketUtils/src/FileInterface.cpp
@@ -44,12 +44,12 @@ set(CLIENT_SIDE
         TCPMessengerClient/src/main.cpp
         TCPMessengerClient/src/MessengerClient.cpp
         TCPMessengerClient/src/MessengerClient.h
-        TCPMessengerClient/src/ClientState.h)
+        TCPMessengerClient/src/ClientStatus.h)
 
 set(serverLoaderTest
-        TCPMessengerServer/src/tests/ServerLoaderTest.cpp
-        TCPMessengerServer/src/ServerLoader.cpp
-        TCPMessengerServer/src/ServerLoader.h)
+        TCPMessengerServer/src/tests/UsersTest.cpp
+        TCPMessengerServer/src/Users.cpp
+        TCPMessengerServer/src/Users.h)
 
 set(mainTest
         TCPMessengerServer/src/tests/main.cpp
@@ -79,11 +79,11 @@ set(TestTwoClients
         TCPMessengerServer/src/MessengerServer.cpp
         TCPMessengerServer/src/MessengerServer.h
         TCPMessengerServer/src/ChatRoom.cpp
-        TCPMessengerServer/src/ChatRoom.h TCPMessengerServer/src/ServerLoader.cpp TCPMessengerServer/src/ServerLoader.h
-        TCPMessengerServer/src/tests/TestTwoClients.cpp
+        TCPMessengerServer/src/ChatRoom.h TCPMessengerServer/src/Users.cpp TCPMessengerServer/src/Users.h
+        TCPMessengerServer/src/tests/SessionTear.cpp
         TCPMessengerClient/src/MessengerClient.cpp
         TCPMessengerClient/src/MessengerClient.h
-        TCPMessengerClient/src/ClientState.h
+        TCPMessengerClient/src/ClientStatus.h
         SocketUtils/src/FileInterface.cpp
         SocketUtils/src/FileInterface.h
         SocketUtils/src/MThread.cpp
