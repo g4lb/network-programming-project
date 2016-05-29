@@ -66,7 +66,6 @@ namespace npl {
                         break;
                     }
                     default: {
-                        closeByExit(sender);
                         break;
                     }
                 }

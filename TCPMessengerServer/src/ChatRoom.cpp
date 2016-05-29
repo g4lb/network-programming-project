@@ -67,7 +67,7 @@ void ChatRoom::run(){
                 break;
             }
             default: {
-                closeByPeer(sender);
+                break;
             }
         }
     }
