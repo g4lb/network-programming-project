@@ -27,7 +27,7 @@ void runServer() {
 void runClientOne(){
     MessengerClient * clientOne = new MessengerClient();
     clientOne->connect("127.0.0.1");
-    clientOne->login("client1","1234");
+    clientOne->login("Ranni","1231");
     sleep(16);
     clientOne->send("msg2");
 
@@ -35,9 +35,9 @@ void runClientOne(){
 void runClientTwo(){
     MessengerClient * clientTwo = new MessengerClient();
     clientTwo->connect("127.0.0.1");
-    clientTwo->login("client2","321");
+    clientTwo->login("moshe","1231");
     sleep(10);
-    clientTwo->openSession("client1");
+    clientTwo->openSession("Ranni");
     sleep(2);
     clientTwo->send("msg1");
 }
