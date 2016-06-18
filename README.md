@@ -1,5 +1,4 @@
 # Network-Programming-Project
-Gal Malca &amp; Gal Ben Evgi &amp; Bar David &amp; Noam Hazaz &amp;
 
 This final project is a hybrid P2P and client­server messenger application
 that enable two clients to send and receive messages between one and the
