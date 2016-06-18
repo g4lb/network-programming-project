@@ -18,5 +18,7 @@ The developed project implement the following functionality:
 
 * Messenger Server App and Messenger Client App using a CLI
 
+* Programing in C++
+
 
 
