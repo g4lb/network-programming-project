@@ -12,7 +12,7 @@ The developed project implement the following functionality:
 
 * The communication between two MCA’s based on UDP (interaction between two clients).
 
-* To connect server the client will sign in using a username and a password (Users).
+* To connect server the client will sign in using a username and a password (Users.h + Users.cpp).
 
 * The communication between clients can use by Chat rooms, Each chat room has admin that can manage the room
 
