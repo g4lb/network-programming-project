@@ -21,4 +21,7 @@ The developed project implement the following functionality:
 * Programing in C++
 
 
+![My image](http://imageshack.com/a/img923/8060/KMJMAm.jpg)
+
+![My image](http://imageshack.com/a/img923/6944/HeQgBt.jpg)
 
